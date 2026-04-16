@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Civic Naturalist Zoo - Ticket Selection</title>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#eaefee",
+                    "error-dim": "#4e0309",
+                    "secondary-container": "#e1e3df",
+                    "primary-fixed": "#c7ebd4",
+                    "on-tertiary-container": "#525a39",
+                    "surface-variant": "#dce4e3",
+                    "primary-fixed-dim": "#baddc6",
+                    "background": "#f9f9f8",
+                    "on-primary-container": "#395847",
+                    "on-tertiary-fixed-variant": "#5c6442",
+                    "on-error": "#fff7f6",
+                    "error": "#9f403d",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary": "#5a6341",
+                    "on-secondary-fixed": "#3d403d",
+                    "error-container": "#fe8983",
+                    "primary-container": "#c7ebd4",
+                    "surface-container-low": "#f1f4f3",
+                    "surface-container-high": "#e3e9e8",
+                    "on-primary-fixed-variant": "#436250",
+                    "surface-tint": "#466553",
+                    "outline-variant": "#abb4b3",
+                    "on-secondary-container": "#4f524f",
+                    "secondary-dim": "#515451",
+                    "tertiary-fixed-dim": "#d8e1b7",
+                    "on-secondary-fixed-variant": "#595c59",
+                    "surface-bright": "#f9f9f8",
+                    "on-surface": "#2c3433",
+                    "inverse-primary": "#d8fce4",
+                    "primary-dim": "#3a5947",
+                    "inverse-surface": "#0c0f0e",
+                    "secondary": "#5d605d",
+                    "secondary-fixed-dim": "#d3d5d1",
+                    "on-error-container": "#752121",
+                    "surface-dim": "#d2dcdb",
+                    "on-background": "#2c3433",
+                    "on-secondary": "#f8f9f5",
+                    "on-tertiary-fixed": "#404828",
+                    "surface": "#f9f9f8",
+                    "secondary-fixed": "#e1e3df",
+                    "outline": "#747c7c",
+                    "surface-container-highest": "#dce4e3",
+                    "on-primary": "#e1ffea",
+                    "inverse-on-surface": "#9b9d9d",
+                    "tertiary-dim": "#4e5736",
+                    "tertiary-fixed": "#e7f0c4",
+                    "on-primary-fixed": "#274635",
+                    "tertiary-container": "#e7f0c4",
+                    "primary": "#466553",
+                    "on-surface-variant": "#586160",
+                    "on-tertiary": "#f4fed1"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Public Sans"],
+                    "body": ["Public Sans"],
+                    "label": ["Public Sans"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Public Sans', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- TopNavBar: SUPPRESSED because this is a Transactional/Linear screen -->
+<main class="min-h-screen px-6 lg:px-12 py-12">
+<!-- Progress Indicator -->
+<div class="max-w-7xl mx-auto mb-16">
+<div class="flex items-center justify-between max-w-xl mx-auto">
+<div class="flex flex-col items-center gap-2">
+<span class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-sm">1</span>
+<span class="text-[0.625rem] uppercase tracking-widest text-on-surface-variant font-medium">Date</span>
+</div>
+<div class="h-[2px] flex-grow bg-primary-container mx-4"></div>
+<div class="flex flex-col items-center gap-2">
+<span class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-sm">2</span>
+<span class="text-[0.625rem] uppercase tracking-widest text-primary font-bold">Tickets</span>
+</div>
+<div class="h-[2px] flex-grow bg-surface-container-high mx-4"></div>
+<div class="flex flex-col items-center gap-2">
+<span class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-sm">3</span>
+<span class="text-[0.625rem] uppercase tracking-widest text-on-surface-variant font-medium">Payment</span>
+</div>
+</div>
+</div>
+<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
+<!-- Left Column: Selection Content -->
+<div class="lg:col-span-8 space-y-12">
+<section>
+<h1 class="text-4xl font-bold tracking-tighter text-on-surface mb-2">Select Your Tickets</h1>
+<p class="text-on-surface-variant max-w-2xl">Step 2: Choose the admission types for your party. All tickets include access to our conservation exhibits and botanical walk.</p>
+</section>
+<!-- Ticket Counters -->
+<div class="space-y-4">
+<div class="p-8 bg-surface-container-low flex justify-between items-center group transition-colors hover:bg-surface-container">
+<div>
+<h3 class="text-xl font-bold tracking-tight text-on-surface">Adult</h3>
+<p class="text-sm text-on-surface-variant">Ages 13 and above</p>
+<p class="mt-2 font-bold text-primary">$32.00</p>
+</div>
+<div class="flex items-center gap-6">
+<button class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-primary-container hover:border-primary-container transition-all text-on-surface">
+<span class="material-symbols-outlined">remove</span>
+</button>
+<span class="text-2xl font-bold w-6 text-center">2</span>
+<button class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-primary-container hover:border-primary-container transition-all text-on-surface">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+</div>
+<div class="p-8 bg-surface-container-low flex justify-between items-center group transition-colors hover:bg-surface-container">
+<div>
+<h3 class="text-xl font-bold tracking-tight text-on-surface">Child</h3>
+<p class="text-sm text-on-surface-variant">Ages 3 to 12. Under 3 are free.</p>
+<p class="mt-2 font-bold text-primary">$18.00</p>
+</div>
+<div class="flex items-center gap-6">
+<button class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-primary-container hover:border-primary-container transition-all text-on-surface">
+<span class="material-symbols-outlined">remove</span>
+</button>
+<span class="text-2xl font-bold w-6 text-center">1</span>
+<button class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-primary-container hover:border-primary-container transition-all text-on-surface">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Enhancements Section -->
+<section class="space-y-6">
+<h2 class="text-2xl font-bold tracking-tight text-on-surface">Enhance Your Visit</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Safari Access Card -->
+<div class="bg-surface-container-lowest overflow-hidden group">
+<div class="h-48 w-full relative overflow-hidden">
+<img alt="Safari Jeep" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Modern safari jeep driving through an open savannah with distant acacia trees under a warm hazy sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjomdQcQyjIBVoi9JW3oQEBmukgQWoMOMt_sKMPAYs8Td-qyhtNBtYb0J1pxTl9BIuIbyN33cHTHLIJ4a4yW1LoW5S7YOJFVrrKpxC8kxqLkbZ5uIlUb7rCBj9DmrE6HrUirBso8pxEaXUXsiXcJ3kAp1IgdgduhOUZBx06Yt5Vzr7QfGEuqZIm3T1TO6QHSCfiwDYoXZ6rH3M5G2q6NZKVttqqnjfH3IbjU7aMqucLXVm9NQBDiVMMJ4z9cwzP1bCghABiMYyb3A"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+<div class="absolute bottom-4 left-4 text-white font-bold text-lg">Safari Access</div>
+</div>
+<div class="p-6 space-y-4">
+<p class="text-sm text-on-surface-variant">Premium guided truck tour through the open habitat zones. 90 minutes.</p>
+<div class="flex justify-between items-center">
+<span class="font-bold text-tertiary">+$45.00 / person</span>
+<button class="px-4 py-2 bg-tertiary-container text-on-tertiary-container text-xs font-bold uppercase tracking-widest rounded-lg hover:bg-tertiary hover:text-on-tertiary transition-colors">Add</button>
+</div>
+</div>
+</div>
+<!-- Camera Permit Card -->
+<div class="bg-surface-container-lowest overflow-hidden group">
+<div class="h-48 w-full relative overflow-hidden">
+<img alt="Camera Kit" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A vintage camera and telephoto lens resting on a wooden table with soft natural light entering from a nearby window" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCf6sn6eW31lg44EBe8fpMVDtk9xiwSVZ-uYxxHmC-YhwS892BPSe7xwnw8ShiLiBqxLGxqg94knR7nOqZiv0mzMPZFFbnEmtZh2CR6P_tHXHv1XmHqHuwgwYXn2EgPh-TIKeTAWHw9iN6Lo3b1pdpI635_mEYCwCFAKP4E9aSWAn2BGQ20DLjE5NmEwSxThJEpMK_AdkazJkNrhxTyTwtopEgmPT1U7WGvZ8oaP21yDkj5j8G25gmwbFGGo-j6mXsD7v6oKEQXT3c"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+<div class="absolute bottom-4 left-4 text-white font-bold text-lg">Camera Permit</div>
+</div>
+<div class="p-6 space-y-4">
+<p class="text-sm text-on-surface-variant">Professional gear access for photography enthusiasts. Includes tripod clearance.</p>
+<div class="flex justify-between items-center">
+<span class="font-bold text-tertiary">+$15.00 / group</span>
+<button class="px-4 py-2 bg-primary text-on-primary text-xs font-bold uppercase tracking-widest rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check</span>
+                                        Added
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Sidebar Booking Summary -->
+<aside class="lg:col-span-4">
+<div class="sticky top-12 bg-surface-container-lowest p-8 shadow-[0px_12px_32px_rgba(44,52,51,0.06)] space-y-8">
+<div>
+<h2 class="text-xs uppercase tracking-[0.15em] text-on-surface-variant font-bold mb-6">Booking Summary</h2>
+<div class="space-y-6">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-bold text-on-surface">General Admission</p>
+<p class="text-xs text-on-surface-variant">Nov 24, 2024 • 10:30 AM</p>
+</div>
+<button class="text-primary hover:underline text-xs font-bold uppercase">Change</button>
+</div>
+<div class="space-y-3 pt-6 border-t border-surface-container-high">
+<div class="flex justify-between text-sm">
+<span class="text-on-surface-variant">Adult (x2)</span>
+<span class="font-medium text-on-surface">$64.00</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-on-surface-variant">Child (x1)</span>
+<span class="font-medium text-on-surface">$18.00</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-on-surface-variant">Camera Permit</span>
+<span class="font-medium text-on-surface">$15.00</span>
+</div>
+</div>
+<div class="pt-6 border-t border-surface-container-high space-y-4">
+<div class="flex justify-between items-center">
+<span class="text-lg font-bold text-on-surface">Total</span>
+<span class="text-3xl font-extrabold tracking-tighter text-primary">$97.00</span>
+</div>
+<p class="text-[0.625rem] text-on-surface-variant text-center leading-relaxed">
+                                    Prices include all local taxes and conservation levies. Non-refundable but transferable.
+                                </p>
+</div>
+</div>
+</div>
+<button class="w-full py-5 bg-primary text-on-primary font-bold rounded-lg flex items-center justify-center gap-3 group transition-all hover:bg-primary-dim">
+                        Continue to Payment
+                        <span class="material-symbols-outlined text-lg transition-transform group-hover:translate-x-1">arrow_forward</span>
+</button>
+<div class="flex items-center gap-3 p-4 bg-surface-container-low rounded-lg">
+<span class="material-symbols-outlined text-primary">verified_user</span>
+<span class="text-[0.625rem] text-on-surface-variant font-medium uppercase tracking-wider">Secure SSL Checkout</span>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- Footer Component Mapping from JSON -->
+<footer class="bg-stone-100 dark:bg-stone-900 w-full border-t border-stone-200/50 dark:border-stone-800/50">
+<div class="flex flex-col md:flex-row justify-between items-center px-12 py-8 w-full">
+<div class="mb-4 md:mb-0">
+<span class="text-lg font-bold text-emerald-900 font-headline tracking-tighter">Civic Naturalist Zoo</span>
+</div>
+<div class="flex gap-8 mb-4 md:mb-0">
+<a class="font-public-sans text-sm uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-emerald-600 transition-all opacity-80 hover:opacity-100" href="#">Privacy Policy</a>
+<a class="font-public-sans text-sm uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-emerald-600 transition-all opacity-80 hover:opacity-100" href="#">Accessibility</a>
+<a class="font-public-sans text-sm uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-emerald-600 transition-all opacity-80 hover:opacity-100" href="#">Terms of Service</a>
+<a class="font-public-sans text-sm uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-emerald-600 transition-all opacity-80 hover:opacity-100" href="#">Contact Us</a>
+</div>
+<div class="text-[10px] uppercase tracking-widest text-stone-400">
+                © 2024 Civic Naturalist Botanical Gardens &amp; Zoo. A Sanctuary for Biodiversity.
+            </div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Checkout - Civic Naturalist Zoo</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#eaefee",
+                    "error-dim": "#4e0309",
+                    "secondary-container": "#e1e3df",
+                    "primary-fixed": "#c7ebd4",
+                    "on-tertiary-container": "#525a39",
+                    "surface-variant": "#dce4e3",
+                    "primary-fixed-dim": "#baddc6",
+                    "background": "#f9f9f8",
+                    "on-primary-container": "#395847",
+                    "on-tertiary-fixed-variant": "#5c6442",
+                    "on-error": "#fff7f6",
+                    "error": "#9f403d",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary": "#5a6341",
+                    "on-secondary-fixed": "#3d403d",
+                    "error-container": "#fe8983",
+                    "primary-container": "#c7ebd4",
+                    "surface-container-low": "#f1f4f3",
+                    "surface-container-high": "#e3e9e8",
+                    "on-primary-fixed-variant": "#436250",
+                    "surface-tint": "#466553",
+                    "outline-variant": "#abb4b3",
+                    "on-secondary-container": "#4f524f",
+                    "secondary-dim": "#515451",
+                    "tertiary-fixed-dim": "#d8e1b7",
+                    "on-secondary-fixed-variant": "#595c59",
+                    "surface-bright": "#f9f9f8",
+                    "on-surface": "#2c3433",
+                    "inverse-primary": "#d8fce4",
+                    "primary-dim": "#3a5947",
+                    "inverse-surface": "#0c0f0e",
+                    "secondary": "#5d605d",
+                    "secondary-fixed-dim": "#d3d5d1",
+                    "on-error-container": "#752121",
+                    "surface-dim": "#d2dcdb",
+                    "on-background": "#2c3433",
+                    "on-secondary": "#f8f9f5",
+                    "on-tertiary-fixed": "#404828",
+                    "surface": "#f9f9f8",
+                    "secondary-fixed": "#e1e3df",
+                    "outline": "#747c7c",
+                    "surface-container-highest": "#dce4e3",
+                    "on-primary": "#e1ffea",
+                    "inverse-on-surface": "#9b9d9d",
+                    "tertiary-dim": "#4e5736",
+                    "tertiary-fixed": "#e7f0c4",
+                    "on-primary-fixed": "#274635",
+                    "tertiary-container": "#e7f0c4",
+                    "primary": "#466553",
+                    "on-surface-variant": "#586160",
+                    "on-tertiary": "#f4fed1"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Public Sans"],
+                    "body": ["Public Sans"],
+                    "label": ["Public Sans"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Public Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- TopNavBar: SUPPRESSED for Transactional Step -->
+<!-- Content Header -->
+<header class="w-full px-6 py-8 md:px-12 md:py-12 max-w-7xl mx-auto flex items-center justify-between">
+<div class="flex flex-col gap-1">
+<span class="text-xs font-bold uppercase tracking-widest text-primary-dim">Step 3 of 3</span>
+<h1 class="text-3xl md:text-4xl font-extrabold tracking-tighter text-emerald-900">Guest Information</h1>
+</div>
+<a class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">close</span>
+<span class="font-semibold text-sm">Cancel Booking</span>
+</a>
+</header>
+<main class="max-w-7xl mx-auto px-6 md:px-12 pb-24">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+<!-- Main Form Section -->
+<section class="lg:col-span-8 space-y-12">
+<div class="bg-surface-container-low rounded-xl p-8 md:p-12 space-y-10">
+<div class="space-y-8">
+<!-- Full Name -->
+<div class="space-y-2">
+<label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant" for="full_name">Full Name</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg px-6 py-4 focus:ring-2 focus:ring-primary focus:bg-surface-container-highest transition-all text-on-surface placeholder:text-outline/50" id="full_name" placeholder="Enter your full legal name" type="text"/>
+</div>
+<!-- Contact Row -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-2">
+<label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant" for="mobile_number">Mobile Number</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg px-6 py-4 focus:ring-2 focus:ring-primary focus:bg-surface-container-highest transition-all text-on-surface placeholder:text-outline/50" id="mobile_number" placeholder="+1 (555) 000-0000" type="tel"/>
+</div>
+<div class="space-y-2">
+<label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant" for="email_address">Email Address</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg px-6 py-4 focus:ring-2 focus:ring-primary focus:bg-surface-container-highest transition-all text-on-surface placeholder:text-outline/50" id="email_address" placeholder="nature@example.org" type="email"/>
+</div>
+</div>
+</div>
+<!-- Privacy Notice -->
+<div class="pt-6 flex gap-4 items-start">
+<span class="material-symbols-outlined text-primary mt-1">verified_user</span>
+<div class="space-y-2">
+<p class="text-sm text-on-surface-variant leading-relaxed">
+                                Your data is handled according to our <a class="underline font-medium text-primary" href="#">Privacy Policy</a>. We use this information only for booking verification and conservation updates relevant to your visit.
+                            </p>
+</div>
+</div>
+</div>
+<!-- Complete Button (Mobile Order) -->
+<div class="md:hidden">
+<button class="w-full bg-primary text-on-primary py-5 rounded-lg font-bold text-lg shadow-[0px_12px_32px_rgba(70,101,83,0.15)] hover:scale-[0.98] transition-transform">
+                        Complete Booking
+                    </button>
+</div>
+</section>
+<!-- Sidebar Summary -->
+<aside class="lg:col-span-4 sticky top-12">
+<div class="bg-surface-container-lowest border border-outline-variant/10 rounded-xl overflow-hidden shadow-[0px_12px_32px_rgba(44,52,51,0.06)]">
+<div class="relative h-32 w-full">
+<img class="w-full h-full object-cover" data-alt="vibrant botanical garden with exotic ferns and a wooden bridge over a tranquil pond at sunrise" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUkG4byymUZGkBJlT7wRMg2HL1DseqYsNBp-7fhoGT8qu-Icv8TsULPPrp2ZGalqIlvOZ4ZjDGwbgGfzm25VLVXbdBbaQIhPRSp1YLLmHOdjO5Gydcl1778fE4iINdzX7WaHLhr0aDfd8-uvDZ7sgGFIVCcgSf_2qZOiJiEs-NchfmVrI8AQkGA2002GcLdMqeR-mN43xMgaU-aISIF_G0F9LLvmK2QhVrVCs10Q59gaCJ_Vz2wUs1ZnM4myVhcojtm278n3ny9g8"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest to-transparent"></div>
+</div>
+<div class="p-8 space-y-8">
+<div>
+<span class="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">Selection</span>
+<h3 class="text-xl font-bold text-on-surface mt-1">Sanctuary Pass</h3>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-center text-sm">
+<div class="flex items-center gap-3 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg">calendar_today</span>
+<span>Date</span>
+</div>
+<span class="font-bold text-on-surface">Oct 24, 2024</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<div class="flex items-center gap-3 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg">schedule</span>
+<span>Time</span>
+</div>
+<span class="font-bold text-on-surface">10:30 AM</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<div class="flex items-center gap-3 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg">confirmation_number</span>
+<span>Tickets</span>
+</div>
+<span class="font-bold text-on-surface">2x Adult, 1x Youth</span>
+</div>
+</div>
+<div class="pt-6 border-t border-outline-variant/15 flex justify-between items-end">
+<span class="text-sm font-medium text-on-surface-variant">Total Payment</span>
+<span class="text-3xl font-extrabold text-emerald-900 tracking-tighter">$84.00</span>
+</div>
+<button class="hidden md:block w-full bg-primary text-on-primary py-4 rounded-lg font-bold shadow-[0px_8px_24px_rgba(70,101,83,0.15)] hover:bg-primary-dim transition-colors">
+                            Complete Booking
+                        </button>
+</div>
+</div>
+<div class="mt-6 flex items-center justify-center gap-2 text-outline text-xs uppercase tracking-widest font-semibold">
+<span class="material-symbols-outlined text-sm">lock</span>
+                    Secure Encryption Enabled
+                </div>
+</aside>
+</div>
+</main>
+<!-- Footer Segment -->
+<footer class="bg-stone-100 dark:bg-stone-900 border-t border-stone-200/50 dark:border-stone-800/50">
+<div class="flex flex-col md:flex-row justify-between items-center px-12 py-12 max-w-7xl mx-auto w-full gap-8">
+<div class="flex flex-col items-center md:items-start gap-2">
+<span class="text-lg font-bold text-emerald-900 uppercase tracking-tighter">Civic Naturalist Zoo</span>
+<p class="font-public-sans text-[10px] uppercase tracking-widest text-stone-500 text-center md:text-left">
+                    © 2024 Civic Naturalist Botanical Gardens &amp; Zoo. A Sanctuary for Biodiversity.
+                </p>
+</div>
+<div class="flex gap-8">
+<a class="font-public-sans text-xs uppercase tracking-widest text-stone-500 hover:text-emerald-600 transition-all opacity-80 hover:opacity-100" href="#">Privacy Policy</a>
+<a class="font-public-sans text-xs uppercase tracking-widest text-stone-500 hover:text-emerald-600 transition-all opacity-80 hover:opacity-100" href="#">Accessibility</a>
+<a class="font-public-sans text-xs uppercase tracking-widest text-stone-500 hover:text-emerald-600 transition-all opacity-80 hover:opacity-100" href="#">Contact Us</a>
+</div>
+</div>
+</footer>
+</body></html>
