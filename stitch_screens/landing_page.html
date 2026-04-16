@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-dim": "#d2dcdb",
+                    "on-tertiary-fixed-variant": "#5c6442",
+                    "error-dim": "#4e0309",
+                    "tertiary-container": "#e7f0c4",
+                    "on-surface-variant": "#586160",
+                    "primary-container": "#c7ebd4",
+                    "error-container": "#fe8983",
+                    "surface-variant": "#dce4e3",
+                    "tertiary-dim": "#4e5736",
+                    "on-tertiary": "#f4fed1",
+                    "on-error": "#fff7f6",
+                    "surface-container-highest": "#dce4e3",
+                    "primary-dim": "#3a5947",
+                    "surface-bright": "#f9f9f8",
+                    "outline": "#747c7c",
+                    "on-surface": "#2c3433",
+                    "secondary": "#5d605d",
+                    "tertiary-fixed": "#e7f0c4",
+                    "primary-fixed-dim": "#baddc6",
+                    "on-primary-container": "#395847",
+                    "tertiary": "#5a6341",
+                    "on-primary-fixed-variant": "#436250",
+                    "inverse-surface": "#0c0f0e",
+                    "primary": "#466553",
+                    "on-secondary-fixed-variant": "#595c59",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-container": "#525a39",
+                    "background": "#f9f9f8",
+                    "on-secondary-container": "#4f524f",
+                    "surface": "#f9f9f8",
+                    "surface-container-low": "#f1f4f3",
+                    "on-secondary": "#f8f9f5",
+                    "surface-container": "#eaefee",
+                    "on-error-container": "#752121",
+                    "secondary-fixed": "#e1e3df",
+                    "primary-fixed": "#c7ebd4",
+                    "secondary-dim": "#515451",
+                    "on-primary-fixed": "#274635",
+                    "secondary-fixed-dim": "#d3d5d1",
+                    "secondary-container": "#e1e3df",
+                    "on-primary": "#e1ffea",
+                    "error": "#9f403d",
+                    "on-background": "#2c3433",
+                    "outline-variant": "#abb4b3",
+                    "surface-container-high": "#e3e9e8",
+                    "inverse-on-surface": "#9b9d9d",
+                    "on-secondary-fixed": "#3d403d",
+                    "surface-tint": "#466553",
+                    "inverse-primary": "#d8fce4",
+                    "on-tertiary-fixed": "#404828",
+                    "tertiary-fixed-dim": "#d8e1b7"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Public Sans"],
+                    "body": ["Public Sans"],
+                    "label": ["Public Sans"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Public Sans', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="bg-stone-50/80 dark:bg-stone-950/80 backdrop-blur-xl fixed top-0 w-full z-50 shadow-[0px_12px_32px_rgba(44,52,51,0.06)]">
+<div class="max-w-7xl mx-auto px-8 py-4 flex justify-between items-center">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-emerald-900 dark:text-emerald-500" data-icon="park">park</span>
+<h1 class="text-xl font-bold text-emerald-900 dark:text-emerald-100 uppercase tracking-wider font-public-sans tracking-tight">The Civic Naturalist</h1>
+</div>
+<nav class="hidden md:flex gap-8 items-center">
+<a class="text-emerald-800 dark:text-emerald-400 font-semibold border-b-2 border-emerald-800 transition-colors duration-300" href="#">Home</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors duration-300" href="#">Exhibits</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors duration-300" href="#">Conservation</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors duration-300" href="#">Visit</a>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-lg font-medium transition-transform active:opacity-80 scale-95 hover:bg-primary-dim">
+                    Book Tickets
+                </button>
+</nav>
+</div>
+</header>
+<main class="pt-24">
+<!-- Hero Section -->
+<section class="relative h-[707px] min-h-[600px] flex items-center overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover grayscale-[0.2] contrast-110" data-alt="cinematic wide shot of lush tropical greenhouse with giant palm leaves and misty sunlight filtering through botanical architecture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIXhvBRI25eaUiQNwH7WX8SvrGfWFQsDd5w1ZvHCQ8-9yAvvc51jbQ3uGQKhWAEIpTO8qlnfq9tAkGV08aHNYF01QIVDZC4m01DVxMvk4xtvNuwyr3SrTXaa8V4-lBN0WgwMlq02l5Y5Bu3fjSghnHx31Cw6zelgqOQHGpWjJkvr8xQuPLESTg8YPMkYXAF-5LI5TbZab42tzrWuGMddQaJMVXQ3SBr6p-v-TwxnEKsAOYSmeJm0YgrwVOWufc8ToTFUlSVp4lN04"/>
+<div class="absolute inset-0 bg-gradient-to-r from-background via-background/40 to-transparent"></div>
+</div>
+<div class="relative z-10 max-w-7xl mx-auto px-8 w-full">
+<div class="max-w-2xl">
+<span class="inline-block text-primary font-bold tracking-widest uppercase text-xs mb-4">Official Botanical Garden &amp; Zoo</span>
+<h2 class="text-6xl md:text-7xl font-bold text-on-surface tracking-tighter leading-[0.9] mb-6">
+                        Where Nature <br/>
+<span class="text-primary italic">Architecture</span> Meets.
+                    </h2>
+<p class="text-lg text-on-surface-variant mb-10 leading-relaxed font-medium max-w-md">
+                        Experience the harmony of conservation and civic design. Our sanctuary hosts over 400 species within architecturally significant habitats.
+                    </p>
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="bg-primary text-on-primary px-10 py-4 rounded-lg text-lg font-semibold shadow-lg hover:bg-primary-dim transition-all">
+                            Book Tickets
+                        </button>
+<button class="flex items-center gap-2 px-8 py-4 text-on-surface font-semibold hover:bg-surface-container-low rounded-lg transition-colors">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+                            View Map
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Information Bento Grid -->
+<section class="py-24 bg-surface">
+<div class="max-w-7xl mx-auto px-8">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<!-- Planning Card -->
+<div class="md:col-span-4 bg-surface-container-low p-8 rounded-xl flex flex-col justify-between">
+<div>
+<span class="material-symbols-outlined text-primary text-4xl mb-6" data-icon="schedule">schedule</span>
+<h3 class="text-2xl font-bold text-on-surface mb-2">Opening Hours</h3>
+<p class="text-on-surface-variant">Daily sanctuary access and exhibit walkthroughs.</p>
+</div>
+<div class="mt-8">
+<div class="text-4xl font-bold text-primary">9 AM - 6 PM</div>
+<p class="text-sm font-bold text-on-surface-variant uppercase tracking-widest mt-2">Monday through Sunday</p>
+</div>
+</div>
+<!-- Pricing Card -->
+<div class="md:col-span-8 bg-surface-container-highest p-8 rounded-xl relative overflow-hidden">
+<div class="relative z-10 grid md:grid-cols-2 gap-8 h-full">
+<div>
+<h3 class="text-2xl font-bold text-on-surface mb-6">Access Pricing</h3>
+<div class="space-y-6">
+<div class="flex justify-between items-end border-b border-outline-variant/20 pb-4">
+<div>
+<span class="block font-bold text-lg">Adults</span>
+<span class="text-sm text-on-surface-variant">Ages 13 and above</span>
+</div>
+<span class="text-3xl font-bold text-primary">$25</span>
+</div>
+<div class="flex justify-between items-end border-b border-outline-variant/20 pb-4">
+<div>
+<span class="block font-bold text-lg">Children</span>
+<span class="text-sm text-on-surface-variant">Ages 3 to 12</span>
+</div>
+<span class="text-3xl font-bold text-primary">$15</span>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest/50 backdrop-blur p-6 rounded-lg self-center">
+<p class="text-sm italic text-on-surface-variant mb-4">"Proceeds directly support our local wildlife rehabilitation and international reforestation programs."</p>
+<div class="flex items-center gap-2 text-primary font-bold text-sm">
+<span class="material-symbols-outlined text-sm" data-icon="verified" data-weight="fill" style="font-variation-settings: 'FILL' 1;">verified</span>
+                                    Verified Conservation Partner
+                                </div>
+</div>
+</div>
+</div>
+<!-- Booking Process -->
+<div class="md:col-span-12 bg-white p-12 rounded-xl shadow-[0px_12px_32px_rgba(44,52,51,0.06)] mt-6">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
+<div>
+<h3 class="text-3xl font-bold text-on-surface tracking-tight">How to Book</h3>
+<p class="text-on-surface-variant mt-1">A simple three-step process for secure entry.</p>
+</div>
+<button class="bg-tertiary-container text-on-tertiary-container px-8 py-3 rounded-lg font-bold hover:bg-tertiary-fixed-dim transition-colors">
+                                Start Reservation
+                            </button>
+</div>
+<div class="grid md:grid-cols-3 gap-12">
+<div class="relative">
+<div class="text-8xl font-black text-surface-container-high absolute -top-8 -left-4 z-0 opacity-50">1</div>
+<div class="relative z-10">
+<h4 class="text-xl font-bold text-on-surface mb-3">Select date</h4>
+<p class="text-on-surface-variant leading-relaxed">Choose your preferred visit date from our availability calendar.</p>
+</div>
+</div>
+<div class="relative">
+<div class="text-8xl font-black text-surface-container-high absolute -top-8 -left-4 z-0 opacity-50">2</div>
+<div class="relative z-10">
+<h4 class="text-xl font-bold text-on-surface mb-3">Choose tickets</h4>
+<p class="text-on-surface-variant leading-relaxed">Specify the number of adult and child passes for your party.</p>
+</div>
+</div>
+<div class="relative">
+<div class="text-8xl font-black text-surface-container-high absolute -top-8 -left-4 z-0 opacity-50">3</div>
+<div class="relative z-10">
+<h4 class="text-xl font-bold text-on-surface mb-3">Pay securely</h4>
+<p class="text-on-surface-variant leading-relaxed">Complete your transaction via our encrypted payment portal.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Asymmetric Detail Section -->
+<section class="py-24 bg-surface-container-low overflow-hidden">
+<div class="max-w-7xl mx-auto px-8 flex flex-col md:flex-row gap-16 items-center">
+<div class="w-full md:w-1/2 order-2 md:order-1">
+<img class="w-full aspect-[4/5] object-cover rounded-xl shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-700" data-alt="close-up of a majestic green iguana resting on a mossy branch with shallow depth of field and soft botanical lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsIqUvbmBbm4TwRrSlZpimudMy6VPIOfKVhjIfoMT4-tudDFxWLc0Z0a9nNY67LLJcB8EFfyFqR0zeJJEO763pgXd-APpz0g1zORs0sgMrd7KcwEo0aQ3mvVAHSerbVb0O3MAMSVr93qF3Bk5woPyD_78uhC0sMWN_OWcz7LHdJCz2v18b7Qb2nf6HAd_3FxV_OHIAhCjKmltXB8f2Q8o7lkAMbMbtIMfYb4V6RHt0iZbDfZKCMhKB25atM12gOSNJSQb71PKDRyQ"/>
+</div>
+<div class="w-full md:w-1/2 order-1 md:order-2">
+<span class="text-tertiary font-bold uppercase tracking-[0.2em] text-xs">The Experience</span>
+<h2 class="text-5xl font-bold text-on-surface mt-4 mb-8 tracking-tight">Preserving nature through architectural intent.</h2>
+<p class="text-on-surface-variant text-lg mb-8 leading-relaxed">
+                        Our facilities are designed to minimize human footprint while maximizing animal welfare. Every enclosure is a bespoke ecosystem tailored to the specific needs of its inhabitants.
+                    </p>
+<ul class="space-y-4">
+<li class="flex items-center gap-4 text-on-surface font-medium">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+                            40+ Endangered Species Breeding Programs
+                        </li>
+<li class="flex items-center gap-4 text-on-surface font-medium">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+                            Zero-Waste Botanical Education Center
+                        </li>
+<li class="flex items-center gap-4 text-on-surface font-medium">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+                            Award-winning "Lichen" Glass Pavilions
+                        </li>
+</ul>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-stone-100 dark:bg-stone-900 w-full border-t-0">
+<div class="max-w-7xl mx-auto px-12 py-16 grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-emerald-900 dark:text-emerald-500" data-icon="park">park</span>
+<h4 class="font-bold uppercase tracking-widest text-emerald-950 text-lg">The Civic Naturalist</h4>
+</div>
+<p class="text-stone-500 dark:text-stone-400 text-sm font-public-sans tracking-normal max-w-xs">
+                    © 2024 The Civic Naturalist Botanical Gardens &amp; Zoo. Preserving nature through architectural intent.
+                </p>
+</div>
+<div class="grid grid-cols-2 gap-8">
+<div>
+<h5 class="font-bold text-on-surface mb-4 uppercase text-xs tracking-widest">Sitemap</h5>
+<ul class="space-y-2">
+<li><a class="text-stone-500 dark:text-stone-400 text-sm hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors" href="#">Conservation</a></li>
+<li><a class="text-stone-500 dark:text-stone-400 text-sm hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors" href="#">Education</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-bold text-on-surface mb-4 uppercase text-xs tracking-widest">Legal &amp; Help</h5>
+<ul class="space-y-2">
+<li><a class="text-stone-500 dark:text-stone-400 text-sm hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="text-stone-500 dark:text-stone-400 text-sm hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors" href="#">Contact</a></li>
+</ul>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

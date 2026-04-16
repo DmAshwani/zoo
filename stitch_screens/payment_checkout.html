@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Complete Booking - Payment</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "error-container": "#fe8983",
+                    "tertiary-dim": "#4e5736",
+                    "on-primary": "#e1ffea",
+                    "on-error": "#fff7f6",
+                    "inverse-surface": "#0c0f0e",
+                    "surface-container-low": "#f1f4f3",
+                    "surface-container-highest": "#dce4e3",
+                    "surface-container": "#eaefee",
+                    "surface-bright": "#f9f9f8",
+                    "primary-fixed-dim": "#baddc6",
+                    "on-secondary-fixed": "#3d403d",
+                    "tertiary-container": "#e7f0c4",
+                    "secondary": "#5d605d",
+                    "on-surface": "#2c3433",
+                    "primary-fixed": "#c7ebd4",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-primary": "#d8fce4",
+                    "primary-dim": "#3a5947",
+                    "on-secondary-container": "#4f524f",
+                    "surface-container-high": "#e3e9e8",
+                    "on-primary-fixed": "#274635",
+                    "primary": "#466553",
+                    "inverse-on-surface": "#9b9d9d",
+                    "on-surface-variant": "#586160",
+                    "surface": "#f9f9f8",
+                    "background": "#f9f9f8",
+                    "primary-container": "#c7ebd4",
+                    "outline": "#747c7c",
+                    "on-background": "#2c3433",
+                    "on-tertiary": "#f4fed1",
+                    "secondary-dim": "#515451",
+                    "surface-dim": "#d2dcdb",
+                    "on-tertiary-fixed-variant": "#5c6442",
+                    "on-secondary-fixed-variant": "#595c59",
+                    "on-tertiary-fixed": "#404828",
+                    "surface-variant": "#dce4e3",
+                    "surface-tint": "#466553",
+                    "on-secondary": "#f8f9f5",
+                    "tertiary-fixed": "#e7f0c4",
+                    "secondary-container": "#e1e3df",
+                    "tertiary-fixed-dim": "#d8e1b7",
+                    "secondary-fixed": "#e1e3df",
+                    "error-dim": "#4e0309",
+                    "on-primary-fixed-variant": "#436250",
+                    "error": "#9f403d",
+                    "secondary-fixed-dim": "#d3d5d1",
+                    "outline-variant": "#abb4b3",
+                    "tertiary": "#5a6341",
+                    "on-tertiary-container": "#525a39",
+                    "on-primary-container": "#395847",
+                    "on-error-container": "#752121"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Public Sans"],
+                    "body": ["Public Sans"],
+                    "label": ["Public Sans"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Public Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-20">
+<!-- TopAppBar -->
+<header class="w-full sticky top-0 z-50 bg-[#f9f9f8] dark:bg-stone-950">
+<div class="flex items-center px-6 py-4 w-full max-w-7xl mx-auto">
+<button class="mr-4 text-[#466553] dark:text-[#8db19b] active:opacity-80 transition-opacity">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold text-[#2c3433] dark:text-stone-100 font-['Public_Sans'] tracking-tight">Complete Booking</h1>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-6 pt-8 pb-12">
+<!-- Progress Indicator -->
+<div class="mb-12">
+<div class="flex items-center justify-between mb-4">
+<span class="text-label text-[11px] uppercase tracking-[0.05em] font-medium text-on-surface-variant">Step 4 of 4</span>
+<span class="text-label text-[11px] uppercase tracking-[0.05em] font-medium text-primary">Payment</span>
+</div>
+<div class="flex gap-2">
+<div class="h-1 flex-1 rounded-full bg-primary"></div>
+<div class="h-1 flex-1 rounded-full bg-primary"></div>
+<div class="h-1 flex-1 rounded-full bg-primary"></div>
+<div class="h-1 flex-1 rounded-full bg-primary"></div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Payment Column -->
+<div class="lg:col-span-7 space-y-8">
+<div class="bg-surface-container-lowest rounded-xl shadow-[0px_12px_32px_rgba(44,52,51,0.06)] overflow-hidden">
+<div class="p-8">
+<h2 class="text-2xl font-bold tracking-tight text-on-surface mb-8">Payment Method</h2>
+<!-- Credit/Debit Card Section -->
+<div class="mb-10">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">credit_card</span>
+<h3 class="font-semibold text-on-surface">Credit / Debit Card</h3>
+</div>
+<div class="space-y-4">
+<div class="relative">
+<label class="block text-[11px] uppercase tracking-[0.05em] font-bold text-on-surface-variant mb-1.5 ml-1">Cardholder Name</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg p-4 text-on-surface placeholder-outline-variant focus:ring-0 focus:bg-surface-container-highest transition-colors" placeholder="John Doe" type="text"/>
+</div>
+<div class="relative">
+<label class="block text-[11px] uppercase tracking-[0.05em] font-bold text-on-surface-variant mb-1.5 ml-1">Card Number</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg p-4 text-on-surface placeholder-outline-variant focus:ring-0 focus:bg-surface-container-highest transition-colors" placeholder="XXXX XXXX XXXX XXXX" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="relative">
+<label class="block text-[11px] uppercase tracking-[0.05em] font-bold text-on-surface-variant mb-1.5 ml-1">Expiry Date</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg p-4 text-on-surface placeholder-outline-variant focus:ring-0 focus:bg-surface-container-highest transition-colors" placeholder="MM/YY" type="text"/>
+</div>
+<div class="relative">
+<label class="block text-[11px] uppercase tracking-[0.05em] font-bold text-on-surface-variant mb-1.5 ml-1">CVV</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg p-4 text-on-surface placeholder-outline-variant focus:ring-0 focus:bg-surface-container-highest transition-colors" placeholder="***" type="password"/>
+</div>
+</div>
+</div>
+</div>
+<!-- UPI Section -->
+<div class="mb-10">
+<div class="flex items-center gap-3 mb-6 pt-6 border-t border-outline-variant/15">
+<span class="material-symbols-outlined text-primary">account_balance_wallet</span>
+<h3 class="font-semibold text-on-surface">UPI Payment</h3>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+<button class="flex flex-col items-center justify-center p-4 rounded-xl bg-surface-container-low border border-transparent hover:border-primary/30 transition-all group">
+<img alt="" class="h-8 mb-2 opacity-80 group-hover:opacity-100 transition-opacity" data-alt="Google Pay logo in full color on a clean transparent background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtb1VC1UV0tv4RAq9K6AeeAcwJKRksddk_8e8nkX6PfP9ZMIjXCRshEEbpb1ltzdKlTWO-9X_XamJrCDCd5bJPg7qcCx0gFyM7nnoz04ewpJA_qcyjAOsSXs5nU9Bog-K608QQzpCj0RiAiOZUcRJh4AUemEz_Y0-WBRKWE6kXXCTwUIbcpOw5XdYWNeSDwBwE-cEnFCF5Um4TiwZ_MiZjgnIuNo8Kh_S7AvPNN8ncIvk09YpZ1DtQWEiHyjk_6YIqW6Dqd1fydl8"/>
+<span class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">GPay</span>
+</button>
+<button class="flex flex-col items-center justify-center p-4 rounded-xl bg-surface-container-low border border-transparent hover:border-primary/30 transition-all group">
+<img alt="" class="h-8 mb-2 opacity-80 group-hover:opacity-100 transition-opacity" data-alt="PhonePe logo in primary corporate colors on a clean background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_RcRoDWlrsi2VvBPbOfrs9qkwd68fK0u3HJRSk9YCIEIFsUOUOdk4h3QMY41nHFvxrDT_t05lS8-0A-lv_YVPdS84z-ATTTdWRXTWJ-qPEmBXZ0JelA6kyXOrp4knAM-4mG2VsofUapniD80-5ZEsjA9OlQLonbH04u_gyG9jK7sGD--PertvG8XVkRfF46niwPQTb98Ev6wL2QwA8HuOspR8n3aHJEhknll_4aVvN5_pMAgPUvkf2nZgVH5vRh1XcrGOQs4xMqY"/>
+<span class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">PhonePe</span>
+</button>
+<button class="flex flex-col items-center justify-center p-4 rounded-xl bg-surface-container-low border border-transparent hover:border-primary/30 transition-all group">
+<span class="material-symbols-outlined text-3xl mb-1 text-on-surface-variant">qr_code_2</span>
+<span class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">Any UPI ID</span>
+</button>
+</div>
+</div>
+<!-- Net Banking -->
+<div>
+<div class="flex items-center gap-3 mb-6 pt-6 border-t border-outline-variant/15">
+<span class="material-symbols-outlined text-primary">account_balance</span>
+<h3 class="font-semibold text-on-surface">Net Banking</h3>
+</div>
+<select class="w-full bg-surface-container-high border-none rounded-lg p-4 text-on-surface appearance-none focus:ring-0 focus:bg-surface-container-highest transition-colors cursor-pointer">
+<option>Select your bank</option>
+<option>HDFC Bank</option>
+<option>ICICI Bank</option>
+<option>State Bank of India</option>
+<option>Axis Bank</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+<!-- Summary Column -->
+<div class="lg:col-span-5 space-y-6">
+<div class="bg-surface-container-low rounded-xl p-8 sticky top-24">
+<h2 class="text-xl font-bold tracking-tight text-on-surface mb-6">Booking Summary</h2>
+<div class="space-y-6">
+<div class="flex items-start gap-4">
+<div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-surface-dim">
+<img alt="" class="w-full h-full object-cover" data-alt="close up of a majestic male lion resting under the shade of an acacia tree in the savannah at midday" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5yx5QaaslLuPZehijSc2IF3JFDtzndY7oI_KvKio5eFmN624URrJaQOaf8oSKDHgn8RODFcj9cttadfygkpOJjrtAP0_khh77MNz5RD9VTef-tZ62LoadZkZc3XiV9jUmmqxhXkmwSqTueyb3HnzSJoY90jz6JmEAhX2flY8wNRv-TvkDsTpUSlFhqRLUpV5Ze6oYs9ZAVntN7ZoqYYhsUtSEaxeotfiw91r5obfMPAscl4ELHpWsTWwUlrG7NshFcuGWnmf94K8"/>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">Sanctuary Pass</h4>
+<p class="text-sm text-on-surface-variant">Standard Entry Access</p>
+</div>
+</div>
+<div class="space-y-3 pt-6 border-t border-outline-variant/15">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+<span class="text-sm">Oct 6, 2023</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+<span class="text-sm">09:00 - 11:00</span>
+</div>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">group</span>
+<span class="text-sm">2 Adults, 1 Child</span>
+</div>
+</div>
+<div class="pt-6 space-y-2 border-t border-outline-variant/15">
+<div class="flex justify-between text-on-surface-variant">
+<span class="text-sm">Subtotal</span>
+<span class="text-sm font-medium">$70.00</span>
+</div>
+<div class="flex justify-between text-on-surface-variant">
+<span class="text-sm">Conservation Fee</span>
+<span class="text-sm font-medium">$5.00</span>
+</div>
+<div class="flex justify-between items-center pt-4">
+<span class="text-lg font-bold text-on-surface">Total Amount</span>
+<span class="text-2xl font-extrabold text-primary">$75.00</span>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-4 rounded-lg font-bold flex items-center justify-center gap-2 hover:bg-primary-dim transition-colors shadow-lg shadow-primary/10 group active:scale-[0.98]">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">lock</span>
+                            Pay $75.00
+                        </button>
+<div class="flex items-center justify-center gap-2 mt-4 text-outline text-[11px] font-medium uppercase tracking-widest">
+<span class="material-symbols-outlined text-sm">verified_user</span>
+                            SSL Secured Payment
+                        </div>
+</div>
+</div>
+<div class="p-6 bg-tertiary-container rounded-xl flex items-start gap-4">
+<span class="material-symbols-outlined text-on-tertiary-container">info</span>
+<div>
+<h5 class="text-sm font-bold text-on-tertiary-container mb-1">Cancellation Policy</h5>
+<p class="text-xs text-on-tertiary-container/80 leading-relaxed">Free cancellation up to 24 hours before your scheduled time. Your support helps fund our worldwide conservation efforts.</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Hidden on desktop) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-3 pb-safe bg-white/80 dark:bg-stone-900/80 backdrop-blur-xl border-t border-[#abb4b3]/15 shadow-[0px_-12px_32px_rgba(44,52,51,0.06)] z-50 rounded-t-2xl">
+<a class="flex flex-col items-center justify-center text-[#586160] dark:text-stone-400 px-3 py-1 hover:text-[#466553] dark:hover:text-[#8db19b] transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined">park</span>
+<span class="font-['Public_Sans'] text-[11px] uppercase tracking-[0.05em] font-medium">Explore</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#e7f0c4] dark:bg-[#525a39] text-[#525a39] dark:text-[#e7f0c4] rounded-xl px-3 py-1 transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">confirmation_number</span>
+<span class="font-['Public_Sans'] text-[11px] uppercase tracking-[0.05em] font-medium">Tickets</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#586160] dark:text-stone-400 px-3 py-1 hover:text-[#466553] dark:hover:text-[#8db19b] transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined">local_library</span>
+<span class="font-['Public_Sans'] text-[11px] uppercase tracking-[0.05em] font-medium">Education</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#586160] dark:text-stone-400 px-3 py-1 hover:text-[#466553] dark:hover:text-[#8db19b] transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-['Public_Sans'] text-[11px] uppercase tracking-[0.05em] font-medium">Account</span>
+</a>
+</nav>
+</body></html>

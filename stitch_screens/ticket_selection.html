@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ticket Selection - Civic Naturalist Zoo</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed-variant": "#5c6442",
+                    "on-surface": "#2c3433",
+                    "on-secondary-fixed": "#3d403d",
+                    "surface-variant": "#dce4e3",
+                    "outline": "#747c7c",
+                    "surface-tint": "#466553",
+                    "surface-container-low": "#f1f4f3",
+                    "tertiary-fixed-dim": "#d8e1b7",
+                    "surface-container": "#eaefee",
+                    "tertiary-fixed": "#e7f0c4",
+                    "secondary-dim": "#515451",
+                    "surface-container-lowest": "#ffffff",
+                    "outline-variant": "#abb4b3",
+                    "on-secondary-container": "#4f524f",
+                    "error-container": "#fe8983",
+                    "surface-dim": "#d2dcdb",
+                    "tertiary": "#5a6341",
+                    "on-primary-container": "#395847",
+                    "primary-fixed-dim": "#baddc6",
+                    "tertiary-dim": "#4e5736",
+                    "secondary-fixed-dim": "#d3d5d1",
+                    "secondary-container": "#e1e3df",
+                    "on-secondary": "#f8f9f5",
+                    "surface-container-high": "#e3e9e8",
+                    "on-tertiary": "#f4fed1",
+                    "primary-dim": "#3a5947",
+                    "surface-container-highest": "#dce4e3",
+                    "primary": "#466553",
+                    "on-primary": "#e1ffea",
+                    "inverse-on-surface": "#9b9d9d",
+                    "on-secondary-fixed-variant": "#595c59",
+                    "on-error": "#fff7f6",
+                    "on-primary-fixed-variant": "#436250",
+                    "inverse-surface": "#0c0f0e",
+                    "surface": "#f9f9f8",
+                    "primary-fixed": "#c7ebd4",
+                    "on-surface-variant": "#586160",
+                    "on-primary-fixed": "#274635",
+                    "secondary": "#5d605d",
+                    "on-tertiary-fixed": "#404828",
+                    "tertiary-container": "#e7f0c4",
+                    "inverse-primary": "#d8fce4",
+                    "error": "#9f403d",
+                    "on-error-container": "#752121",
+                    "primary-container": "#c7ebd4",
+                    "on-tertiary-container": "#525a39",
+                    "secondary-fixed": "#e1e3df",
+                    "surface-bright": "#f9f9f8",
+                    "on-background": "#2c3433",
+                    "error-dim": "#4e0309",
+                    "background": "#f9f9f8"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Public Sans"],
+                    "body": ["Public Sans"],
+                    "label": ["Public Sans"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Public Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased min-h-screen">
+<!-- Top Navigation Anchor -->
+<header class="fixed top-0 w-full z-50 bg-[#f9f9f8] dark:bg-stone-950 flex items-center px-6 py-4 max-w-full">
+<div class="flex items-center gap-4 w-full max-w-2xl mx-auto">
+<button class="text-[#466553] dark:text-[#527d66] hover:bg-[#f1f4f3] dark:hover:bg-stone-800 transition-colors p-2 rounded-full active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold text-[#2c3433] dark:text-[#f1f4f3] font-['Public_Sans'] tracking-tight">Ticket Selection</h1>
+</div>
+</header>
+<main class="pt-24 pb-40 px-6 max-w-2xl mx-auto">
+<!-- Progress Indicator -->
+<div class="mb-12">
+<div class="flex justify-between items-center mb-4">
+<span class="text-[10px] uppercase tracking-[0.1em] font-bold text-primary">Step 2 of 3</span>
+<span class="text-xs text-on-surface-variant">Choose your tickets</span>
+</div>
+<div class="h-1 w-full bg-surface-container rounded-full overflow-hidden flex">
+<div class="h-full bg-primary w-1/3 opacity-40"></div>
+<div class="h-full bg-primary w-1/3"></div>
+<div class="h-full bg-surface-container-high w-1/3"></div>
+</div>
+</div>
+<!-- Hero Section Asymmetry -->
+<section class="mb-12">
+<div class="grid grid-cols-12 gap-4 items-end">
+<div class="col-span-8">
+<h2 class="text-4xl font-extrabold tracking-tighter text-on-surface leading-none mb-2">Admission</h2>
+<p class="text-on-surface-variant body-md max-w-xs">Select the number of guests joining the expedition today.</p>
+</div>
+<div class="col-span-4 flex justify-end">
+<div class="w-16 h-16 rounded-full bg-tertiary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-container" data-icon="confirmation_number">confirmation_number</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Ticket Types: Tonal Layering -->
+<div class="space-y-4 mb-12">
+<!-- Adult Ticket -->
+<div class="bg-surface-container-low p-6 rounded-xl flex items-center justify-between border-b-0">
+<div>
+<h3 class="text-lg font-bold text-on-surface">Adult</h3>
+<p class="text-sm text-on-surface-variant tracking-wide">$25.00 per person</p>
+</div>
+<div class="flex items-center gap-6 bg-surface-container-lowest py-2 px-4 rounded-full shadow-sm">
+<button class="w-8 h-8 rounded-full border border-outline-variant flex items-center justify-center text-primary hover:bg-primary-container transition-colors active:scale-90">
+<span class="material-symbols-outlined text-sm" data-icon="remove">remove</span>
+</button>
+<span class="text-lg font-bold w-4 text-center">2</span>
+<button class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary hover:opacity-90 transition-opacity active:scale-90">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+</button>
+</div>
+</div>
+<!-- Child Ticket -->
+<div class="bg-surface-container-low p-6 rounded-xl flex items-center justify-between">
+<div>
+<h3 class="text-lg font-bold text-on-surface">Child</h3>
+<p class="text-sm text-on-surface-variant tracking-wide">$15.00 (Ages 3-12)</p>
+</div>
+<div class="flex items-center gap-6 bg-surface-container-lowest py-2 px-4 rounded-full shadow-sm">
+<button class="w-8 h-8 rounded-full border border-outline-variant flex items-center justify-center text-primary hover:bg-primary-container transition-colors active:scale-90">
+<span class="material-symbols-outlined text-sm" data-icon="remove">remove</span>
+</button>
+<span class="text-lg font-bold w-4 text-center">1</span>
+<button class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary hover:opacity-90 transition-opacity active:scale-90">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Add-ons: Bento Style -->
+<section class="mb-12">
+<h3 class="text-[10px] uppercase tracking-[0.15em] font-bold text-on-surface-variant mb-6">Enhance Your Visit</h3>
+<div class="grid grid-cols-2 gap-4">
+<!-- Safari Access -->
+<div class="bg-surface-container p-5 rounded-xl flex flex-col justify-between relative overflow-hidden group">
+<div class="mb-8">
+<span class="material-symbols-outlined text-tertiary mb-3 block" data-icon="directions_bus">directions_bus</span>
+<h4 class="font-bold text-on-surface">Safari Access</h4>
+<p class="text-xs text-on-surface-variant mt-1 leading-tight">Guided vehicle tour through the savannah.</p>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-sm font-bold text-primary">+$10.00</span>
+<div class="w-6 h-6 rounded-full bg-tertiary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px] text-on-tertiary-container" data-icon="check" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+</div>
+<!-- Selection Indicator -->
+<div class="absolute inset-0 border-2 border-tertiary rounded-xl pointer-events-none opacity-100"></div>
+</div>
+<!-- Camera Permit -->
+<div class="bg-surface-container-low p-5 rounded-xl flex flex-col justify-between border border-transparent hover:border-outline-variant transition-colors cursor-pointer">
+<div class="mb-8">
+<span class="material-symbols-outlined text-on-surface-variant mb-3 block" data-icon="photo_camera">photo_camera</span>
+<h4 class="font-bold text-on-surface">Camera Permit</h4>
+<p class="text-xs text-on-surface-variant mt-1 leading-tight">Professional photography in designated zones.</p>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-sm font-bold text-on-surface-variant">+$5.00</span>
+<div class="w-6 h-6 rounded-full border border-outline-variant"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Informational Banner -->
+<div class="bg-primary-container/30 rounded-xl p-4 flex gap-4 items-start">
+<span class="material-symbols-outlined text-primary-fixed-variant" data-icon="info">info</span>
+<p class="text-xs text-on-primary-fixed-variant leading-relaxed">
+                Tickets are valid for the selected date only. Children under 3 enter free of charge and do not require a ticket.
+            </p>
+</div>
+</main>
+<!-- Sticky Summary Panel -->
+<footer class="fixed bottom-0 left-0 w-full z-50 bg-[#ffffffcc] dark:bg-stone-900/80 backdrop-blur-xl border-t border-[#abb4b31a] shadow-[0px_-12px_32px_rgba(44,52,51,0.06)]">
+<div class="max-w-2xl mx-auto px-6 py-6 pb-safe flex flex-col gap-4">
+<div class="flex justify-between items-end">
+<div>
+<p class="text-[10px] uppercase tracking-[0.05em] text-on-surface-variant font-bold mb-1">Current Selection</p>
+<p class="text-sm text-on-surface font-medium">2 Adults, 1 Child + Safari</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] uppercase tracking-[0.05em] text-on-surface-variant font-bold mb-1">Total</p>
+<p class="text-2xl font-extrabold text-on-surface tracking-tighter">$75.00</p>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-4 rounded-full font-bold tracking-tight hover:opacity-90 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+                Continue to Payment
+                <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</footer>
+<!-- Bottom Navigation Shell (Only visible on top-level, hidden here for focused task) -->
+<!-- Navigation suppressed per 'Semantic Shell Mandate' for task-focused journey -->
+</body></html>

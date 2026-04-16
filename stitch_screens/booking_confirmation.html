@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Booking Confirmed | Civic Naturalist Zoo</title>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-high": "#e3e9e8",
+                      "secondary-dim": "#515451",
+                      "outline": "#747c7c",
+                      "on-surface": "#2c3433",
+                      "on-primary-fixed": "#274635",
+                      "tertiary-fixed-dim": "#d8e1b7",
+                      "surface": "#f9f9f8",
+                      "primary-fixed": "#c7ebd4",
+                      "secondary": "#5d605d",
+                      "surface-bright": "#f9f9f8",
+                      "tertiary": "#5a6341",
+                      "tertiary-dim": "#4e5736",
+                      "on-primary-container": "#395847",
+                      "on-surface-variant": "#586160",
+                      "on-error": "#fff7f6",
+                      "error-dim": "#4e0309",
+                      "surface-container-highest": "#dce4e3",
+                      "primary-container": "#c7ebd4",
+                      "on-tertiary-fixed": "#404828",
+                      "secondary-fixed-dim": "#d3d5d1",
+                      "primary-fixed-dim": "#baddc6",
+                      "secondary-container": "#e1e3df",
+                      "error-container": "#fe8983",
+                      "on-secondary-fixed-variant": "#595c59",
+                      "on-primary-fixed-variant": "#436250",
+                      "inverse-primary": "#d8fce4",
+                      "tertiary-fixed": "#e7f0c4",
+                      "on-secondary": "#f8f9f5",
+                      "on-secondary-fixed": "#3d403d",
+                      "on-tertiary-fixed-variant": "#5c6442",
+                      "surface-container": "#eaefee",
+                      "primary": "#466553",
+                      "surface-container-lowest": "#ffffff",
+                      "primary-dim": "#3a5947",
+                      "secondary-fixed": "#e1e3df",
+                      "error": "#9f403d",
+                      "on-secondary-container": "#4f524f",
+                      "surface-variant": "#dce4e3",
+                      "background": "#f9f9f8",
+                      "inverse-surface": "#0c0f0e",
+                      "on-background": "#2c3433",
+                      "on-tertiary": "#f4fed1",
+                      "on-tertiary-container": "#525a39",
+                      "tertiary-container": "#e7f0c4",
+                      "outline-variant": "#abb4b3",
+                      "surface-tint": "#466553",
+                      "inverse-on-surface": "#9b9d9d",
+                      "surface-dim": "#d2dcdb",
+                      "on-error-container": "#752121",
+                      "surface-container-low": "#f1f4f3",
+                      "on-primary": "#e1ffea"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "fontFamily": {
+                      "headline": ["Public Sans"],
+                      "body": ["Public Sans"],
+                      "label": ["Public Sans"]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        body { font-family: 'Public Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .qr-gradient {
+            background: linear-gradient(135deg, #466553 0%, #3a5947 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen pb-24">
+<!-- TopAppBar Component (Transactional/Success Style) -->
+<header class="docked full-width top-0 flex items-center w-full px-6 py-4 h-16 bg-[#f9f9f8] dark:bg-zinc-950 sticky z-50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#466553] dark:text-[#5d856d]" data-icon="check_circle">check_circle</span>
+<h1 class="font-['Public_Sans'] tracking-tight font-bold text-on-surface text-lg">Booking Confirmed</h1>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-6 pt-8">
+<!-- Progress Indicator -->
+<div class="mb-12">
+<div class="flex justify-between items-center mb-4">
+<span class="text-[11px] uppercase tracking-wider font-bold text-primary">Step 5 of 5: Confirmation</span>
+<span class="text-[11px] uppercase tracking-wider font-bold text-primary">100% Complete</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary w-full"></div>
+</div>
+</div>
+<!-- Success Message Cluster -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start mb-16">
+<div class="md:col-span-7">
+<h2 class="text-4xl md:text-5xl font-extrabold tracking-tighter text-on-surface mb-6">Booking Successful!</h2>
+<p class="text-on-surface-variant text-lg leading-relaxed max-w-md">
+                    Thank you for supporting our conservation efforts. Your tickets have been issued and a confirmation email has been sent to your registered address.
+                </p>
+<div class="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-y-8 gap-x-12">
+<div>
+<span class="block text-[11px] uppercase tracking-wider font-bold text-outline mb-1">Booking ID</span>
+<span class="text-xl font-bold font-mono tracking-tight">#ZOO-9928374</span>
+</div>
+<div>
+<span class="block text-[11px] uppercase tracking-wider font-bold text-outline mb-1">Ticket Count</span>
+<span class="text-xl font-bold">2 Adults, 1 Child</span>
+</div>
+<div class="sm:col-span-2">
+<span class="block text-[11px] uppercase tracking-wider font-bold text-outline mb-1">Selected Date &amp; Time</span>
+<span class="text-xl font-bold">Oct 6, 2023, 09:00 — 11:00</span>
+</div>
+</div>
+</div>
+<!-- Ticket Card (Asymmetric Layout) -->
+<div class="md:col-span-5">
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-[0px_12px_32px_rgba(44,52,51,0.06)] relative overflow-hidden">
+<!-- Ticket Header Tonal Shift -->
+<div class="absolute top-0 right-0 w-32 h-32 bg-tertiary-container/30 -mr-16 -mt-16 rounded-full blur-3xl"></div>
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-full flex justify-between items-center mb-8">
+<span class="font-extrabold text-primary tracking-tighter uppercase text-xs">Admission Pass</span>
+<span class="material-symbols-outlined text-outline-variant" data-icon="qr_code_2">qr_code_2</span>
+</div>
+<!-- QR Code Area -->
+<div class="bg-white p-4 rounded-xl shadow-inner border border-outline-variant/10 mb-8">
+<div class="w-48 h-48 bg-surface-container-highest flex items-center justify-center relative">
+<img alt="Scan-ready QR code for entry" class="w-full h-full mix-blend-multiply opacity-90" data-alt="A clean, sharp black and white QR code on a light gray background, professionally centered for ticket scanning" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZ6yxk6NJNoVHl4r00Ap0smlaURKSM0W-sW-1343p-oei8siOZYqxD22FgFxNU5VBHvsZyGOWlWp7v8oVR5opxwpEL5tOAURpmiKiY7hSyRqoimdlUOqIZuI25OkKIijHMWlj9Nz6OmCyFnciNlbViciObTDLJ6UOF_9k3t9aYkc-3KgetDi--44auvW0lgRR7ACWK5hfKmaJOrKhw2ptB2Zvkv5eDTywG0RQ-Y0YA6ER0Vo5rbYfyU6smZJbJrYwl-BP9BXReZ3I"/>
+</div>
+</div>
+<div class="text-center w-full">
+<p class="text-[11px] uppercase tracking-widest font-bold text-outline-variant mb-4">Present at Main Gate</p>
+<div class="flex flex-col gap-3">
+<button class="w-full bg-primary text-on-primary py-3.5 px-6 rounded-lg font-bold text-sm flex items-center justify-center gap-2 active:scale-95 duration-150 transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="download">download</span>
+                                    Download PDF
+                                </button>
+<button class="w-full bg-surface-container-high text-on-primary-container py-3.5 px-6 rounded-lg font-bold text-sm flex items-center justify-center gap-2 hover:bg-surface-container-highest active:scale-95 duration-150 transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="mail">mail</span>
+                                    Send to Email
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Preparation Tips (Editorial Layout) -->
+<section class="mt-20 pt-16 border-t border-outline-variant/15">
+<h3 class="text-2xl font-extrabold tracking-tight mb-8">Preparing for your visit</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Info Cluster 1 -->
+<div class="bg-surface-container-low p-6 rounded-xl">
+<span class="material-symbols-outlined text-tertiary mb-4" data-icon="forest">forest</span>
+<h4 class="font-bold mb-2">Sustainable Travel</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">Consider using the Greenway Shuttle. Present your ticket for a 20% discount on the fare.</p>
+</div>
+<!-- Info Cluster 2 -->
+<div class="bg-surface-container-low p-6 rounded-xl">
+<span class="material-symbols-outlined text-tertiary mb-4" data-icon="wb_sunny">wb_sunny</span>
+<h4 class="font-bold mb-2">Weather Ready</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">Outdoor exhibits are fully open. We recommend comfortable walking shoes and hydration.</p>
+</div>
+<!-- Info Cluster 3 -->
+<div class="bg-surface-container-low p-6 rounded-xl">
+<span class="material-symbols-outlined text-tertiary mb-4" data-icon="map">map</span>
+<h4 class="font-bold mb-2">Digital Guide</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">Download our interactive sanctuary map to find scheduled feeding times and exhibit details.</p>
+</div>
+</div>
+</section>
+<!-- Banner Image (Asymmetric Bleed Effect) -->
+<div class="mt-20 h-64 w-full rounded-2xl overflow-hidden relative group">
+<img alt="Lion in lush greenery" class="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700" data-alt="Majestic lion resting in tall golden grass and lush green foliage with soft cinematic afternoon lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHGex359T7nXeZnZdSDo8pTSLKxF_CBQR609iSXH26TYYQhQwtzqE5sjdATjFJmEIsudloTOh2O1ygr2bu4sBfLcB-J7z1R2lP1ZFXX51FWPlHjg4iFNc4KTiK3LV-FhVaD2UItYlvMM5I6DtXujcdUNdmQqDkreVzCKt-lzo3iyrXzkT4Vx_vi2g-SwqsizD_iDYLCM5FVRjRtxUbSfvD8d_fRbWb5yVn1-LtsjJAI6HuJIWtvI5DlhiW0HgYoySCgHuYigf1Psw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-8">
+<p class="text-white font-bold text-xl tracking-tight max-w-xs">We can't wait to see you at the Sanctuary.</p>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Suppressed for transactional focus per shell visibility rules, but included if user navigates back to top-level later. For this specific page, we follow the "suppress" rule for transactional flow, but here is a placeholder of how it would look in the app shell for consistent reference) -->
+<!-- Note: Strictly for UI demonstration, visibility is usually toggled based on "Destination Rule" -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border-t border-[#abb4b3]/15 shadow-[0px_-4px_16px_rgba(44,52,51,0.04)] md:hidden">
+<a class="flex flex-col items-center justify-center text-[#586160] dark:text-zinc-400 px-5 py-1.5 hover:text-[#466553] dark:hover:text-white active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-['Public_Sans'] text-[11px] uppercase tracking-wider font-semibold">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#e7f0c4] dark:bg-[#525a39]/30 text-[#2c3433] dark:text-[#e7f0c4] rounded-xl px-5 py-1.5 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="confirmation_number">confirmation_number</span>
+<span class="font-['Public_Sans'] text-[11px] uppercase tracking-wider font-semibold">My Tickets</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#586160] dark:text-zinc-400 px-5 py-1.5 hover:text-[#466553] dark:hover:text-white active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-['Public_Sans'] text-[11px] uppercase tracking-wider font-semibold">Account</span>
+</a>
+</nav>
+</body></html>
