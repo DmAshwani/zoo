@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#eaefee",
+                        "error-dim": "#4e0309",
+                        "secondary-container": "#e1e3df",
+                        "primary-fixed": "#c7ebd4",
+                        "on-tertiary-container": "#525a39",
+                        "surface-variant": "#dce4e3",
+                        "primary-fixed-dim": "#baddc6",
+                        "background": "#f9f9f8",
+                        "on-primary-container": "#395847",
+                        "on-tertiary-fixed-variant": "#5c6442",
+                        "on-error": "#fff7f6",
+                        "error": "#9f403d",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#5a6341",
+                        "on-secondary-fixed": "#3d403d",
+                        "error-container": "#fe8983",
+                        "primary-container": "#c7ebd4",
+                        "surface-container-low": "#f1f4f3",
+                        "surface-container-high": "#e3e9e8",
+                        "on-primary-fixed-variant": "#436250",
+                        "surface-tint": "#466553",
+                        "outline-variant": "#abb4b3",
+                        "on-secondary-container": "#4f524f",
+                        "secondary-dim": "#515451",
+                        "tertiary-fixed-dim": "#d8e1b7",
+                        "on-secondary-fixed-variant": "#595c59",
+                        "surface-bright": "#f9f9f8",
+                        "on-surface": "#2c3433",
+                        "inverse-primary": "#d8fce4",
+                        "primary-dim": "#3a5947",
+                        "inverse-surface": "#0c0f0e",
+                        "secondary": "#5d605d",
+                        "secondary-fixed-dim": "#d3d5d1",
+                        "on-error-container": "#752121",
+                        "surface-dim": "#d2dcdb",
+                        "on-background": "#2c3433",
+                        "on-secondary": "#f8f9f5",
+                        "on-tertiary-fixed": "#404828",
+                        "surface": "#f9f9f8",
+                        "secondary-fixed": "#e1e3df",
+                        "outline": "#747c7c",
+                        "surface-container-highest": "#dce4e3",
+                        "on-primary": "#e1ffea",
+                        "inverse-on-surface": "#9b9d9d",
+                        "tertiary-dim": "#4e5736",
+                        "tertiary-fixed": "#e7f0c4",
+                        "on-primary-fixed": "#274635",
+                        "tertiary-container": "#e7f0c4",
+                        "primary": "#466553",
+                        "on-surface-variant": "#586160",
+                        "on-tertiary": "#f4fed1"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Public Sans"],
+                        "body": ["Public Sans"],
+                        "label": ["Public Sans"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Public Sans', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-nav { background: rgba(249, 249, 248, 0.8); backdrop-filter: blur(24px); }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 glass-nav shadow-[0px_12px_32px_rgba(44,52,51,0.06)] px-12 py-4 flex justify-between items-center max-w-full mx-auto">
+<div class="text-2xl font-bold tracking-tighter text-emerald-900 dark:text-emerald-50">Civic Naturalist Zoo</div>
+<div class="hidden md:flex items-center space-x-8 font-public-sans tracking-tight text-on-surface">
+<a class="text-stone-600 dark:text-stone-400 hover:text-emerald-700 hover:bg-emerald-50/50 transition-colors" href="#">Exhibits</a>
+<a class="text-stone-600 dark:text-stone-400 hover:text-emerald-700 hover:bg-emerald-50/50 transition-colors" href="#">Conservation</a>
+<a class="text-stone-600 dark:text-stone-400 hover:text-emerald-700 hover:bg-emerald-50/50 transition-colors" href="#">Tickets</a>
+<a class="text-stone-600 dark:text-stone-400 hover:text-emerald-700 hover:bg-emerald-50/50 transition-colors" href="#">Visit</a>
+</div>
+<div class="flex items-center space-x-4">
+<button class="px-6 py-2 text-stone-600 dark:text-stone-400 font-medium hover:text-emerald-700 transition-colors">Support Us</button>
+<button class="px-6 py-2 bg-primary text-on-primary rounded-lg font-semibold scale-95 duration-200 ease-in-out hover:bg-primary-dim">Sign In</button>
+</div>
+</nav>
+<!-- Hero Section -->
+<section class="relative min-h-screen flex items-center pt-20 overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover grayscale-[20%] opacity-90" data-alt="Cinematic wide shot of a glass conservatory nestled in lush tropical botanical gardens with morning mist and soft sun rays filtering through leaves" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCAHBPR6rg9ww7zCvQDEbJ-U6i18e3dIxocjsUE-NVkMrakrUYkXTA8goTxwHffkoIQLu5YW5_O6aPsvNt4WtIcDhWti6RMIQGLGJtVIzs0PXj-nfvK1qaZMGO69x6QMA55smXlbdXSez2ZOCPGc3YjgmAsjs9Oz-TNWpJEv8dr1CFtoM5Z1wHdG_lVudbhEHQaAnQBD9Jva0x7SfZFUSc6wEtpNyxS2kEkCDcgIyooo5ItH-LVifRqh1tOmOGm_aYne940qC4PU0"/>
+<div class="absolute inset-0 bg-gradient-to-br from-primary/40 to-transparent"></div>
+</div>
+<div class="container mx-auto px-12 relative z-10 grid grid-cols-12 gap-8">
+<div class="col-span-12 lg:col-span-7">
+<span class="inline-block px-4 py-1 bg-tertiary-container text-on-tertiary-container rounded-full text-sm font-bold tracking-widest uppercase mb-6">Established 1894</span>
+<h1 class="text-7xl font-extrabold tracking-tighter text-on-primary mb-8 leading-[0.95]">Architecting <br/>the Natural World.</h1>
+<p class="text-xl text-on-primary/90 max-w-xl mb-12 font-light leading-relaxed">Experience a sanctuary where civic duty meets biological wonder. Our botanical gardens and zoo are curated to foster deep connection with our planet's most vital species.</p>
+<div class="flex flex-wrap gap-4">
+<button class="px-10 py-5 bg-surface-container-lowest text-primary text-lg font-bold rounded-xl shadow-xl hover:bg-primary-container transition-all">Book Tickets</button>
+<button class="px-10 py-5 border-2 border-on-primary/30 text-on-primary text-lg font-bold rounded-xl backdrop-blur-md hover:bg-on-primary/10 transition-all">Explore Exhibits</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Utility & Info Clusters (Bento) -->
+<section class="py-24 px-12 bg-surface">
+<div class="container mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<!-- Opening Hours -->
+<div class="md:col-span-1 bg-surface-container-low p-8 rounded-xl flex flex-col justify-between">
+<div>
+<span class="material-symbols-outlined text-primary text-4xl mb-4" data-icon="schedule">schedule</span>
+<h3 class="text-2xl font-bold tracking-tight mb-4">Opening Hours</h3>
+<div class="space-y-3">
+<div class="flex justify-between text-sm">
+<span class="text-on-surface-variant uppercase tracking-wider">Weekday</span>
+<span class="font-bold">09:00 - 18:00</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-on-surface-variant uppercase tracking-wider">Weekend</span>
+<span class="font-bold">08:00 - 20:00</span>
+</div>
+<div class="pt-4 mt-4 border-t border-outline-variant/20">
+<p class="text-xs text-on-surface-variant leading-relaxed">Last entry strictly 60 minutes before closing time.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Pricing Overview -->
+<div class="md:col-span-2 bg-surface-container-high p-8 rounded-xl relative overflow-hidden group">
+<div class="relative z-10 h-full flex flex-col">
+<h3 class="text-3xl font-extrabold tracking-tighter mb-6">Access &amp; Support</h3>
+<div class="grid grid-cols-2 gap-8 flex-grow">
+<div class="bg-surface-container-lowest p-6 rounded-lg shadow-sm">
+<h4 class="font-bold text-lg mb-1">Standard Adult</h4>
+<p class="text-primary font-black text-3xl mb-4">$24.00</p>
+<p class="text-xs text-on-surface-variant uppercase tracking-widest font-bold">Includes Conservatories</p>
+</div>
+<div class="bg-primary text-on-primary p-6 rounded-lg shadow-sm">
+<h4 class="font-bold text-lg mb-1">Annual Member</h4>
+<p class="text-on-primary font-black text-3xl mb-4">$85.00</p>
+<p class="text-xs text-on-primary/70 uppercase tracking-widest font-bold">Unlimited Access</p>
+</div>
+</div>
+</div>
+<div class="absolute -right-8 -bottom-8 opacity-5 group-hover:scale-110 transition-transform duration-700">
+<span class="material-symbols-outlined text-[12rem]" data-icon="park">park</span>
+</div>
+</div>
+<!-- Live Updates -->
+<div class="md:col-span-1 bg-tertiary-container p-8 rounded-xl flex flex-col justify-center">
+<span class="material-symbols-outlined text-on-tertiary-container text-4xl mb-4" data-icon="eco">eco</span>
+<h3 class="text-xl font-bold text-on-tertiary-container mb-2">Botanical Update</h3>
+<p class="text-on-tertiary-container/80 text-sm italic">"The Titan Arum is currently in early bloom phase. Visit Pavilion 4 for viewing."</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Asymmetric Gallery/Exhibit Section -->
+<section class="py-24 bg-surface-container-low overflow-hidden">
+<div class="container mx-auto px-12">
+<div class="flex flex-col md:flex-row gap-16 items-center">
+<div class="w-full md:w-5/12">
+<h2 class="text-5xl font-black tracking-tighter mb-8 leading-none">Curated <br/>Ecosystems.</h2>
+<p class="text-on-surface-variant text-lg leading-relaxed mb-8">Each exhibit at The Civic Naturalist is a masterclass in architectural ecology. We don't just display nature; we reconstruct the atmospheric and geological conditions required for life to flourish.</p>
+<ul class="space-y-6">
+<li class="flex items-start gap-4">
+<span class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="check">check</span>
+</span>
+<div>
+<h4 class="font-bold text-on-surface uppercase tracking-widest text-xs mb-1">Cloud Forest Pavilion</h4>
+<p class="text-sm text-on-surface-variant">Automated misting and temperature control at 1,500m simulation.</p>
+</div>
+</li>
+<li class="flex items-start gap-4">
+<span class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="check">check</span>
+</span>
+<div>
+<h4 class="font-bold text-on-surface uppercase tracking-widest text-xs mb-1">Arid Garden Spire</h4>
+<p class="text-sm text-on-surface-variant">Housing 400+ rare succulent species in a geodesic structure.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="w-full md:w-7/12 relative">
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-4 pt-12">
+<img class="w-full h-[300px] object-cover rounded-xl shadow-xl" data-alt="close up of a vibrant tropical plant leaf with deep ridges and dew drops in soft morning light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmxWtc8HRbX88K6cAyR9DNIl85XUuh0c8cDJnYemzSe3MYDjDg358g8Pwp-zfaZ-EuVxncKbSz_K4xDjTHHO_GSPLIh0m1WNSbd4dedrXcaocdHWFwfO8JVlgz4YMoZvC9JA0ywLvUqRuSol2_zJBbGMnHizcBTqUpKpzE_pPL_hGyVx5bQsd6gsH7YROmHeVyGaHj8vC6e_uk39A96ydKyQmpE3Lmk3wpkr_QGGfiFeJjs9tPgSt5vvX9x48RuCcDLG0Ac7YaAkk"/>
+<img class="w-full h-[400px] object-cover rounded-xl shadow-xl" data-alt="magnificent tiger resting in a shaded jungle enclave with soft green bokeh background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjyO-fWW17XnnPCOT5ooNBwDwl0sA9hu_pCaAY9TMkMa70F5NKYujeT7dJ1SOT4BlvYiMDnMyU-PsJGu0Y83aQCvP0GumKO752A3SIeMtzFO-Vq6QfBYV4cB_Mo7xucbVeGCeeZCV5G-Hi0U7xhqgIZXBm_ybdIHMyOgU_7liT-tfKxk9gb9G9aweCUl_jSxO8CxMJgCaAsxXtobRkR2G6az8nh1YOy2L--qI5OyTiXRXuytkVizU0-K0Vu9T7uoKnuWorWNJdRqE"/>
+</div>
+<div class="space-y-4">
+<img class="w-full h-[400px] object-cover rounded-xl shadow-xl" data-alt="overhead view of a manicured botanical garden with geometric paths and colorful flower beds" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDX9NwdYHOhPytmo7vNdaFCfOUI2K8PPI_kdT0QL8G0sSIh3aqyKHv-sVF16dqoZ8AmTXbxH6DCDbgfeQ1XVku-foqbb7ugW1_7yD4PmDm5R56wwc3iQUeFtCEWdl1ltBDcDtzl-cClwAOjLcV8LEtGmftYHfFwq8CxON9aLa9R8WoB8UwfmNMQ2PRYrsDlT-PIGcELPsEPgElVepnHhai60ox37Hvj2g5L5iW7DzJxwZdLZYlz6epf03AsEqY3e5kiAl6sR3VKvNQ"/>
+<img class="w-full h-[300px] object-cover rounded-xl shadow-xl" data-alt="majestic elephant standing under an acacia tree at sunset with orange and purple sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAeSzTXImPVlejr5cws04f7qXF71goDSTECQe5jR1LL_x5N5m_UlTDs9TFl78QeysGBgpldCStrQ6I1UrgXoCT-lXJwPRtxIZmGJPZ0RNRkw8JddPNHmj0AsHGrmbFk-jCPUo8T5qOOrmBdXRSgSg68YlzBbXA5sx5Oc9-Zwf5vl6gf5XO1-wx8GpWx7HGr2ovi_GXRtE92615krm4mqVevMe8DUM_9dtxeRK46joNAIKnJPZ9eEJuK0cvtdcPqfDZR84vpKNmY8JE"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Conservation CTA (Editorial Style) -->
+<section class="py-32 bg-background">
+<div class="container mx-auto px-12 text-center">
+<div class="max-w-3xl mx-auto">
+<span class="text-xs font-bold uppercase tracking-[0.2em] text-tertiary mb-6 block">Our Mission</span>
+<h2 class="text-6xl font-extrabold tracking-tighter mb-10 leading-[1.1]">Preserving Biodiversity <br/>through Civic Engagement.</h2>
+<p class="text-xl text-on-surface-variant font-light mb-12">We believe that to love nature, one must see it in its most heroic state. Join our conservation efforts today.</p>
+<div class="flex justify-center gap-6">
+<button class="px-12 py-6 bg-primary text-on-primary rounded-lg font-bold text-lg hover:bg-primary-dim transition-all shadow-lg">Become a Member</button>
+<button class="px-12 py-6 border border-outline text-on-surface rounded-lg font-bold text-lg hover:bg-surface-container transition-all">Read Annual Report</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="w-full border-t border-stone-200/50 dark:border-stone-800/50 bg-stone-100 dark:bg-stone-900 py-16">
+<div class="container mx-auto px-12">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-12">
+<div class="text-lg font-bold text-emerald-900 tracking-tighter">Civic Naturalist Botanical Gardens &amp; Zoo</div>
+<div class="flex flex-wrap gap-8 font-public-sans text-sm uppercase tracking-widest">
+<a class="text-stone-500 dark:text-stone-400 hover:text-emerald-600 transition-all opacity-80 hover:opacity-100" href="#">Privacy Policy</a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-emerald-600 transition-all opacity-80 hover:opacity-100" href="#">Accessibility</a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-emerald-600 transition-all opacity-80 hover:opacity-100" href="#">Terms of Service</a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-emerald-600 transition-all opacity-80 hover:opacity-100" href="#">Contact Us</a>
+</div>
+</div>
+<div class="text-stone-400 text-xs text-center border-t border-stone-200/20 pt-8 uppercase tracking-widest">
+                © 2024 Civic Naturalist Botanical Gardens &amp; Zoo. A Sanctuary for Biodiversity.
+            </div>
+</div>
+</footer>
+</body></html>

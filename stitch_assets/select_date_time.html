@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#eaefee",
+                    "error-dim": "#4e0309",
+                    "secondary-container": "#e1e3df",
+                    "primary-fixed": "#c7ebd4",
+                    "on-tertiary-container": "#525a39",
+                    "surface-variant": "#dce4e3",
+                    "primary-fixed-dim": "#baddc6",
+                    "background": "#f9f9f8",
+                    "on-primary-container": "#395847",
+                    "on-tertiary-fixed-variant": "#5c6442",
+                    "on-error": "#fff7f6",
+                    "error": "#9f403d",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary": "#5a6341",
+                    "on-secondary-fixed": "#3d403d",
+                    "error-container": "#fe8983",
+                    "primary-container": "#c7ebd4",
+                    "surface-container-low": "#f1f4f3",
+                    "surface-container-high": "#e3e9e8",
+                    "on-primary-fixed-variant": "#436250",
+                    "surface-tint": "#466553",
+                    "outline-variant": "#abb4b3",
+                    "on-secondary-container": "#4f524f",
+                    "secondary-dim": "#515451",
+                    "tertiary-fixed-dim": "#d8e1b7",
+                    "on-secondary-fixed-variant": "#595c59",
+                    "surface-bright": "#f9f9f8",
+                    "on-surface": "#2c3433",
+                    "inverse-primary": "#d8fce4",
+                    "primary-dim": "#3a5947",
+                    "inverse-surface": "#0c0f0e",
+                    "secondary": "#5d605d",
+                    "secondary-fixed-dim": "#d3d5d1",
+                    "on-error-container": "#752121",
+                    "surface-dim": "#d2dcdb",
+                    "on-background": "#2c3433",
+                    "on-secondary": "#f8f9f5",
+                    "on-tertiary-fixed": "#404828",
+                    "surface": "#f9f9f8",
+                    "secondary-fixed": "#e1e3df",
+                    "outline": "#747c7c",
+                    "surface-container-highest": "#dce4e3",
+                    "on-primary": "#e1ffea",
+                    "inverse-on-surface": "#9b9d9d",
+                    "tertiary-dim": "#4e5736",
+                    "tertiary-fixed": "#e7f0c4",
+                    "on-primary-fixed": "#274635",
+                    "tertiary-container": "#e7f0c4",
+                    "primary": "#466553",
+                    "on-surface-variant": "#586160",
+                    "on-tertiary": "#f4fed1"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Public Sans"],
+                    "body": ["Public Sans"],
+                    "label": ["Public Sans"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Public Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .asymmetric-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 4rem;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-stone-50/80 dark:bg-stone-950/80 backdrop-blur-md shadow-[0px_12px_32px_rgba(44,52,51,0.06)] flex justify-between items-center px-12 py-4 max-w-full mx-auto font-public-sans tracking-tight text-on-surface">
+<div class="text-2xl font-bold tracking-tighter text-emerald-900 dark:text-emerald-50">
+            Civic Naturalist Zoo
+        </div>
+<div class="hidden md:flex items-center space-x-8">
+<a class="text-stone-600 dark:text-stone-400 hover:text-emerald-700 transition-colors" href="#">Exhibits</a>
+<a class="text-stone-600 dark:text-stone-400 hover:text-emerald-700 transition-colors" href="#">Conservation</a>
+<a class="text-emerald-800 dark:text-emerald-400 font-semibold border-b-2 border-emerald-800" href="#">Tickets</a>
+<a class="text-stone-600 dark:text-stone-400 hover:text-emerald-700 transition-colors" href="#">Visit</a>
+</div>
+<div class="flex items-center space-x-6">
+<button class="text-stone-600 dark:text-stone-400 hover:text-emerald-700 transition-colors">Sign In</button>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-lg font-semibold hover:bg-primary-dim transition-all scale-95 duration-200 ease-in-out">Support Us</button>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-32 pb-20 px-12 max-w-7xl mx-auto w-full">
+<!-- Progress Indicator -->
+<div class="mb-16">
+<div class="flex items-center justify-between max-w-2xl mx-auto mb-4">
+<div class="flex flex-col items-center gap-2">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold">1</div>
+<span class="text-xs font-bold uppercase tracking-widest text-primary">Schedule</span>
+</div>
+<div class="flex-grow h-[2px] bg-surface-container-highest mx-4 mb-6"></div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center font-bold">2</div>
+<span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Tickets</span>
+</div>
+<div class="flex-grow h-[2px] bg-surface-container-highest mx-4 mb-6"></div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center font-bold">3</div>
+<span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Review</span>
+</div>
+</div>
+<h1 class="text-4xl font-extrabold tracking-tight text-center text-on-surface mt-8">Plan Your Expedition</h1>
+<p class="text-on-surface-variant text-center mt-2 max-w-xl mx-auto">Select your preferred date and entry window to ensure an intimate experience with our flora and fauna.</p>
+</div>
+<div class="asymmetric-grid">
+<!-- Left: Calendar Section -->
+<section class="space-y-8">
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-[0px_12px_32px_rgba(44,52,51,0.06)]">
+<div class="flex items-center justify-between mb-8">
+<h2 class="text-xl font-bold tracking-tight">September 2024</h2>
+<div class="flex gap-4">
+<button class="p-2 hover:bg-surface-container rounded-lg transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="p-2 hover:bg-surface-container rounded-lg transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Calendar Grid -->
+<div class="grid grid-cols-7 gap-2">
+<!-- Days Header -->
+<div class="text-center py-2 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Sun</div>
+<div class="text-center py-2 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Mon</div>
+<div class="text-center py-2 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Tue</div>
+<div class="text-center py-2 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Wed</div>
+<div class="text-center py-2 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Thu</div>
+<div class="text-center py-2 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Fri</div>
+<div class="text-center py-2 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Sat</div>
+<!-- Row 1 -->
+<div class="h-20 bg-surface-dim opacity-40 rounded flex items-center justify-center text-on-surface-variant">25</div>
+<div class="h-20 bg-surface-dim opacity-40 rounded flex items-center justify-center text-on-surface-variant">26</div>
+<div class="h-20 bg-surface-dim opacity-40 rounded flex items-center justify-center text-on-surface-variant">27</div>
+<div class="h-20 bg-surface-dim opacity-40 rounded flex items-center justify-center text-on-surface-variant">28</div>
+<div class="h-20 bg-surface-dim opacity-40 rounded flex items-center justify-center text-on-surface-variant">29</div>
+<div class="h-20 bg-surface-dim opacity-40 rounded flex items-center justify-center text-on-surface-variant">30</div>
+<div class="h-20 bg-surface-container-low hover:bg-surface-container transition-colors rounded flex flex-col items-center justify-center cursor-pointer">
+<span class="font-bold">1</span>
+</div>
+<!-- Row 2 -->
+<div class="h-20 bg-surface-container-low hover:bg-surface-container transition-colors rounded flex flex-col items-center justify-center cursor-pointer">
+<span class="font-bold">2</span>
+</div>
+<div class="h-20 bg-surface-container-low hover:bg-surface-container transition-colors rounded flex flex-col items-center justify-center cursor-pointer">
+<span class="font-bold">3</span>
+</div>
+<div class="h-20 bg-surface-container-low hover:bg-surface-container transition-colors rounded flex flex-col items-center justify-center cursor-pointer">
+<span class="font-bold">4</span>
+</div>
+<div class="h-20 bg-surface-container-low hover:bg-surface-container transition-colors rounded flex flex-col items-center justify-center cursor-pointer">
+<span class="font-bold">5</span>
+</div>
+<div class="h-20 bg-surface-container-low hover:bg-surface-container transition-colors rounded flex flex-col items-center justify-center cursor-pointer">
+<span class="font-bold">6</span>
+</div>
+<div class="h-20 bg-surface-container-low hover:bg-surface-container transition-colors rounded flex flex-col items-center justify-center cursor-pointer">
+<span class="font-bold">7</span>
+</div>
+<div class="h-20 bg-surface-container-low hover:bg-surface-container transition-colors rounded flex flex-col items-center justify-center cursor-pointer">
+<span class="font-bold">8</span>
+</div>
+<!-- Row 3 (Today/Selected) -->
+<div class="h-20 bg-surface-container-low hover:bg-surface-container transition-colors rounded flex flex-col items-center justify-center cursor-pointer">
+<span class="font-bold">9</span>
+</div>
+<div class="h-20 bg-primary text-on-primary rounded flex flex-col items-center justify-center cursor-pointer relative shadow-lg">
+<span class="font-bold">10</span>
+<span class="text-[10px] uppercase font-bold tracking-tighter mt-1">Selected</span>
+</div>
+<div class="h-20 bg-surface-container-low hover:bg-surface-container transition-colors rounded flex flex-col items-center justify-center cursor-pointer">
+<span class="font-bold">11</span>
+</div>
+<div class="h-20 bg-surface-container-low hover:bg-surface-container transition-colors rounded flex flex-col items-center justify-center cursor-pointer">
+<span class="font-bold">12</span>
+</div>
+<div class="h-20 bg-surface-container-low hover:bg-surface-container transition-colors rounded flex flex-col items-center justify-center cursor-pointer">
+<span class="font-bold">13</span>
+</div>
+<div class="h-20 bg-surface-container-low hover:bg-surface-container transition-colors rounded flex flex-col items-center justify-center cursor-pointer">
+<span class="font-bold">14</span>
+</div>
+<div class="h-20 bg-surface-container-low hover:bg-surface-container transition-colors rounded flex flex-col items-center justify-center cursor-pointer">
+<span class="font-bold">15</span>
+</div>
+</div>
+</div>
+<!-- Naturalist Tips (Bento-lite) -->
+<div class="grid grid-cols-2 gap-6">
+<div class="bg-tertiary-container p-6 rounded-xl flex gap-4 items-start">
+<div class="bg-surface-container-lowest p-2 rounded-lg">
+<span class="material-symbols-outlined text-tertiary" data-icon="light_mode">light_mode</span>
+</div>
+<div>
+<h4 class="font-bold text-on-tertiary-container">Early Bird Advantage</h4>
+<p class="text-sm text-on-tertiary-fixed-variant mt-1">Animals are most active before 10:00 AM. Perfect for photography.</p>
+</div>
+</div>
+<div class="bg-surface-container p-6 rounded-xl flex gap-4 items-start overflow-hidden relative">
+<div class="relative z-10">
+<h4 class="font-bold">Conservation Spotlight</h4>
+<p class="text-sm text-on-surface-variant mt-1">Visit the Aviary at noon for the rare orchid pollination display.</p>
+</div>
+<div class="absolute right-[-10%] bottom-[-20%] w-24 h-24 opacity-20 transform rotate-12">
+<span class="material-symbols-outlined text-[80px]" data-icon="potted_plant">potted_plant</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Right: Entry Windows -->
+<section class="flex flex-col gap-8">
+<div class="bg-surface-container-low p-8 rounded-xl flex flex-col h-full">
+<h3 class="text-lg font-bold tracking-tight mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">schedule</span>
+                        Available Entry Windows
+                    </h3>
+<div class="space-y-4 flex-grow overflow-y-auto pr-2">
+<!-- Entry Card 1 -->
+<div class="bg-surface-container-lowest p-5 rounded-lg border-l-4 border-primary flex items-center justify-between group cursor-pointer hover:shadow-md transition-all">
+<div>
+<span class="text-sm font-bold uppercase tracking-widest text-primary">Morning</span>
+<p class="text-xl font-bold text-on-surface">09:00 AM — 11:00 AM</p>
+<p class="text-xs text-on-surface-variant mt-1">High Availability • Quietest Period</p>
+</div>
+<div class="w-6 h-6 rounded-full border-2 border-primary flex items-center justify-center">
+<div class="w-3 h-3 bg-primary rounded-full"></div>
+</div>
+</div>
+<!-- Entry Card 2 -->
+<div class="bg-surface-container-lowest p-5 rounded-lg border-l-4 border-transparent flex items-center justify-between group cursor-pointer hover:bg-surface-container transition-all">
+<div>
+<span class="text-sm font-bold uppercase tracking-widest text-on-surface-variant">Midday</span>
+<p class="text-xl font-bold text-on-surface">11:30 AM — 01:30 PM</p>
+<p class="text-xs text-on-surface-variant mt-1">Limited Space • Peak Lighting</p>
+</div>
+<div class="w-6 h-6 rounded-full border-2 border-outline-variant"></div>
+</div>
+<!-- Entry Card 3 -->
+<div class="bg-surface-container-lowest p-5 rounded-lg border-l-4 border-transparent flex items-center justify-between group cursor-pointer hover:bg-surface-container transition-all">
+<div>
+<span class="text-sm font-bold uppercase tracking-widest text-on-surface-variant">Afternoon</span>
+<p class="text-xl font-bold text-on-surface">02:00 PM — 04:00 PM</p>
+<p class="text-xs text-on-surface-variant mt-1">Moderate Availability • Feeding Time</p>
+</div>
+<div class="w-6 h-6 rounded-full border-2 border-outline-variant"></div>
+</div>
+<!-- Entry Card 4 -->
+<div class="bg-surface-container-lowest p-5 rounded-lg border-l-4 border-transparent opacity-60 flex items-center justify-between">
+<div>
+<span class="text-sm font-bold uppercase tracking-widest text-error">Sold Out</span>
+<p class="text-xl font-bold text-on-surface italic line-through">04:30 PM — 06:30 PM</p>
+<p class="text-xs text-error-container mt-1">Sunset Expedition Full</p>
+</div>
+<span class="material-symbols-outlined text-error">block</span>
+</div>
+</div>
+<div class="mt-8 pt-8 border-t border-outline-variant/20">
+<div class="flex items-center justify-between mb-6">
+<div>
+<p class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Selected Visit</p>
+<p class="font-bold">Sept 10, 2024 • 09:00 AM</p>
+</div>
+<div class="text-right">
+<p class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Starting From</p>
+<p class="text-xl font-bold text-primary">$24.00</p>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-4 rounded-lg font-bold text-lg hover:bg-primary-dim transition-all flex items-center justify-center gap-3">
+                            Continue to Tickets
+                            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+<!-- Featured Imagery Cluster -->
+<section class="mt-24">
+<h3 class="text-xs font-bold uppercase tracking-[0.2em] text-on-surface-variant mb-8 text-center">Seasonal Highlights</h3>
+<div class="grid grid-cols-12 gap-6 h-[400px]">
+<div class="col-span-5 rounded-xl overflow-hidden relative group">
+<img class="w-full h-full object-cover grayscale-[0.2] group-hover:scale-105 transition-transform duration-700" data-alt="dramatic close-up of a majestic lion resting in tall golden grass at sunrise with soft atmospheric lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOVqXft81EZWWu-zKyKKQlo22PBKBHDTcdWI17j20-eDzEWJH_10cpPNNaPGgXqA0fF30S1eu00HV0QoGAhFEpPsQoL-_gBd30kX0Z0GbWp8Qd9l7MjO_estzW6Ow42MsmFHO1cr7uX2i236QDuTtDeBdSlp6-4i-ByyiEQFRi4U8fCEWcA6aU3DdJHmQd4FiQSWCNdBSAUujalkpNFyFlvej8jH2DIUOU4WzgUiTz-Tz7xQ1WRaXJAGSRFwJ3qbHRf1h-mB-ruAY"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="absolute bottom-6 left-6 text-white">
+<span class="text-[10px] font-bold uppercase tracking-widest opacity-80">African Savanna</span>
+<h4 class="text-xl font-bold">Lion Pride Watch</h4>
+</div>
+</div>
+<div class="col-span-3 rounded-xl overflow-hidden relative group">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="vibrant tropical greenhouse with massive fern leaves and dappled sunlight filtering through glass roof" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFcxDZZXEr0vsZFwH-r6QUZW48en8lXjaP4mJs4yGNjMiRWvpxqkEquxBWPvdmX-n3NxLluHBBjiD8zZ6IU6EwN37XKNggW6BzYYNotTXFpnLp3aUWHtLBWMglvGMEx4m7HyV7QZ6WNtfbfzTVngPE6D405M30v-vjdPp1QdNnF_vUzIDevlCGlP024y5mGxuKFii5CzWmlDjPQgdBGDk1KZAglSwduVb2Ril9DcAKG3U41w2JNi3ep2pqz-_AvLQuPhWuxnJ_I4E"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="absolute bottom-6 left-6 text-white">
+<span class="text-[10px] font-bold uppercase tracking-widest opacity-80">Botanical</span>
+<h4 class="text-xl font-bold">Fern Gully</h4>
+</div>
+</div>
+<div class="col-span-4 rounded-xl overflow-hidden relative group">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="serene high-angle view of a red panda climbing a bamboo branch against a soft bokeh background of lush forest" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqD4J-xPwrFfIlHiBxtQjXfxm8_KhKPO-FbWKc5_rh-4R6b2muOlzSkx1lbOS-QD0VrjILgOh7x8SHtKC4bSvMEUOCAwuL2lZZR2qKnegIjxhZBRCWc3SCURjWBOa6BxMiNjIBQAaAsPemIJXI0P4CKmU_l74hZ_m2_cios9BiP6P2j9r98LgXZOGNQ0jmILS-3BMT-oAF8M5aROc7fPrt9cJmwe0b6j3h7sXXXpLxIRGJ-6D7-bDLJ5IPziU1k4eppk6VWPA_cIc"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="absolute bottom-6 left-6 text-white">
+<span class="text-[10px] font-bold uppercase tracking-widest opacity-80">Asia Trail</span>
+<h4 class="text-xl font-bold">Red Panda Nursery</h4>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full border-t border-stone-200/50 dark:border-stone-800/50 bg-stone-100 dark:bg-stone-900 flex flex-col md:flex-row justify-between items-center px-12 py-8 font-public-sans text-sm uppercase tracking-widest text-emerald-900 dark:text-emerald-50">
+<div class="flex flex-col gap-2">
+<span class="text-lg font-bold text-emerald-900">Civic Naturalist</span>
+<span class="text-[10px] opacity-60 normal-case tracking-normal">© 2024 Civic Naturalist Botanical Gardens &amp; Zoo. A Sanctuary for Biodiversity.</span>
+</div>
+<div class="flex gap-8 mt-6 md:mt-0">
+<a class="text-stone-500 dark:text-stone-400 hover:text-emerald-600 transition-all opacity-80 hover:opacity-100" href="#">Privacy Policy</a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-emerald-600 transition-all opacity-80 hover:opacity-100" href="#">Accessibility</a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-emerald-600 transition-all opacity-80 hover:opacity-100" href="#">Terms of Service</a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-emerald-600 transition-all opacity-80 hover:opacity-100" href="#">Contact Us</a>
+</div>
+</footer>
+</body></html>
