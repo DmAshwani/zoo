@@ -57,7 +57,10 @@ const AdminSidebar = () => {
                     <span className="font-public-sans text-sm tracking-tight">Back to Site</span>
                 </button>
                 <button
-                    onClick={logout}
+                    onClick={() => {
+                        logout();
+                        navigate('/');
+                    }}
                     className="w-full flex items-center text-on-surface-variant dark:text-stone-400 font-medium px-6 py-3 hover:bg-surface-container-high dark:hover:bg-stone-800 rounded-r-full transition-colors duration-200"
                 >
                     <span className="material-symbols-outlined mr-4">logout</span>

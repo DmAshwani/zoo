@@ -231,8 +231,8 @@ const DateTimePage = () => {
                                     </div>
                                 ) : slots.length > 0 ? (
                                     slots.map(slot => {
-                                        const available = slot.capacity - slot.currentBookings;
-                                        const isSoldOut = available <= 0 || !slot.active;
+                                        const available = slot.availableCapacity;
+                                        const isSoldOut = available <= 0 || !slot.isActive;
                                         const isSelected = selectedSlot?.id === slot.id;
 
                                         if (isSoldOut) {
@@ -241,7 +241,7 @@ const DateTimePage = () => {
                                                     <div>
                                                         <span className="text-[10px] font-bold uppercase tracking-widest text-error">Sold Out / Inactive</span>
                                                         <p className="text-xl font-bold text-on-surface italic line-through">{formatAmPm(slot.startTime)} — {formatAmPm(slot.endTime)}</p>
-                                                        <p className="text-[10px] text-error-container mt-1">Re-populating species data. Please check another date.</p>
+                                                        <p className="text-[10px] text-error-container mt-1">This slot is currently full or unavailable.</p>
                                                     </div>
                                                     <span className="material-symbols-outlined text-error">block</span>
                                                 </div>
@@ -256,7 +256,7 @@ const DateTimePage = () => {
                                             >
                                                 <div>
                                                     <div className="flex items-center gap-2">
-                                                        <span className={`text-[10px] font-bold uppercase tracking-widest ${isSelected ? 'text-primary' : 'text-on-surface-variant'}`}>{slot.name || 'General Admission'}</span>
+                                                        <span className={`text-[10px] font-bold uppercase tracking-widest ${isSelected ? 'text-primary' : 'text-on-surface-variant'}`}>General Admission</span>
                                                         {available < 10 && <span className="bg-error/10 text-error text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-tighter animate-pulse">Filling Fast</span>}
                                                     </div>
                                                     <p className="text-xl font-bold text-on-surface">{formatAmPm(slot.startTime)} — {formatAmPm(slot.endTime)}</p>
@@ -291,7 +291,7 @@ const DateTimePage = () => {
                                     </div>
                                     <div className="text-right">
                                         <p className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Starting From</p>
-                                        <p className="text-xl font-bold text-primary">$32.00</p>
+                                        <p className="text-xl font-bold text-primary">₹800.00</p>
                                     </div>
                                 </div>
                                 <button

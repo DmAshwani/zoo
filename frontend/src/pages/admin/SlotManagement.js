@@ -25,13 +25,15 @@ const SlotManagement = () => {
     const fetchSlots = async () => {
         try {
             setLoading(true);
+            // Use the available slots endpoint for now, or the admin all slots endpoint
             const res = await api.get('/slots/');
-            // Filter by selected date if needed, or show all
             const allSlots = res.data;
             const dateFiltered = allSlots.filter(s => s.slotDate === selectedDate);
             setSlots(dateFiltered);
         } catch (err) {
             console.error("Error fetching slots:", err);
+            // Fallback: set empty array if error
+            setSlots([]);
         } finally {
             setLoading(false);
         }
@@ -40,7 +42,7 @@ const SlotManagement = () => {
     const handleCreateSlot = async (e) => {
         e.preventDefault();
         try {
-            await api.post('/slots/create', {
+            await api.post('/slots/', {
                 ...formData,
                 availableCapacity: formData.totalCapacity
             });
@@ -54,10 +56,8 @@ const SlotManagement = () => {
 
     const toggleSlotStatus = async (id, currentStatus) => {
         try {
-            // Assuming there's a toggle endpoint or we update via put
-            // For now let's assume we can update the slot
             const slot = slots.find(s => s.id === id);
-            await api.post(`/slots/create`, { ...slot, isActive: !currentStatus });
+            await api.put(`/slots/${id}`, { ...slot, isActive: !currentStatus });
             fetchSlots();
         } catch (err) {
             console.error("Error toggling slot:", err);

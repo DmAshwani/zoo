@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { FiMenu, FiX, FiUser, FiLogOut } from 'react-icons/fi';
 import './Navbar.css';
@@ -8,9 +8,17 @@ const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, logout, isAdmin } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Don't show navbar on admin pages
   if (location.pathname.startsWith('/admin')) return null;
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+    setMobileMenuOpen(false);
+  };
+
 
   return (
     <nav className="navbar" id="main-navbar">
@@ -32,7 +40,7 @@ const Navbar = () => {
               <div className="navbar__user">
                 <FiUser size={16} />
                 <span>{user.email?.split('@')[0]}</span>
-                <button className="btn btn--ghost btn--sm" onClick={logout} id="logout-btn">
+                <button className="btn btn--ghost btn--sm" onClick={handleLogout} id="logout-btn">
                   <FiLogOut size={14} />
                 </button>
               </div>

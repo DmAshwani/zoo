@@ -61,7 +61,7 @@ public class TicketService {
         document.add(new Paragraph("Safari Add-on: " + booking.getAddOnSafari()));
         document.add(new Paragraph("Camera Add-on: " + booking.getAddOnCamera()));
         
-        document.add(new Paragraph("Total Price: INR " + booking.getTotalAmount()));
+        document.add(new Paragraph("Total Price: ₹ " + booking.getTotalAmount()));
 
         byte[] qrCodeBytes = generateQRCodeImage("BOOKING_ID:" + booking.getId());
         Image qrImage = Image.getInstance(qrCodeBytes);

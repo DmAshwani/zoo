@@ -1,27 +1,32 @@
 package com.zoo.booking.controller;
 
 import com.zoo.booking.entity.Booking;
-import com.zoo.booking.entity.Slot;
 import com.zoo.booking.entity.User;
+import com.zoo.booking.payload.request.CreateBookingRequest;
 import com.zoo.booking.repository.BookingRepository;
 import com.zoo.booking.repository.SlotRepository;
 import com.zoo.booking.repository.UserRepository;
-import com.zoo.booking.service.TicketService;
+import com.zoo.booking.service.BookingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -39,7 +44,7 @@ public class BookingController {
     UserRepository userRepository;
 
     @Autowired
-    TicketService ticketService;
+    BookingService bookingService;
 
     @PostMapping("/initiate")
     @SecurityRequirement(name = "Bearer")
@@ -49,35 +54,13 @@ public class BookingController {
         @ApiResponse(responseCode = "400", description = "Slot not found or invalid request"),
         @ApiResponse(responseCode = "409", description = "Not enough capacity in selected slot")
     })
-    public ResponseEntity<?> initiateBooking(@RequestBody Booking bookingRequest) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = ((UserDetails) principal).getUsername();
-        User user = userRepository.findByEmail(email).orElseThrow();
-
-        Optional<Slot> optSlot = slotRepository.findById(bookingRequest.getSlot().getId());
-        if (!optSlot.isPresent()) {
-            return ResponseEntity.badRequest().body("Slot not found");
+    public ResponseEntity<?> initiateBooking(@RequestBody CreateBookingRequest bookingRequest) {
+        try {
+            Booking savedBooking = bookingService.initiateBooking(bookingRequest);
+            return ResponseEntity.ok(savedBooking);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
-        Slot slot = optSlot.get();
-
-        int totalTickets = bookingRequest.getAdultTickets() + bookingRequest.getChildTickets();
-
-        if (slot.getAvailableCapacity() < totalTickets) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Not enough capacity");
-        }
-
-        // Deduct capacity
-        slot.setAvailableCapacity(slot.getAvailableCapacity() - totalTickets);
-        slotRepository.save(slot);
-
-        bookingRequest.setUser(user);
-        bookingRequest.setStatus("PENDING");
-        
-        // Mock Razorpay Order ID (In Prod: Call Razorpay API)
-        bookingRequest.setRazorpayOrderId("order_test_" + System.currentTimeMillis());
-
-        Booking savedBooking = bookingRepository.save(bookingRequest);
-        return ResponseEntity.ok(savedBooking);
     }
 
     @PostMapping("/confirm/{id}")
@@ -89,26 +72,12 @@ public class BookingController {
         @ApiResponse(responseCode = "500", description = "Error generating ticket")
     })
     public ResponseEntity<?> confirmBooking(@PathVariable Long id, @RequestParam String paymentId) {
-        Optional<Booking> optBooking = bookingRepository.findById(id);
-        if (!optBooking.isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        Booking booking = optBooking.get();
-        // In Prod: Verify Razorpay signature
-        
-        booking.setStatus("CONFIRMED");
-        booking.setRazorpayPaymentId(paymentId);
-
         try {
-            String pdfUrl = ticketService.generatePdfTicket(booking);
-            booking.setPdfUrl("/api/bookings/ticket/" + pdfUrl);
+            Booking booking = bookingService.confirmBooking(id, paymentId);
+            return ResponseEntity.ok(booking);
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error generating ticket");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-
-        bookingRepository.save(booking);
-        return ResponseEntity.ok(booking);
     }
 
     @GetMapping("/my-bookings")
@@ -135,5 +104,25 @@ public class BookingController {
     })
     public ResponseEntity<List<Booking>> getAllBookings() {
         return ResponseEntity.ok(bookingRepository.findAll());
+    }
+
+    @GetMapping("/ticket/{fileName}")
+    @Operation(summary = "Download Ticket", description = "Download ticket PDF by file name")
+    public ResponseEntity<Resource> downloadTicket(@PathVariable String fileName) {
+        try {
+            Path path = Paths.get("tickets/" + fileName);
+            Resource resource = new UrlResource(path.toUri());
+
+            if (resource.exists() || resource.isReadable()) {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.APPLICATION_PDF)
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                        .body(resource);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }

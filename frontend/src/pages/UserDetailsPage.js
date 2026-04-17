@@ -153,7 +153,7 @@ const UserDetailsPage = () => {
 
                                 <div className="pt-6 border-t border-outline-variant/15 flex justify-between items-end">
                                     <span className="text-sm font-medium text-on-surface-variant">Total Payment</span>
-                                    <span className="text-3xl font-extrabold text-emerald-900 tracking-tighter">${bookingState.total || 0}.00</span>
+                                    <span className="text-3xl font-extrabold text-emerald-900 tracking-tighter">₹{bookingState.total || 0}.00</span>
                                 </div>
                                 <button type="submit" className="hidden md:block w-full bg-primary text-on-primary py-4 rounded-lg font-bold shadow-[0px_8px_24px_rgba(70,101,83,0.15)] hover:bg-primary-dim transition-colors">
                                     Continue to Payment

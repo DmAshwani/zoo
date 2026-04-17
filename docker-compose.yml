@@ -11,6 +11,13 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./backend/src/main/resources/data.sql:/docker-entrypoint-initdb.d/01-data.sql
+      - ./backend/src/main/resources/production-data.sql:/docker-entrypoint-initdb.d/02-production-data.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U zoo_admin -d zoo_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   pgdata:

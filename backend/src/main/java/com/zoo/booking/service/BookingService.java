@@ -45,6 +45,9 @@ public class BookingService {
     @Autowired
     private PricingService pricingService;
 
+    @Autowired
+    private TicketService ticketService;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
     private static final int BOOKING_EXPIRY_MINUTES = 10;
 
@@ -56,11 +59,34 @@ public class BookingService {
     public Booking initiateBooking(CreateBookingRequest request) {
         log.info("Initiating booking for slot: {}", request.getSlotId());
 
-        // Get current user
+        // Get current user or handle guest
+        User user = null;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = ((UserDetails) principal).getUsername();
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        if (principal instanceof UserDetails) {
+            String email = ((UserDetails) principal).getUsername();
+            user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("Authenticated user not found"));
+            log.info("Booking with authenticated user: {}", email);
+        } else if (request.getGuestEmail() != null) {
+            // Guest booking
+            String guestEmail = request.getGuestEmail();
+            user = userRepository.findByEmail(guestEmail).orElse(null);
+            
+            if (user == null) {
+                log.info("Creating new guest user for email: {}", guestEmail);
+                user = new User();
+                user.setEmail(guestEmail);
+                user.setFullName(request.getGuestFullName());
+                user.setMobileNumber(request.getGuestMobileNumber());
+                // Password can be null for guest users
+                user = userRepository.save(user);
+            } else {
+                log.info("Using existing user for guest booking: {}", guestEmail);
+            }
+        } else {
+            throw new RuntimeException("Login required or guest information must be provided");
+        }
 
         // Lock slot row using pessimistic lock to prevent concurrent overbooking
         Slot slot = slotRepository.findById(request.getSlotId())
@@ -293,11 +319,11 @@ public class BookingService {
     }
 
     /**
-     * Generate PDF ticket (mock implementation).
+     * Generate PDF ticket using TicketService.
      */
     private String generateTicketPdf(Booking booking) throws Exception {
-        // Delegate to TicketService
-        return "ticket_" + booking.getId() + ".pdf";
+        String fileName = ticketService.generatePdfTicket(booking);
+        return "/api/bookings/ticket/" + fileName;
     }
 }
 

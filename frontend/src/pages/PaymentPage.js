@@ -10,9 +10,41 @@ const PaymentPage = () => {
     const [paymentMethod, setPaymentMethod] = useState('card');
     const [processing, setProcessing] = useState(false);
     const [error, setError] = useState(null);
+    const [cardData, setCardData] = useState({
+        number: '',
+        expiry: '',
+        cvc: '',
+        name: ''
+    });
 
     // Calculate total including the conservation levy
-    const finalTotal = (bookingState.total || 0) + 12;
+    const finalTotal = (bookingState.total || 0) + 100;
+
+    const handleCardNumberChange = (e) => {
+        let value = e.target.value.replace(/\D/g, ''); // Numeric only
+        if (value.length > 16) value = value.slice(0, 16);
+        
+        // Format with spaces: 0000 0000 0000 0000
+        const formatted = value.match(/.{1,4}/g)?.join(' ') || '';
+        setCardData({ ...cardData, number: formatted });
+    };
+
+    const handleExpiryChange = (e) => {
+        let value = e.target.value.replace(/\D/g, ''); // Numeric only
+        if (value.length > 4) value = value.slice(0, 4);
+        
+        // Format as MM/YY
+        if (value.length >= 3) {
+            value = value.slice(0, 2) + '/' + value.slice(2);
+        }
+        setCardData({ ...cardData, expiry: value });
+    };
+
+    const handleCVCChange = (e) => {
+        let value = e.target.value.replace(/\D/g, ''); // Numeric only
+        if (value.length > 4) value = value.slice(0, 4);
+        setCardData({ ...cardData, cvc: value });
+    };
 
     const handlePayment = async () => {
         setProcessing(true);
@@ -23,13 +55,23 @@ const PaymentPage = () => {
 
         try {
             // 1. Initiate Booking
+            const addOns = [];
+            if (bookingState.addons?.camera) {
+                addOns.push({ addOnId: 1, quantity: 1 });
+            }
+            if (bookingState.addons?.safari) {
+                addOns.push({ addOnId: 2, quantity: bookingState.adults + bookingState.children });
+            }
+
             const initiatePayload = {
-                slot: { id: bookingState.slot.id },
-                adultTickets: bookingState.adults,
-                childTickets: bookingState.children,
-                totalAmount: finalTotal,
-                visitDate: bookingState.date,
-                status: 'PENDING'
+                slotId: bookingState.slot?.id,
+                adultTickets: bookingState.adults || 0,
+                childTickets: bookingState.children || 0,
+                addOns: addOns,
+                // Guest information for unauthenticated bookings
+                guestFullName: bookingState.userDetails?.fullName,
+                guestEmail: bookingState.userDetails?.email,
+                guestMobileNumber: bookingState.userDetails?.mobileNumber
             };
 
             console.log('[PaymentPage] Step 1: Calling /api/bookings/initiate', initiatePayload);
@@ -138,18 +180,64 @@ const PaymentPage = () => {
                                                 <span className="material-symbols-outlined text-on-surface-variant">credit_card</span>
                                             </div>
                                             {paymentMethod === 'card' && (
-                                                <div className="grid grid-cols-2 gap-4">
-                                                    <div className="col-span-2">
-                                                        <label className="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Card Number</label>
-                                                        <input className="w-full bg-surface-container-high border-none outline-none rounded-lg p-3 focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-highest transition-all" placeholder="0000 0000 0000 0000" type="text" />
+                                                <div className="space-y-6 pt-4 border-t border-outline-variant/10">
+                                                    <div className="space-y-1.5">
+                                                        <label className="block text-xs font-bold uppercase tracking-widest text-on-surface-variant flex justify-between">
+                                                            Card Holder Name
+                                                        </label>
+                                                        <input 
+                                                            className="w-full bg-surface-container border-2 border-transparent focus:border-primary/20 rounded-lg px-4 py-3.5 focus:bg-surface-container-highest transition-all outline-none font-medium text-sm" 
+                                                            placeholder="NAME ON CARD" 
+                                                            type="text" 
+                                                            value={cardData.name}
+                                                            onChange={(e) => setCardData({...cardData, name: e.target.value})}
+                                                        />
                                                     </div>
-                                                    <div>
-                                                        <label className="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">Expiry Date</label>
-                                                        <input className="w-full bg-surface-container-high border-none outline-none rounded-lg p-3 focus:ring-2 focus:ring-primary/20" placeholder="MM/YY" type="text" />
+                                                    
+                                                    <div className="space-y-1.5">
+                                                        <label className="block text-xs font-bold uppercase tracking-widest text-on-surface-variant flex justify-between">
+                                                            Card Number
+                                                            <span className="flex gap-1.5 opacity-40">
+                                                                <span className="material-symbols-outlined text-[16px]">credit_card</span>
+                                                                <span className="material-symbols-outlined text-[16px]">lock_person</span>
+                                                            </span>
+                                                        </label>
+                                                        <input 
+                                                            className="w-full bg-surface-container border-2 border-transparent focus:border-primary/20 rounded-lg px-4 py-3.5 focus:bg-surface-container-highest transition-all outline-none font-mono text-base tracking-widest" 
+                                                            placeholder="0000 0000 0000 0000" 
+                                                            type="tel" 
+                                                            inputMode="numeric"
+                                                            value={cardData.number}
+                                                            onChange={handleCardNumberChange}
+                                                            maxLength={19}
+                                                        />
                                                     </div>
-                                                    <div>
-                                                        <label className="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">CVV</label>
-                                                        <input className="w-full bg-surface-container-high border-none outline-none rounded-lg p-3 focus:ring-2 focus:ring-primary/20" placeholder="***" type="password" />
+
+                                                    <div className="grid grid-cols-2 gap-6">
+                                                        <div className="space-y-1.5">
+                                                            <label className="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Expiry Date</label>
+                                                            <input 
+                                                                className="w-full bg-surface-container border-2 border-transparent focus:border-primary/20 rounded-lg px-4 py-3.5 focus:bg-surface-container-highest transition-all outline-none text-sm font-medium" 
+                                                                placeholder="MM / YY" 
+                                                                type="tel" 
+                                                                inputMode="numeric"
+                                                                value={cardData.expiry}
+                                                                onChange={handleExpiryChange}
+                                                                maxLength={5}
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-1.5">
+                                                            <label className="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">CVC / CVV</label>
+                                                            <input 
+                                                                className="w-full bg-surface-container border-2 border-transparent focus:border-primary/20 rounded-lg px-4 py-3.5 focus:bg-surface-container-highest transition-all outline-none text-sm font-medium" 
+                                                                placeholder="***" 
+                                                                type="password" 
+                                                                inputMode="numeric"
+                                                                value={cardData.cvc}
+                                                                onChange={handleCVCChange}
+                                                                maxLength={4}
+                                                            />
+                                                        </div>
                                                     </div>
                                                 </div>
                                             )}
@@ -215,37 +303,37 @@ const PaymentPage = () => {
                                 <div className="space-y-4">
                                     <div className="flex justify-between items-center text-sm">
                                         <span className="text-on-surface-variant">Adult Tickets (x{bookingState.adults || 0})</span>
-                                        <span className="font-medium">${(bookingState.adults || 0) * 32}.00</span>
+                                        <span className="font-medium">₹{(bookingState.adults || 0) * 800}.00</span>
                                     </div>
                                     <div className="flex justify-between items-center text-sm">
                                         <span className="text-on-surface-variant">Children Tickets (x{bookingState.children || 0})</span>
-                                        <span className="font-medium">${(bookingState.children || 0) * 18}.00</span>
+                                        <span className="font-medium">₹{(bookingState.children || 0) * 500}.00</span>
                                     </div>
 
                                     {/* Additional Addons */}
                                     {bookingState.addons?.safari && (
                                         <div className="flex justify-between items-center text-sm">
                                             <span className="text-on-surface-variant">Safari Access</span>
-                                            <span className="font-medium">${(bookingState.adults + bookingState.children) * 45}.00</span>
+                                            <span className="font-medium">₹{(bookingState.adults + bookingState.children) * 1000}.00</span>
                                         </div>
                                     )}
                                     {bookingState.addons?.camera && (
                                         <div className="flex justify-between items-center text-sm">
                                             <span className="text-on-surface-variant">Camera Permit</span>
-                                            <span className="font-medium">$15.00</span>
+                                            <span className="font-medium">₹300.00</span>
                                         </div>
                                     )}
 
 
                                     <div className="flex justify-between items-center text-sm">
                                         <span className="text-on-surface-variant">Conservation Levy</span>
-                                        <span className="font-medium">$12.00</span>
+                                        <span className="font-medium">₹100.00</span>
                                     </div>
 
                                     <div className="pt-4 border-t border-surface-container-high flex justify-between items-end">
                                         <div>
                                             <span className="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Total Amount</span>
-                                            <span className="text-3xl font-extrabold tracking-tighter text-emerald-900">${finalTotal}.00</span>
+                                            <span className="text-3xl font-extrabold tracking-tighter text-emerald-900">₹{finalTotal}.00</span>
                                         </div>
                                         <span className="text-xs text-on-surface-variant pb-1">Tax included</span>
                                     </div>
@@ -256,7 +344,7 @@ const PaymentPage = () => {
                                     disabled={processing}
                                     className={`w-full bg-primary text-on-primary py-4 rounded-lg font-bold text-lg shadow-lg shadow-primary/20 hover:scale-[0.98] transition-all flex items-center justify-center gap-3 ${processing ? 'opacity-80' : ''}`}>
                                     <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>{processing ? 'hourglass_top' : 'verified_user'}</span>
-                                    {processing ? 'Processing Execution...' : `Authenticate & Pay $${finalTotal}.00`}
+                                    {processing ? 'Processing Execution...' : `Authenticate & Pay ₹${finalTotal}.00`}
                                 </button>
                                 <div className="flex justify-center items-center gap-6 opacity-40">
                                     <span className="material-symbols-outlined text-3xl">brand_family</span>

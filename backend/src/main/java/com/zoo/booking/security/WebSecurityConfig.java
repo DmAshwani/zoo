@@ -67,6 +67,9 @@ public class WebSecurityConfig {
                     auth.requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/api/slots/available").permitAll()
+                        .requestMatchers("/api/bookings/initiate").permitAll()
+                        .requestMatchers("/api/bookings/confirm/**").permitAll()
+                        .requestMatchers("/api/bookings/ticket/**").permitAll()
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 );

@@ -21,6 +21,12 @@ public class CreateBookingRequest {
     private Integer childTickets;
 
     private List<AddOnRequest> addOns;
+    
+    // Guest information for unauthenticated bookings
+    private String guestFullName;
+    private String guestEmail;
+    private String guestMobileNumber;
+
 
     @Data
     public static class AddOnRequest {

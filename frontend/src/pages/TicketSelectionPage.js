@@ -11,10 +11,10 @@ const TicketSelectionPage = () => {
     const [children, setChildren] = useState(1);
     const [addons, setAddons] = useState({ camera: false, safari: false });
 
-    const adultPrice = 32;
-    const childPrice = 18;
-    const cameraPrice = 15;
-    const safariPrice = 45;
+    const adultPrice = 800;
+    const childPrice = 500;
+    const cameraPrice = 300;
+    const safariPrice = 1000;
 
     const totalPersons = adults + children;
     const subtotal = (adults * adultPrice) + (children * childPrice);
@@ -92,7 +92,7 @@ const TicketSelectionPage = () => {
                                 <div>
                                     <h3 className="text-xl font-bold tracking-tight text-on-surface">Adult</h3>
                                     <p className="text-sm text-on-surface-variant">Ages 13 and above</p>
-                                    <p className="mt-2 font-bold text-primary">${adultPrice}.00</p>
+                                    <p className="mt-2 font-bold text-primary">₹{adultPrice}.00</p>
                                 </div>
                                 <div className="flex items-center gap-6">
                                     <button onClick={() => setAdults(Math.max(1, adults - 1))} className="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-primary-container hover:border-primary-container transition-all text-on-surface">
@@ -108,7 +108,7 @@ const TicketSelectionPage = () => {
                                 <div>
                                     <h3 className="text-xl font-bold tracking-tight text-on-surface">Child</h3>
                                     <p className="text-sm text-on-surface-variant">Ages 3 to 12. Under 3 are free.</p>
-                                    <p className="mt-2 font-bold text-primary">${childPrice}.00</p>
+                                    <p className="mt-2 font-bold text-primary">₹{childPrice}.00</p>
                                 </div>
                                 <div className="flex items-center gap-6">
                                     <button onClick={() => setChildren(Math.max(0, children - 1))} className="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-primary-container hover:border-primary-container transition-all text-on-surface">
@@ -136,7 +136,7 @@ const TicketSelectionPage = () => {
                                     <div className="p-6 space-y-4">
                                         <p className="text-sm text-on-surface-variant">Premium guided truck tour through the open habitat zones. 90 minutes.</p>
                                         <div className="flex justify-between items-center">
-                                            <span className="font-bold text-tertiary">+${safariPrice}.00 / person</span>
+                                            <span className="font-bold text-tertiary">+₹{safariPrice}.00 / person</span>
                                             {addons.safari ? (
                                                 <button className="px-4 py-2 bg-primary text-on-primary text-xs font-bold uppercase tracking-widest rounded-lg flex items-center gap-2">
                                                     <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>check</span>
@@ -159,7 +159,7 @@ const TicketSelectionPage = () => {
                                     <div className="p-6 space-y-4">
                                         <p className="text-sm text-on-surface-variant">Professional gear access for photography enthusiasts. Includes tripod clearance.</p>
                                         <div className="flex justify-between items-center">
-                                            <span className="font-bold text-tertiary">+${cameraPrice}.00 / group</span>
+                                            <span className="font-bold text-tertiary">+₹{cameraPrice}.00 / group</span>
                                             {addons.camera ? (
                                                 <button className="px-4 py-2 bg-primary text-on-primary text-xs font-bold uppercase tracking-widest rounded-lg flex items-center gap-2">
                                                     <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>check</span>
@@ -193,25 +193,25 @@ const TicketSelectionPage = () => {
                                         {adults > 0 && (
                                             <div className="flex justify-between text-sm">
                                                 <span className="text-on-surface-variant">Adult (x{adults})</span>
-                                                <span className="font-medium text-on-surface">${adults * adultPrice}.00</span>
+                                                <span className="font-medium text-on-surface">₹{adults * adultPrice}.00</span>
                                             </div>
                                         )}
                                         {children > 0 && (
                                             <div className="flex justify-between text-sm">
                                                 <span className="text-on-surface-variant">Child (x{children})</span>
-                                                <span className="font-medium text-on-surface">${children * childPrice}.00</span>
+                                                <span className="font-medium text-on-surface">₹{children * childPrice}.00</span>
                                             </div>
                                         )}
                                         {addons.safari && (
                                             <div className="flex justify-between text-sm">
                                                 <span className="text-on-surface-variant">Safari Access (x{totalPersons})</span>
-                                                <span className="font-medium text-on-surface">${safariPrice * totalPersons}.00</span>
+                                                <span className="font-medium text-on-surface">₹{safariPrice * totalPersons}.00</span>
                                             </div>
                                         )}
                                         {addons.camera && (
                                             <div className="flex justify-between text-sm">
                                                 <span className="text-on-surface-variant">Camera Permit</span>
-                                                <span className="font-medium text-on-surface">${cameraPrice}.00</span>
+                                                <span className="font-medium text-on-surface">₹{cameraPrice}.00</span>
                                             </div>
                                         )}
                                     </div>
@@ -219,7 +219,7 @@ const TicketSelectionPage = () => {
                                     <div className="pt-6 border-t border-surface-container-high space-y-4">
                                         <div className="flex justify-between items-center">
                                             <span className="text-lg font-bold text-on-surface">Total</span>
-                                            <span className="text-3xl font-extrabold tracking-tighter text-primary">${total}.00</span>
+                                            <span className="text-3xl font-extrabold tracking-tighter text-primary">₹{total}.00</span>
                                         </div>
                                         <p className="text-[0.625rem] text-on-surface-variant text-center leading-relaxed">
                                             Prices include all local taxes and conservation levies. Non-refundable but transferable.

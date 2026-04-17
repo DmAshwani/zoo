@@ -1,5 +1,14 @@
 # Quick Start Guide - Production Booking System
 
+## 🔐 Default Admin Credentials
+
+**Email:** `sa@zoo.com`  
+**Password:** `sa`
+
+Use these credentials to login as admin in both the REST API and web application.
+
+---
+
 ## 🚀 Getting Started
 
 ### 1. Database Setup
@@ -48,8 +57,20 @@ curl -X POST http://localhost:8080/api/auth/signup \
   }'
 ```
 
-### Test 2: Login
+### Test 2: Login (Admin User)
 ```bash
+# Default Admin Credentials:
+# Email: sa@zoo.com
+# Password: sa
+
+curl -X POST http://localhost:8080/api/auth/signin \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "sa@zoo.com",
+    "password": "sa"
+  }'
+
+# Or login as regular user:
 curl -X POST http://localhost:8080/api/auth/signin \
   -H "Content-Type: application/json" \
   -d '{
