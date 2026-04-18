@@ -8,27 +8,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8a1f2a58-caa6-4116-87fa-31d5b9bc8d3b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/ADMIN_CREDENTIALS.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/QUICKSTART.md" beforeDir="false" afterPath="$PROJECT_DIR$/backend/QUICKSTART.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/zoo/booking/controller/BookingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/zoo/booking/controller/BookingController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/zoo/booking/payload/request/CreateBookingRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/zoo/booking/payload/request/CreateBookingRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/ADMIN_CREDENTIALS.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/API_GUIDE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/IMPLEMENTATION_SUMMARY.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/PRODUCTION_BOOKING_SYSTEM.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/PROJECT_CONTEXT.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/QUICKSTART.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/zoo/booking/entity/Booking.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/zoo/booking/entity/Booking.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/zoo/booking/security/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/zoo/booking/security/WebSecurityConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/zoo/booking/service/BookingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/zoo/booking/service/BookingService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/zoo/booking/service/TicketService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/zoo/booking/service/TicketService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/data.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/AdminSidebar.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/AdminSidebar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Navbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Navbar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/context/AuthContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/context/AuthContext.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/DateTimePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/DateTimePage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/LandingPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/LandingPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/PaymentPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/PaymentPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/TicketSelectionPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/TicketSelectionPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/UserDetailsPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/UserDetailsPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/admin/SlotManagement.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/admin/SlotManagement.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/zoo/booking/service/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/zoo/booking/service/EmailService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,6 +31,9 @@
     <persistenceIdMap>
       <entry key="_C:/Users/dataman/Desktop/zoo" value="3CRAMt81byVnn3OoeXJqGcLtPUv" />
     </persistenceIdMap>
+  </component>
+  <component name="CopilotUserSelectedChatMode">
+    <option name="chatModeId" value="file:///c%3A/snapshot/copilot-intellij/dist/assets/agents/Plan.agent.md" />
   </component>
   <component name="EmbeddingIndexingInfo">
     <option name="cachedIndexableFilesCount" value="139" />
@@ -117,7 +112,7 @@
       <workItem from="1776344157948" duration="2000" />
       <workItem from="1776344180468" duration="65000" />
       <workItem from="1776404257497" duration="5784000" />
-      <workItem from="1776410618708" duration="4754000" />
+      <workItem from="1776410618708" duration="16057000" />
     </task>
     <servers />
   </component>

@@ -48,6 +48,9 @@ public class BookingService {
     @Autowired
     private TicketService ticketService;
 
+    @Autowired
+    private EmailService emailService;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
     private static final int BOOKING_EXPIRY_MINUTES = 10;
 
@@ -108,6 +111,13 @@ public class BookingService {
         booking.setTotalAmount(totalAmount);
         booking.setStatus("PENDING");
         booking.setExpiryTime(LocalDateTime.now().plusMinutes(BOOKING_EXPIRY_MINUTES));
+        
+        // Store guest details if it's a guest booking
+        if (request.getGuestEmail() != null) {
+            booking.setGuestFullName(request.getGuestFullName());
+            booking.setGuestEmail(request.getGuestEmail());
+            booking.setGuestMobileNumber(request.getGuestMobileNumber());
+        }
 
         // Store booked quantities for add-ons
         if (request.getAddOns() != null) {
@@ -186,6 +196,14 @@ public class BookingService {
         }
 
         createAuditLog(booking, null, null, "PAYMENT_SUCCESS", null);
+        
+        // Send email confirmation
+        try {
+            emailService.sendBookingConfirmation(booking);
+        } catch (Exception e) {
+            log.error("Error sending email for booking: {}", bookingId, e);
+        }
+
         log.info("Booking confirmed successfully: {}", bookingId);
 
         return booking;

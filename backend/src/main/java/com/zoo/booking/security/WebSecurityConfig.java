@@ -70,7 +70,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/bookings/initiate").permitAll()
                         .requestMatchers("/api/bookings/confirm/**").permitAll()
                         .requestMatchers("/api/bookings/ticket/**").permitAll()
-                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**", "/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 );
 

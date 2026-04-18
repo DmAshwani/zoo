@@ -1,30 +1,81 @@
 package com.zoo.booking.service;
 
+import com.zoo.booking.entity.Booking;
+import jakarta.mail.internet.MimeMessage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class EmailService {
-    private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
+
+    @Autowired
+    private JavaMailSender mailSender;
+
+    @Autowired
+    private TemplateEngine templateEngine;
+
+    public void sendBookingConfirmation(Booking booking) {
+        try {
+            String recipientEmail = booking.getUser().getEmail();
+            String fullName = booking.getUser().getFullName();
+
+            Context context = new Context();
+            context.setVariable("fullName", fullName);
+            context.setVariable("bookingId", booking.getId());
+            context.setVariable("visitDate", booking.getSlot().getSlotDate().format(DateTimeFormatter.ofPattern("MMMM dd, yyyy")));
+            context.setVariable("timeSlot", booking.getSlot().getStartTime() + " - " + booking.getSlot().getEndTime());
+            context.setVariable("adultCount", booking.getAdultTickets());
+            context.setVariable("childCount", booking.getChildTickets());
+            context.setVariable("safari", booking.getAddOnSafari() > 0);
+            context.setVariable("camera", booking.getAddOnCamera() > 0);
+            context.setVariable("totalAmount", String.format("%.2f", booking.getTotalAmount()));
+
+            String process = templateEngine.process("ticket-email", context);
+
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+            
+            helper.setFrom("dataman.uat@gmail.com", "Civic Naturalist Zoo");
+            helper.setTo(recipientEmail);
+            helper.setSubject("Zoo Ticket Confirmation - " + booking.getId());
+            helper.setText(process, true);
+
+            mailSender.send(mimeMessage);
+            System.out.println("✅ Booking confirmation email sent to " + recipientEmail);
+        } catch (Exception e) {
+            System.err.println("❌ Failed to send booking confirmation email: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     public void sendResetPasswordEmail(String email, String token) {
-        String resetUrl = "http://localhost:3001/reset-password/" + token;
-        
-        logger.info("================================================");
-        logger.info("PASSWORD RESET REQUEST FOR: {}", email);
-        logger.info("Click the link below to reset your password:");
-        logger.info(resetUrl);
-        logger.info("This link will expire in 1 hour.");
-        logger.info("================================================");
-        
-        // In a real application, you would use JavaMailSender to send an actual email:
-        /*
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(email);
-        message.setSubject("Password Reset Request");
-        message.setText("To reset your password, click the link below:\n" + resetUrl);
-        mailSender.send(message);
-        */
+        try {
+            Context context = new Context();
+            context.setVariable("email", email);
+            context.setVariable("resetToken", token);
+            context.setVariable("resetLink", "http://localhost:3000/reset-password?token=" + token);
+
+            String process = templateEngine.process("reset-password-email", context);
+
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+            helper.setFrom("dataman.uat@gmail.com", "Civic Naturalist Zoo");
+            helper.setTo(email);
+            helper.setSubject("Password Reset Request - Civic Naturalist Zoo");
+            helper.setText(process, true);
+
+            mailSender.send(mimeMessage);
+            System.out.println("✅ Password reset email sent to " + email);
+        } catch (Exception e) {
+            System.err.println("❌ Failed to send password reset email: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

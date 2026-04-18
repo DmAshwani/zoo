@@ -51,4 +51,9 @@ public class Booking {
 
     // Expiry for pending bookings
     private LocalDateTime expiryTime;
+
+    // Guest information for non-logged-in bookings
+    private String guestFullName;
+    private String guestEmail;
+    private String guestMobileNumber;
 }
