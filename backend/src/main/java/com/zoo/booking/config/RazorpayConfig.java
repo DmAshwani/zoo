@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RazorpayConfig {
 
-	private static final String RAZORPAY_KEY_ID = "rzp_live_QX8BXvhImSEQL9";
-    private static final String RAZORPAY_KEY_SECRET = "el24erdmUWFxb1Mz7U3vGgV1";
+	private static final String RAZORPAY_KEY_ID = "";
+    private static final String RAZORPAY_KEY_SECRET = "";
 
     @Bean
     RazorpayClient razorpayClient() throws Exception {

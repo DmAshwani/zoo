@@ -13,7 +13,7 @@ public class RazorpayService {
 	private final RazorpayClient razorpayClient;
 
 
-	private static final String RAZORPAY_KEY_SECRET = "el24erdmUWFxb1Mz7U3vGgV1";
+	private static final String RAZORPAY_KEY_SECRET = "";
 
 	public RazorpayService(RazorpayClient razorpayClient) {
 		this.razorpayClient = razorpayClient;
