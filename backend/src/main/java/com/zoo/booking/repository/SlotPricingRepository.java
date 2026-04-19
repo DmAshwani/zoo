@@ -16,7 +16,8 @@ public class SlotPricingRepository {
                 pricing.setId(rs.getLong("id"));
                 pricing.setSlotId(rs.getLong("slot_id"));
                 pricing.setTicketType(rs.getString("ticket_type"));
-                pricing.setPrice(rs.getDouble("price"));
+                java.math.BigDecimal priceDecimal = rs.getBigDecimal("price");
+                pricing.setPrice(priceDecimal != null ? priceDecimal.doubleValue() : 0.0);
                 pricing.setIsActive(rs.getBoolean("is_active"));
                 return pricing;
             };
@@ -25,6 +26,13 @@ public class SlotPricingRepository {
 
     public SlotPricingRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public List<SlotPricing> findAll() {
+        return jdbcTemplate.query(
+                "SELECT id, slot_id, ticket_type, price, is_active FROM slot_pricing ORDER BY id",
+                SLOT_PRICING_ROW_MAPPER
+        );
     }
 
     public Optional<SlotPricing> findBySlotIdAndTicketType(Long slotId, String ticketType) {
@@ -43,6 +51,31 @@ public class SlotPricingRepository {
                 SLOT_PRICING_ROW_MAPPER,
                 slotId
         );
+    }
+
+    public SlotPricing save(SlotPricing pricing) {
+        if (pricing.getId() == null) {
+            Long id = jdbcTemplate.queryForObject(
+                    "INSERT INTO slot_pricing (slot_id, ticket_type, price, is_active) VALUES (?, ?, ?, ?) RETURNING id",
+                    Long.class,
+                    pricing.getSlotId(),
+                    pricing.getTicketType(),
+                    pricing.getPrice(),
+                    Boolean.TRUE.equals(pricing.getIsActive())
+            );
+            pricing.setId(id);
+            return pricing;
+        }
+
+        jdbcTemplate.update(
+                "UPDATE slot_pricing SET slot_id = ?, ticket_type = ?, price = ?, is_active = ?, updated_at = now() WHERE id = ?",
+                pricing.getSlotId(),
+                pricing.getTicketType(),
+                pricing.getPrice(),
+                Boolean.TRUE.equals(pricing.getIsActive()),
+                pricing.getId()
+        );
+        return pricing;
     }
 }
 

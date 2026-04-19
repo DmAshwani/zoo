@@ -24,6 +24,9 @@ import RevenueAnalytics from './pages/admin/RevenueAnalytics';
 import PricingManagement from './pages/admin/PricingManagement';
 import UserManagement from './pages/admin/UserManagement';
 
+// Staff Pages
+import GatekeeperDashboard from './pages/staff/GatekeeperDashboard';
+
 function App() {
   return (
     <AuthProvider>
@@ -46,7 +49,7 @@ function App() {
 
           {/* Admin Routes */}
           <Route path="/admin" element={
-            <ProtectedRoute adminOnly>
+            <ProtectedRoute requiredRoles={['ROLE_ADMIN', 'ROLE_SLOTS', 'ROLE_PRICING', 'ROLE_BOOKINGS', 'ROLE_ANALYTICS']}>
               <AdminLayout />
             </ProtectedRoute>
           }>
@@ -57,6 +60,13 @@ function App() {
             <Route path="pricing" element={<PricingManagement />} />
             <Route path="users" element={<UserManagement />} />
           </Route>
+
+          {/* Staff/Gatekeeper Routes */}
+          <Route path="/staff/gatekeeper" element={
+            <ProtectedRoute requiredRoles={['ROLE_GATEKEEPER', 'ROLE_ADMIN']}>
+              <GatekeeperDashboard />
+            </ProtectedRoute>
+          } />
         </Routes>
       </Router>
     </AuthProvider>

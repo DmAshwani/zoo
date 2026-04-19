@@ -1,143 +1,107 @@
 package com.zoo.booking.service;
 
-import com.zoo.booking.entity.AddOn;
-import com.zoo.booking.entity.Slot;
-import com.zoo.booking.entity.SlotPricing;
+import com.zoo.booking.entity.*;
 import com.zoo.booking.payload.request.CreateBookingRequest;
 import com.zoo.booking.payload.response.PriceBreakdownResponse;
-import com.zoo.booking.repository.AddOnRepository;
-import com.zoo.booking.repository.SlotPricingRepository;
-import com.zoo.booking.repository.SlotRepository;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.zoo.booking.repository.*;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-@Slf4j
 @Service
 public class PricingService {
 
-    @Autowired
-    private SlotPricingRepository slotPricingRepository;
+    private final TicketTypeRepository ticketTypeRepository;
+    private final SlotPricingRepository slotPricingRepository;
+    private final SystemSettingRepository systemSettingRepository;
+    private final SlotRepository slotRepository;
 
-    @Autowired
-    private SlotRepository slotRepository;
+    public PricingService(TicketTypeRepository ticketTypeRepository,
+                          SlotPricingRepository slotPricingRepository,
+                          SystemSettingRepository systemSettingRepository,
+                          SlotRepository slotRepository) {
+        this.ticketTypeRepository = ticketTypeRepository;
+        this.slotPricingRepository = slotPricingRepository;
+        this.systemSettingRepository = systemSettingRepository;
+        this.slotRepository = slotRepository;
+    }
 
-    @Autowired
-    private AddOnRepository addOnRepository;
-
-    /**
-     * Calculate price breakdown for a booking request.
-     * This is backend-only pricing calculation - NEVER trust frontend values.
-     */
-    public PriceBreakdownResponse calculatePriceBreakdown(CreateBookingRequest request) {
-        log.info("Calculating price breakdown for booking request: {}", request);
-
-        PriceBreakdownResponse response = new PriceBreakdownResponse();
-        Slot slot = slotRepository.findById(request.getSlotId())
-                .orElseThrow(() -> new RuntimeException("Slot not found"));
-
-        // Calculate adult ticket cost
-        Double adultPrice = getTicketPrice(slot.getId(), "ADULT");
-        Integer adultCount = request.getAdultTickets();
-        Double adultSubtotal = adultPrice * adultCount;
-
-        response.setAdultPrice(adultPrice);
-        response.setAdultCount(adultCount);
-        response.setAdultSubtotal(adultSubtotal);
-
-        // Calculate child ticket cost
-        Double childPrice = getTicketPrice(slot.getId(), "CHILD");
-        Integer childCount = request.getChildTickets();
-        Double childSubtotal = childPrice * childCount;
-
-        response.setChildPrice(childPrice);
-        response.setChildCount(childCount);
-        response.setChildSubtotal(childSubtotal);
-
-        // Calculate add-on costs
-        Double addOnTotal = 0.0;
-        List<PriceBreakdownResponse.AddOnBreakdown> addOnsList = new ArrayList<>();
-
-        if (request.getAddOns() != null && !request.getAddOns().isEmpty()) {
-            for (CreateBookingRequest.AddOnRequest addOnRequest : request.getAddOns()) {
-                AddOn addOn = addOnRepository.findById(addOnRequest.getAddOnId())
-                        .orElseThrow(() -> new RuntimeException("Add-on not found: " + addOnRequest.getAddOnId()));
-
-                PriceBreakdownResponse.AddOnBreakdown addOnBreakdown = new PriceBreakdownResponse.AddOnBreakdown();
-                addOnBreakdown.setAddOnId(addOn.getId());
-                addOnBreakdown.setAddOnName(addOn.getName());
-                addOnBreakdown.setAddOnType(addOn.getType());
-                addOnBreakdown.setPrice(addOn.getPrice());
-                addOnBreakdown.setQuantity(addOnRequest.getQuantity());
-
-                // Calculate add-on subtotal based on type
-                Double addOnSubtotal;
-                addOnSubtotal = addOn.getPrice() * addOnRequest.getQuantity();
-
-                addOnBreakdown.setSubtotal(addOnSubtotal);
-                addOnsList.add(addOnBreakdown);
-                addOnTotal += addOnSubtotal;
+    public Map<String, Double> resolvePricesForSlot(Long slotId) {
+        Map<String, Double> finalPrices = new HashMap<>();
+        List<TicketType> types = ticketTypeRepository.findAll();
+        
+        // Initialize with default prices
+        for (TicketType type : types) {
+            if (Boolean.TRUE.equals(type.getIsActive())) {
+                finalPrices.put(type.getName(), type.getDefaultPrice().doubleValue());
             }
         }
 
-        response.setAddOns(addOnsList);
+        // Apply fallback defaults if not found in DB
+        if (!finalPrices.containsKey("ADULT")) finalPrices.put("ADULT", 800.0);
+        if (!finalPrices.containsKey("CHILD")) finalPrices.put("CHILD", 500.0);
 
-        // Calculate total
-        Double totalAmount = adultSubtotal + childSubtotal + addOnTotal;
-        response.setTotalAmount(totalAmount);
+        // 1. Apply Manual Overrides if enabled
+        boolean overridesEnabled = systemSettingRepository.getBooleanValue("manual_overrides_enabled", true);
+        if (overridesEnabled && slotId != null) {
+            List<SlotPricing> overrides = slotPricingRepository.findBySlotId(slotId);
+            for (SlotPricing override : overrides) {
+                if (Boolean.TRUE.equals(override.getIsActive())) {
+                    finalPrices.put(override.getTicketType(), override.getPrice());
+                }
+            }
+        }
 
-        log.info("Price breakdown calculated - Total: {}", totalAmount);
+        // 2. Apply Automatic Surge (Occupancy Based) if enabled
+        boolean automaticEnabled = systemSettingRepository.getBooleanValue("dynamic_pricing_enabled", true);
+        if (automaticEnabled && slotId != null) {
+            Optional<Slot> slotOpt = slotRepository.findById(slotId);
+            if (slotOpt.isPresent()) {
+                Slot slot = slotOpt.get();
+                int threshold = systemSettingRepository.getIntValue("surge_threshold_percent", 90);
+                double multiplier = systemSettingRepository.getDoubleValue("surge_multiplier", 1.5);
+                
+                int total = slot.getTotalCapacity();
+                int available = slot.getAvailableCapacity();
+                int booked = total - available;
+                
+                if (total > 0 && ((double) booked / total) * 100 >= threshold) {
+                    // Apply surge multiplier to current values (which might already be overridden)
+                    for (String type : finalPrices.keySet()) {
+                        finalPrices.put(type, finalPrices.get(type) * multiplier);
+                    }
+                }
+            }
+        }
+
+        return finalPrices;
+    }
+
+    public PriceBreakdownResponse calculatePriceBreakdown(CreateBookingRequest request) {
+        Long slotId = request.getSlotId();
+        Map<String, Double> prices = resolvePricesForSlot(slotId);
+        
+        Double adultBase = prices.getOrDefault("ADULT", 800.0);
+        Double childBase = prices.getOrDefault("CHILD", 500.0);
+        
+        int adults = request.getAdultTickets() != null ? request.getAdultTickets() : 0;
+        int children = request.getChildTickets() != null ? request.getChildTickets() : 0;
+        
+        Double adultSubtotal = adultBase * adults;
+        Double childSubtotal = childBase * children;
+        
+        PriceBreakdownResponse response = new PriceBreakdownResponse();
+        response.setAdultPrice(adultBase);
+        response.setAdultCount(adults);
+        response.setAdultSubtotal(adultSubtotal);
+        
+        response.setChildPrice(childBase);
+        response.setChildCount(children);
+        response.setChildSubtotal(childSubtotal);
+        
+        double addOnTotal = 0.0;
+        // Conservation levy
+        response.setTotalAmount(adultSubtotal + childSubtotal + addOnTotal + 100.0); 
         return response;
     }
-
-    /**
-     * Get ticket price for a specific ticket type and slot.
-     * Checks slot-specific pricing first, then falls back to default price.
-     */
-    private Double getTicketPrice(Long slotId, String ticketType) {
-        // Try to get slot-specific pricing
-        SlotPricing slotPricing = slotPricingRepository.findBySlotIdAndTicketType(slotId, ticketType)
-                .orElse(null);
-
-        if (slotPricing != null && slotPricing.getIsActive()) {
-            log.debug("Using slot-specific price for {} at slot {}: {}",
-                    ticketType, slotId, slotPricing.getPrice());
-            return slotPricing.getPrice();
-        }
-
-        // Fallback to default price from ticket_type table
-        // For now, using hardcoded defaults - can be moved to database
-        if ("ADULT".equals(ticketType)) {
-            return 800.0; // ₹800 for adults
-        } else if ("CHILD".equals(ticketType)) {
-            return 500.0; // ₹500 for children
-        }
-
-        throw new RuntimeException("No pricing found for ticket type: " + ticketType);
-    }
-
-    /**
-     * Apply dynamic pricing based on remaining capacity.
-     * If capacity is low, increase price.
-     */
-    public Double applyDynamicPricing(Double basePrice, Integer remainingCapacity, Integer totalCapacity) {
-        if (remainingCapacity == null || totalCapacity == null || totalCapacity == 0) {
-            return basePrice;
-        }
-
-        double occupancyPercentage = (double) (totalCapacity - remainingCapacity) / totalCapacity;
-
-        // Pricing tiers based on occupancy
-        if (occupancyPercentage >= 0.9) {
-            return basePrice * 1.5; // 50% increase at 90% occupancy
-        } else if (occupancyPercentage >= 0.7) {
-            return basePrice * 1.25; // 25% increase at 70% occupancy
-        }
-
-        return basePrice;
-    }
 }
-

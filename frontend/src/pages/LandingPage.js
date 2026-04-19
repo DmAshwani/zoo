@@ -1,7 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import api from '../services/api';
 
 const LandingPage = () => {
+  const [adultPrice, setAdultPrice] = React.useState(800);
+
+  React.useEffect(() => {
+    api.get('/public/pricing/tickets')
+      .then(res => {
+        if (res.data.ADULT) setAdultPrice(res.data.ADULT);
+      })
+      .catch(err => console.error('Error fetching landing prices:', err));
+  }, []);
+
   return (
     <div className="bg-background text-on-surface">
       {/* TopNavBar */}
@@ -67,7 +78,7 @@ const LandingPage = () => {
                 <div className="grid grid-cols-2 gap-8 flex-grow">
                   <div className="bg-surface-container-lowest p-6 rounded-lg shadow-sm">
                     <h4 className="font-bold text-lg mb-1">Standard Adult</h4>
-                    <p className="text-primary font-black text-3xl mb-4">₹800.00</p>
+                    <p className="text-primary font-black text-3xl mb-4">₹{adultPrice}.00</p>
                     <p className="text-xs text-on-surface-variant uppercase tracking-widest font-bold">Includes Conservatories</p>
                   </div>
                   <div className="bg-primary text-on-primary p-6 rounded-lg shadow-sm">

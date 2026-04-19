@@ -24,6 +24,10 @@ public class UserRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public long count() {
+        return jdbcTemplate.queryForObject("SELECT count(*) FROM users", Long.class);
+    }
+
     public Optional<User> findByEmail(String email) {
         return Optional.ofNullable(queryUserWithRoles("u.email = ?", email));
     }
@@ -41,11 +45,73 @@ public class UserRepository {
         return Boolean.TRUE.equals(exists);
     }
 
-    public List<User> findAll() {
-        return jdbcTemplate.query(
-                "SELECT id, full_name, email, password, mobile_number, reset_token, reset_token_expiry FROM users ORDER BY id",
-                (rs, rowNum) -> mapUser(rs)
+    public Optional<User> findById(Long id) {
+        return Optional.ofNullable(queryUserWithRoles("u.id = ?", id));
+    }
+
+    public Boolean existsById(Long id) {
+        Boolean exists = jdbcTemplate.queryForObject(
+                "SELECT EXISTS(SELECT 1 FROM users WHERE id = ?)",
+                Boolean.class,
+                id
         );
+        return Boolean.TRUE.equals(exists);
+    }
+
+    public void deleteById(Long id) {
+        // Delete roles first
+        jdbcTemplate.update("DELETE FROM user_roles WHERE user_id = ?", id);
+        // Delete user
+        jdbcTemplate.update("DELETE FROM users WHERE id = ?", id);
+    }
+
+    public List<User> findAll() {
+        String sql =
+                "SELECT " +
+                        "u.id AS u_id, u.full_name, u.email, u.password, u.mobile_number, u.reset_token, u.reset_token_expiry, u.is_active, " +
+                        "r.id AS r_id, r.name AS r_name " +
+                        "FROM users u " +
+                        "LEFT JOIN user_roles ur ON ur.user_id = u.id " +
+                        "LEFT JOIN roles r ON r.id = ur.role_id " +
+                        "ORDER BY u.id";
+
+        return jdbcTemplate.query(sql, (ResultSet rs) -> {
+            java.util.Map<Long, User> userMap = new java.util.LinkedHashMap<>();
+            while (rs.next()) {
+                Long userId = rs.getLong("u_id");
+                User user = userMap.computeIfAbsent(userId, id -> {
+                    User u = new User();
+                    u.setId(id);
+                    try {
+                        u.setFullName(rs.getString("full_name"));
+                        u.setEmail(rs.getString("email"));
+                        u.setPassword(rs.getString("password"));
+                        u.setMobileNumber(rs.getString("mobile_number"));
+                        u.setResetToken(rs.getString("reset_token"));
+                        u.setIsActive(rs.getBoolean("is_active"));
+                        OffsetDateTime resetTokenExpiry = rs.getObject("reset_token_expiry", OffsetDateTime.class);
+                        u.setResetTokenExpiry(resetTokenExpiry != null ? resetTokenExpiry.toLocalDateTime() : null);
+                        u.setRoles(new HashSet<>());
+                    } catch (java.sql.SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                    return u;
+                });
+
+                Long roleId = (Long) rs.getObject("r_id");
+                if (roleId != null) {
+                    Role role = new Role();
+                    role.setId(roleId);
+                    try {
+                        role.setName(ERole.valueOf(rs.getString("r_name")));
+                    } catch (java.sql.SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                    user.getRoles().add(role);
+                }
+            }
+            return new java.util.ArrayList<>(userMap.values());
+        });
     }
 
     public User save(User user) {
@@ -77,6 +143,11 @@ public class UserRepository {
                 toTimestamp(user.getResetTokenExpiry()),
                 user.getId()
         );
+
+        // Synchronize roles: Delete old, Insert new
+        jdbcTemplate.update("DELETE FROM user_roles WHERE user_id = ?", user.getId());
+        insertUserRoles(user.getId(), user.getRoles());
+        
         return user;
 
 
@@ -130,19 +201,6 @@ public class UserRepository {
         return user;
     }
 
-    private User mapUser(ResultSet rs) throws java.sql.SQLException {
-        User user = new User();
-        user.setId(rs.getLong("id"));
-        user.setFullName(rs.getString("full_name"));
-        user.setEmail(rs.getString("email"));
-        user.setPassword(rs.getString("password"));
-        user.setMobileNumber(rs.getString("mobile_number"));
-        user.setResetToken(rs.getString("reset_token"));
-
-        OffsetDateTime resetTokenExpiry = rs.getObject("reset_token_expiry", OffsetDateTime.class);
-        user.setResetTokenExpiry(resetTokenExpiry != null ? resetTokenExpiry.toLocalDateTime() : null);
-        return user;
-    }
 
     private void insertUserRoles(Long userId, Set<Role> roles) {
         if (userId == null || roles == null || roles.isEmpty()) {

@@ -41,4 +41,7 @@ public class Booking {
     private String guestFullName;
     private String guestEmail;
     private String guestMobileNumber;
+
+    private LocalDateTime checkedInAt;
+    private LocalDateTime checkedOutAt;
 }

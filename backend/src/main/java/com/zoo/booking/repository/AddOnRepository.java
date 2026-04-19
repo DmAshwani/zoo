@@ -5,7 +5,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +16,8 @@ public class AddOnRepository {
                 addOn.setId(rs.getLong("id"));
                 addOn.setName(rs.getString("name"));
                 addOn.setType(rs.getString("type"));
-                addOn.setPrice(rs.getDouble("price"));
+                java.math.BigDecimal priceDecimal = rs.getBigDecimal("price");
+                addOn.setPrice(priceDecimal != null ? priceDecimal.doubleValue() : 0.0);
                 addOn.setMaxLimitPerBooking((Integer) rs.getObject("max_limit_per_booking"));
                 addOn.setAvailableCapacity((Integer) rs.getObject("available_capacity"));
                 addOn.setBookedCapacity((Integer) rs.getObject("booked_capacity"));
@@ -92,6 +92,13 @@ public class AddOnRepository {
                 addOn.getId()
         );
         return addOn;
+    }
+
+    public List<AddOn> findAll() {
+        return jdbcTemplate.query(
+                "SELECT id, name, type, price, max_limit_per_booking, available_capacity, booked_capacity, is_active FROM add_on_master ORDER BY id",
+                ADD_ON_ROW_MAPPER
+        );
     }
 }
 

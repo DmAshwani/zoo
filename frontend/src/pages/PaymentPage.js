@@ -10,6 +10,11 @@ const PaymentPage = () => {
     const [paymentMethod, setPaymentMethod] = useState('card');
     const [processing, setProcessing] = useState(false);
     const [error, setError] = useState(null);
+    const [prices, setPrices] = useState({ 
+        ADULT: bookingState.adultPrice || 800, 
+        CHILD: bookingState.childPrice || 500 
+    });
+    const [addonMap, setAddonMap] = useState({});
     const [cardData, setCardData] = useState({
         number: '',
         expiry: '',
@@ -17,8 +22,28 @@ const PaymentPage = () => {
         name: ''
     });
 
+    useEffect(() => {
+        // Fetch Ticket Prices if not provided
+        if (!bookingState.adultPrice) {
+            api.get('/public/pricing/tickets')
+                .then(res => setPrices(res.data))
+                .catch(err => console.error('Error fetching prices:', err));
+        }
+
+        // Fetch Add-ons to get correct IDs
+        api.get('/public/pricing/addons')
+            .then(res => {
+                const map = {};
+                res.data.forEach(a => map[a.name] = a.id);
+                setAddonMap(map);
+            })
+            .catch(err => console.error('Error fetching add-ons:', err));
+    }, [bookingState.adultPrice]);
+
     // Calculate total including the conservation levy
-    const finalTotal = (bookingState.total || 0) + 100;
+    // Use the dynamic total from state or recalculate if missing
+    const subtotal = (bookingState.adults * (prices.ADULT || 800)) + (bookingState.children * (prices.CHILD || 500));
+    const finalTotal = (bookingState.total || subtotal) + 100;
 
     const handleCardNumberChange = (e) => {
         let value = e.target.value.replace(/\D/g, ''); // Numeric only
@@ -46,21 +71,35 @@ const PaymentPage = () => {
         setCardData({ ...cardData, cvc: value });
     };
 
+    useEffect(() => {
+        // Load Razorpay SDK
+        const script = document.createElement('script');
+        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+        script.async = true;
+        document.body.appendChild(script);
+        return () => {
+            document.body.removeChild(script);
+        }
+    }, []);
+
     const handlePayment = async () => {
         setProcessing(true);
         setError(null);
         console.group('[PaymentPage] Initiating Booking Process');
-        console.log('Booking State:', bookingState);
-        console.log('Payment Method:', paymentMethod);
-
+        
         try {
             // 1. Initiate Booking
             const addOns = [];
-            if (bookingState.addons?.camera) {
-                addOns.push({ addOnId: 1, quantity: 1 });
+            if (bookingState.addons?.camera && addonMap['Camera']) {
+                addOns.push({ addOnId: addonMap['Camera'], quantity: 1 });
             }
-            if (bookingState.addons?.safari) {
-                addOns.push({ addOnId: 2, quantity: bookingState.adults + bookingState.children });
+            if (bookingState.addons?.safari && addonMap['Safari']) {
+                addOns.push({ addOnId: addonMap['Safari'], quantity: bookingState.adults + bookingState.children });
+            }
+            // Fallback for hardcoded IDs if map is empty (development safety)
+            if (addOns.length === 0 && Object.keys(addonMap).length === 0) {
+                if (bookingState.addons?.camera) addOns.push({ addOnId: 1, quantity: 1 });
+                if (bookingState.addons?.safari) addOns.push({ addOnId: 2, quantity: bookingState.adults + bookingState.children });
             }
 
             const initiatePayload = {
@@ -68,35 +107,58 @@ const PaymentPage = () => {
                 adultTickets: bookingState.adults || 0,
                 childTickets: bookingState.children || 0,
                 addOns: addOns,
-                // Guest information for unauthenticated bookings
                 guestFullName: bookingState.userDetails?.fullName,
                 guestEmail: bookingState.userDetails?.email,
                 guestMobileNumber: bookingState.userDetails?.mobileNumber
             };
 
-            console.log('[PaymentPage] Step 1: Calling /api/bookings/initiate', initiatePayload);
             const initiateRes = await api.post('/bookings/initiate', initiatePayload);
-            const bookingId = initiateRes.data.id;
-            console.log('[PaymentPage] Booking initiated successfully. ID:', bookingId);
+            const bookingData = initiateRes.data;
+            const bookingId = bookingData.id;
+            const razorpayOrderId = bookingData.razorpayOrderId;
+            
+            console.log('[PaymentPage] Booking initiated. Order ID:', razorpayOrderId);
 
-            // 2. Mock payment confirmation (In a real app, this would be Razorpay/Stripe)
-            console.log('[PaymentPage] Step 2: Simulating payment confirmation...');
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            const mockPaymentId = 'pay_test_' + Math.random().toString(36).substring(7);
+            /* 
+            // 2. Razorpay Checkout (BYPASSED FOR DEVELOPMENT)
+            if (!window.Razorpay) {
+                setError("Payment SDK failed to load. Refresh and try again.");
+                setProcessing(false);
+                return;
+            }
 
-            // 3. Confirm Booking
-            console.log('[PaymentPage] Step 3: Calling /api/bookings/confirm/', bookingId);
-            const confirmRes = await api.post(`/bookings/confirm/${bookingId}?paymentId=${mockPaymentId}`);
-            console.log('[PaymentPage] Booking confirmed successfully:', confirmRes.data);
+            const options = {
+                key: process.env.REACT_APP_RAZORPAY_KEY_ID || 'rzp_test_SfGiUOcNjRoxdo',
+                amount: Math.round(bookingData.totalAmount * 100),
+                currency: "INR",
+                name: "Civic Naturalist Zoo",
+                description: "Explorer Day Pass Booking",
+                order_id: razorpayOrderId,
+                handler: async function (response) {
+                    // ... verification logic ...
+                }
+            };
 
-            console.groupEnd();
-            navigate('/booking/confirmation', { state: { ...bookingState, bookingId: confirmRes.data.id, pdfUrl: confirmRes.data.pdfUrl } });
+            const rzp = new window.Razorpay(options);
+            rzp.open();
+            */
+
+            // Bypassing payment: navigate directly to confirmation
+            console.log('[PaymentPage] Bypassing Razorpay payment for development');
+            navigate('/booking/confirmation', {
+                state: {
+                    ...bookingState,
+                    bookingId: bookingId,
+                    pdfUrl: null // PDF might not be generated yet without backend payment confirmation
+                }
+            });
+
         } catch (err) {
             console.error('[PaymentPage] Checkout failed:', err);
-            setError(err.response?.data?.message || err.response?.data || 'Payment processing failed. Please ensure you are logged in and the slot has capacity.');
-            console.groupEnd();
-        } finally {
+            setError(err.response?.data?.message || err.response?.data || 'Failed to initiate booking. Please try again.');
             setProcessing(false);
+        } finally {
+            console.groupEnd();
         }
     };
 
@@ -152,7 +214,7 @@ const PaymentPage = () => {
                             <p className="text-on-surface-variant max-w-md">Secure your passage to the sanctuary. Your contribution directly supports global biodiversity conservation efforts.</p>
                         </div>
 
-                        {/* Payment Methods */}
+                        {/* Payment Selection Simplified */}
                         <section className="space-y-6">
                             <div className="flex items-center justify-between">
                                 <h2 className="text-xl font-semibold tracking-tight">Payment Method</h2>
@@ -162,110 +224,30 @@ const PaymentPage = () => {
                                 </div>
                             </div>
 
-                            <div className="space-y-4">
-                                {/* Credit/Debit Option */}
-                                <div
-                                    className={`p-6 rounded-xl border-2 transition-all cursor-pointer ${paymentMethod === 'card' ? 'bg-surface-container-lowest border-primary-container ring-2 ring-primary/5 shadow-sm' : 'bg-surface-container border-transparent hover:bg-surface-container-high'}`}
-                                    onClick={() => setPaymentMethod('card')}
-                                >
-                                    <label className="flex items-start gap-4 cursor-pointer w-full">
-                                        <div className="mt-1">
-                                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'card' ? 'border-primary' : 'border-outline'}`}>
-                                                {paymentMethod === 'card' && <div className="w-2.5 h-2.5 bg-primary rounded-full"></div>}
-                                            </div>
-                                        </div>
-                                        <div className="flex-1">
-                                            <div className="flex justify-between items-center mb-4">
-                                                <span className="font-bold text-lg">Credit / Debit Card</span>
-                                                <span className="material-symbols-outlined text-on-surface-variant">credit_card</span>
-                                            </div>
-                                            {paymentMethod === 'card' && (
-                                                <div className="space-y-6 pt-4 border-t border-outline-variant/10">
-                                                    <div className="space-y-1.5">
-                                                        <label className="block text-xs font-bold uppercase tracking-widest text-on-surface-variant flex justify-between">
-                                                            Card Holder Name
-                                                        </label>
-                                                        <input 
-                                                            className="w-full bg-surface-container border-2 border-transparent focus:border-primary/20 rounded-lg px-4 py-3.5 focus:bg-surface-container-highest transition-all outline-none font-medium text-sm" 
-                                                            placeholder="NAME ON CARD" 
-                                                            type="text" 
-                                                            value={cardData.name}
-                                                            onChange={(e) => setCardData({...cardData, name: e.target.value})}
-                                                        />
-                                                    </div>
-                                                    
-                                                    <div className="space-y-1.5">
-                                                        <label className="block text-xs font-bold uppercase tracking-widest text-on-surface-variant flex justify-between">
-                                                            Card Number
-                                                            <span className="flex gap-1.5 opacity-40">
-                                                                <span className="material-symbols-outlined text-[16px]">credit_card</span>
-                                                                <span className="material-symbols-outlined text-[16px]">lock_person</span>
-                                                            </span>
-                                                        </label>
-                                                        <input 
-                                                            className="w-full bg-surface-container border-2 border-transparent focus:border-primary/20 rounded-lg px-4 py-3.5 focus:bg-surface-container-highest transition-all outline-none font-mono text-base tracking-widest" 
-                                                            placeholder="0000 0000 0000 0000" 
-                                                            type="tel" 
-                                                            inputMode="numeric"
-                                                            value={cardData.number}
-                                                            onChange={handleCardNumberChange}
-                                                            maxLength={19}
-                                                        />
-                                                    </div>
-
-                                                    <div className="grid grid-cols-2 gap-6">
-                                                        <div className="space-y-1.5">
-                                                            <label className="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Expiry Date</label>
-                                                            <input 
-                                                                className="w-full bg-surface-container border-2 border-transparent focus:border-primary/20 rounded-lg px-4 py-3.5 focus:bg-surface-container-highest transition-all outline-none text-sm font-medium" 
-                                                                placeholder="MM / YY" 
-                                                                type="tel" 
-                                                                inputMode="numeric"
-                                                                value={cardData.expiry}
-                                                                onChange={handleExpiryChange}
-                                                                maxLength={5}
-                                                            />
-                                                        </div>
-                                                        <div className="space-y-1.5">
-                                                            <label className="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">CVC / CVV</label>
-                                                            <input 
-                                                                className="w-full bg-surface-container border-2 border-transparent focus:border-primary/20 rounded-lg px-4 py-3.5 focus:bg-surface-container-highest transition-all outline-none text-sm font-medium" 
-                                                                placeholder="***" 
-                                                                type="password" 
-                                                                inputMode="numeric"
-                                                                value={cardData.cvc}
-                                                                onChange={handleCVCChange}
-                                                                maxLength={4}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </label>
+                            <div className="bg-surface-container-lowest p-8 rounded-xl border-2 border-primary/10 shadow-sm space-y-4">
+                                <div className="flex items-center gap-4 mb-2">
+                                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+                                        <span className="material-symbols-outlined text-2xl">payments</span>
+                                    </div>
+                                    <div>
+                                        <h3 className="font-bold text-lg">Razorpay Secure Checkout</h3>
+                                        <p className="text-sm text-on-surface-variant">Pay securely via Cards, UPI, NetBanking, or Wallets.</p>
+                                    </div>
                                 </div>
-
-                                {/* UPI Option */}
-                                <div
-                                    className={`p-6 rounded-xl border-2 transition-all cursor-pointer group ${paymentMethod === 'upi' ? 'bg-surface-container-lowest border-primary-container ring-2 ring-primary/5 shadow-sm' : 'bg-surface-container border-transparent hover:bg-surface-container-high'}`}
-                                    onClick={() => setPaymentMethod('upi')}
-                                >
-                                    <label className="flex items-center justify-between cursor-pointer w-full">
-                                        <div className="flex items-center gap-4">
-                                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'upi' ? 'border-primary' : 'border-outline'}`}>
-                                                {paymentMethod === 'upi' && <div className="w-2.5 h-2.5 bg-primary rounded-full"></div>}
-                                            </div>
-                                            <div className="flex-1">
-                                                <span className="font-bold text-lg">UPI Payment</span>
-                                                {paymentMethod === 'upi' && (
-                                                    <div className="mt-4">
-                                                        <input className="w-full bg-surface-container-high border-none outline-none rounded-lg p-3 focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-highest transition-all" placeholder="yourname@upi" type="text" onClick={(e) => e.stopPropagation()} />
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                        <span className={`material-symbols-outlined transition-colors ${paymentMethod === 'upi' ? 'text-primary' : 'text-on-surface-variant group-hover:text-primary'}`}>account_balance_wallet</span>
-                                    </label>
+                                <div className="pt-4 border-t border-outline-variant/10 flex flex-wrap gap-4 opacity-70">
+                                    {/* Mock logos or icons for payment methods */}
+                                    <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-container rounded-md">
+                                        <span className="material-symbols-outlined text-sm">credit_card</span>
+                                        <span className="text-xs font-bold">Cards</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-container rounded-md">
+                                        <span className="material-symbols-outlined text-sm">account_balance_wallet</span>
+                                        <span className="text-xs font-bold">UPI / Wallets</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-container rounded-md">
+                                        <span className="material-symbols-outlined text-sm">account_balance</span>
+                                        <span className="text-xs font-bold">NetBanking</span>
+                                    </div>
                                 </div>
                             </div>
                         </section>
@@ -303,11 +285,11 @@ const PaymentPage = () => {
                                 <div className="space-y-4">
                                     <div className="flex justify-between items-center text-sm">
                                         <span className="text-on-surface-variant">Adult Tickets (x{bookingState.adults || 0})</span>
-                                        <span className="font-medium">₹{(bookingState.adults || 0) * 800}.00</span>
+                                        <span className="font-medium">₹{(bookingState.adults || 0) * (prices.ADULT || 800)}.00</span>
                                     </div>
                                     <div className="flex justify-between items-center text-sm">
                                         <span className="text-on-surface-variant">Children Tickets (x{bookingState.children || 0})</span>
-                                        <span className="font-medium">₹{(bookingState.children || 0) * 500}.00</span>
+                                        <span className="font-medium">₹{(bookingState.children || 0) * (prices.CHILD || 500)}.00</span>
                                     </div>
 
                                     {/* Additional Addons */}

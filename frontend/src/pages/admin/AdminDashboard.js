@@ -3,30 +3,51 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area
 } from 'recharts';
 import api from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
 
 const AdminDashboard = () => {
     const [stats, setStats] = useState({
         todayBookings: 0,
         totalRevenue: 0,
         occupancyRate: 0,
-        activeSlots: 0
+        activeSlots: 0,
+        totalUsers: 0,
+        totalStaff: 0
     });
     const [bookings, setBookings] = useState([]);
     const [slots, setSlots] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { hasRole } = useAuth();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const today = new Date().toISOString().split('T')[0];
+                let allBookings = [];
+                let allSlots = [];
+                let summaryData = { totalUsers: 0, totalStaff: 0 };
+
+                // 1. Fetch Summary (Total Users/Staff)
+                try {
+                    const sumRes = await api.get('/admin/summary');
+                    summaryData = sumRes.data;
+                } catch (e) { console.error("Summary fetch failed", e); }
                 
-                // Fetch all bookings for summary stats
-                const bookingsRes = await api.get('/bookings/all');
-                const allBookings = bookingsRes.data;
+                // 2. Fetch Bookings (Only if authorized)
+                if (hasRole('ROLE_ADMIN') || hasRole('ROLE_BOOKINGS')) {
+                    try {
+                        const bookingsRes = await api.get('/bookings/all');
+                        allBookings = bookingsRes.data;
+                    } catch (e) { console.error("Bookings fetch failed", e); }
+                }
                 
-                // Fetch slots for occupancy and active slots count
-                const slotsRes = await api.get('/slots/');
-                const allSlots = slotsRes.data;
+                // 3. Fetch Slots (Only if authorized)
+                if (hasRole('ROLE_ADMIN') || hasRole('ROLE_SLOTS')) {
+                    try {
+                        const slotsRes = await api.get('/slots/');
+                        allSlots = slotsRes.data;
+                    } catch (e) { console.error("Slots fetch failed", e); }
+                }
 
                 // Calculate Stats
                 const todayBookingsArr = allBookings.filter(b => b.createdAt && b.createdAt.startsWith(today));
@@ -34,7 +55,6 @@ const AdminDashboard = () => {
                 
                 const activeCount = allSlots.filter(s => s.isActive).length;
                 
-                // Calculate occupancy rate (average for today)
                 const todaySlots = allSlots.filter(s => s.slotDate === today);
                 let totalCap = 0;
                 let usedCap = 0;
@@ -48,23 +68,24 @@ const AdminDashboard = () => {
                     todayBookings: todayBookingsArr.length,
                     totalRevenue: totalRev,
                     occupancyRate: occupancy,
-                    activeSlots: activeCount
+                    activeSlots: activeCount,
+                    totalUsers: summaryData.totalUsers,
+                    totalStaff: summaryData.totalStaff
                 });
 
-                // Latest 5 bookings
                 const sortedBookings = [...allBookings].sort((a,b) => b.id - a.id).slice(0, 5);
                 setBookings(sortedBookings);
                 setSlots(todaySlots);
                 
             } catch (error) {
-                console.error("Error fetching dashboard data:", error);
+                console.error("Critical error fetching dashboard data:", error);
             } finally {
                 setLoading(false);
             }
         };
 
         fetchData();
-    }, []);
+    }, [hasRole]);
 
     // Revenue data for the chart (Mocked for now since we don't have a trend API, but using real total)
     const revenueTrend = [
@@ -90,56 +111,48 @@ const AdminDashboard = () => {
                     <h1 className="text-5xl font-extrabold text-primary tracking-tighter">Dashboard</h1>
                     <p className="text-on-surface-variant mt-2 font-medium">Welcome back, Curator. Here is the botanical status for today.</p>
                 </div>
-                <button className="bg-primary-container text-on-primary px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-primary transition-colors shadow-lg shadow-primary/20">
-                    <span className="material-symbols-outlined text-[20px]">add</span>
-                    New Booking
-                </button>
+                <div className="flex gap-4">
+                    <button onClick={() => window.location.href='/staff/gatekeeper'} className="bg-stone-100 text-stone-600 px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-stone-200 transition-colors border border-stone-200">
+                        <span className="material-symbols-outlined text-[20px]">door_open</span>
+                        Gatekeeper Portal
+                    </button>
+                    <button className="bg-primary-container text-on-primary px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-primary transition-colors shadow-lg shadow-primary/20">
+                        <span className="material-symbols-outlined text-[20px]">add</span>
+                        New Booking
+                    </button>
+                </div>
             </div>
 
             {/* KPI Stats Row (Tonal Layering) */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-10">
                 <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm transition-transform hover:scale-[1.02]">
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="p-2 bg-primary-container/10 rounded-lg text-primary">
-                            <span className="material-symbols-outlined">confirmation_number</span>
-                        </div>
-                        <span className="text-on-secondary-container bg-secondary-container px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-tight">+12%</span>
-                    </div>
-                    <p className="text-on-surface-variant text-xs font-bold uppercase tracking-widest mb-1">Today's Bookings</p>
-                    <h3 className="text-3xl font-black text-on-surface">{stats.todayBookings}</h3>
+                    <p className="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest mb-1">Total Visitors</p>
+                    <h3 className="text-2xl font-black text-on-surface">{stats.totalUsers}</h3>
                 </div>
 
                 <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm transition-transform hover:scale-[1.02]">
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="p-2 bg-primary-container/10 rounded-lg text-primary">
-                            <span className="material-symbols-outlined">payments</span>
-                        </div>
-                        <span className="text-on-secondary-container bg-secondary-container px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-tight">+5.4%</span>
-                    </div>
-                    <p className="text-on-surface-variant text-xs font-bold uppercase tracking-widest mb-1">Total Revenue</p>
-                    <h3 className="text-3xl font-black text-on-surface">₹{stats.totalRevenue.toLocaleString()}</h3>
+                    <p className="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest mb-1">Total Staff</p>
+                    <h3 className="text-2xl font-black text-on-surface">{stats.totalStaff}</h3>
                 </div>
 
                 <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm transition-transform hover:scale-[1.02]">
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="p-2 bg-primary-container/10 rounded-lg text-primary">
-                            <span className="material-symbols-outlined">percent</span>
-                        </div>
-                        <span className="text-error bg-error-container px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-tight">-2.1%</span>
-                    </div>
-                    <p className="text-on-surface-variant text-xs font-bold uppercase tracking-widest mb-1">Occupancy Rate</p>
-                    <h3 className="text-3xl font-black text-on-surface">{stats.occupancyRate}%</h3>
+                    <p className="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest mb-1">Today's Bookings</p>
+                    <h3 className="text-2xl font-black text-on-surface">{stats.todayBookings}</h3>
                 </div>
 
                 <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm transition-transform hover:scale-[1.02]">
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="p-2 bg-primary-container/10 rounded-lg text-primary">
-                            <span className="material-symbols-outlined">dataset</span>
-                        </div>
-                        <span className="text-on-secondary-container bg-secondary-container px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-tight">Stable</span>
-                    </div>
-                    <p className="text-on-surface-variant text-xs font-bold uppercase tracking-widest mb-1">Active Slots</p>
-                    <h3 className="text-3xl font-black text-on-surface">{stats.activeSlots}</h3>
+                    <p className="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest mb-1">Total Revenue</p>
+                    <h3 className="text-2xl font-black text-on-surface">₹{stats.totalRevenue.toLocaleString()}</h3>
+                </div>
+
+                <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm transition-transform hover:scale-[1.02]">
+                    <p className="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest mb-1">Occupancy</p>
+                    <h3 className="text-2xl font-black text-on-surface">{stats.occupancyRate}%</h3>
+                </div>
+
+                <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm transition-transform hover:scale-[1.02]">
+                    <p className="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest mb-1">Active Slots</p>
+                    <h3 className="text-2xl font-black text-on-surface">{stats.activeSlots}</h3>
                 </div>
             </div>
 

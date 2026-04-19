@@ -17,7 +17,13 @@ export const LoginPage = () => {
         setLoading(true);
         try {
             const data = await login(email, password);
-            if (data.roles?.includes('ROLE_ADMIN')) {
+            const roles = data.roles || [];
+            
+            if (roles.includes('ROLE_ADMIN')) {
+                navigate('/admin');
+            } else if (roles.includes('ROLE_GATEKEEPER')) {
+                navigate('/staff/gatekeeper');
+            } else if (roles.some(r => ['ROLE_SLOTS', 'ROLE_PRICING', 'ROLE_BOOKINGS', 'ROLE_ANALYTICS'].includes(r))) {
                 navigate('/admin');
             } else {
                 navigate('/');

@@ -16,6 +16,13 @@ const DateTimePage = () => {
     const [slots, setSlots] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [adultPrice, setAdultPrice] = useState(800);
+
+    useEffect(() => {
+        api.get('/public/pricing/tickets')
+            .then(res => setAdultPrice(res.data.ADULT || 800))
+            .catch(err => console.error('Failed to fetch base price:', err));
+    }, []);
 
     const daysInMonth = useMemo(() => {
         const firstDay = new Date(currentYear, currentMonth, 1).getDay();
@@ -291,7 +298,7 @@ const DateTimePage = () => {
                                     </div>
                                     <div className="text-right">
                                         <p className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Starting From</p>
-                                        <p className="text-xl font-bold text-primary">₹800.00</p>
+                                        <p className="text-xl font-bold text-primary">₹{adultPrice}.00</p>
                                     </div>
                                 </div>
                                 <button

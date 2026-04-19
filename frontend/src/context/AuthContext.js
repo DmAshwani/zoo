@@ -36,8 +36,12 @@ export const AuthProvider = ({ children }) => {
     return user?.roles?.includes('ROLE_ADMIN') || false;
   };
 
+  const hasRole = (role) => {
+    return user?.roles?.includes(role) || false;
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, signup, logout, isAdmin }}>
+    <AuthContext.Provider value={{ user, loading, login, signup, logout, isAdmin, hasRole }}>
       {children}
     </AuthContext.Provider>
   );

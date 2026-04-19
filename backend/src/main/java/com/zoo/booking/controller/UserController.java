@@ -23,8 +23,8 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
-    @GetMapping("/")
-    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/all")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @SecurityRequirement(name = "Bearer")
     @Operation(summary = "Get All Users", description = "Retrieve all users (Admin only)")
     @ApiResponses(value = {

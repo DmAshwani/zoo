@@ -3,6 +3,7 @@ package com.zoo.booking.controller;
 import com.zoo.booking.entity.Booking;
 import com.zoo.booking.payload.response.MessageResponse;
 import com.zoo.booking.service.BookingService;
+import com.zoo.booking.config.RazorpayService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,6 +23,33 @@ public class PaymentController {
 
     @Autowired
     private BookingService bookingService;
+
+    @Autowired
+    private RazorpayService razorpayService;
+
+    @PostMapping("/confirm/{bookingId}")
+    public ResponseEntity<?> confirmBooking(
+            @PathVariable Long bookingId,
+            @RequestBody java.util.Map<String, String> payload
+    ) {
+        String orderId = payload.get("razorpayOrderId");
+        String paymentId = payload.get("razorpayPaymentId");
+        String signature = payload.get("razorpaySignature");
+
+        java.util.Map<String, String> result = razorpayService.verifyPayment(orderId, paymentId, signature);
+
+        if (!"SUCCESS".equals(result.get("status"))) {
+            return ResponseEntity.badRequest().body(result);
+        }
+
+        // ✅ Update booking status in DB
+        bookingService.confirmBooking(bookingId, paymentId);
+
+        return ResponseEntity.ok(java.util.Map.of(
+                "bookingId", String.valueOf(bookingId),
+                "status", "CONFIRMED"
+        ));
+    }
 
     /**
      * Webhook handler for Razorpay payment success callback.

@@ -13,6 +13,7 @@ import com.zoo.booking.repository.BookingAuditRepository;
 import com.zoo.booking.repository.BookingRepository;
 import com.zoo.booking.repository.SlotRepository;
 import com.zoo.booking.repository.UserRepository;
+import com.zoo.booking.config.RazorpayService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,9 @@ public class BookingService {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private RazorpayService razorpayService;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private static final int BOOKING_EXPIRY_MINUTES = 10;
@@ -178,12 +182,20 @@ public class BookingService {
         // Create audit log
         createAuditLog(booking, request, priceBreakdown, "CREATED", null);
 
-        // Initiate payment (mock Razorpay order)
-        String razorpayOrderId = "order_" + booking.getId() + "_" + System.currentTimeMillis();
-        booking.setRazorpayOrderId(razorpayOrderId);
-        booking = bookingRepository.save(booking);
+        // Initiate payment (real Razorpay order)
+        try {
+            String receipt = "receipt_" + booking.getId();
+            String razorpayOrderId = razorpayService.createOrder(totalAmount, "INR", receipt);
+            booking.setRazorpayOrderId(razorpayOrderId);
+            booking = bookingRepository.save(booking);
+            log.info("Booking initiated successfully with real Razorpay order ID: {}", razorpayOrderId);
+        } catch (Exception e) {
+            log.error("Error creating Razorpay order for booking: {}", booking.getId(), e);
+            // We still have the booking in PENDING status, but without an order ID.
+            // In a real scenario, we might want to fail the booking here or handle it.
+            throw new RuntimeException("Payment initiation failed: " + e.getMessage());
+        }
 
-        log.info("Booking initiated successfully: {} with order ID: {}", booking.getId(), razorpayOrderId);
         return booking;
     }
 

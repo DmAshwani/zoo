@@ -95,7 +95,7 @@ public class BookingController {
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_BOOKINGS')")
     @SecurityRequirement(name = "Bearer")
     @Operation(summary = "Get All Bookings", description = "Retrieve all bookings (Admin only)")
     @ApiResponses(value = {

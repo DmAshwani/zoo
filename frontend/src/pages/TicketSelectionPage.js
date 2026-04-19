@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
+import api from '../services/api';
 import './BookingFlow.css';
 
 const TicketSelectionPage = () => {
@@ -10,11 +11,29 @@ const TicketSelectionPage = () => {
     const [adults, setAdults] = useState(2);
     const [children, setChildren] = useState(1);
     const [addons, setAddons] = useState({ camera: false, safari: false });
+    const [prices, setPrices] = useState({ ADULT: 800, CHILD: 500 });
+    const [addonPrices, setAddonPrices] = useState({ Camera: 300, Safari: 1000 });
 
-    const adultPrice = 800;
-    const childPrice = 500;
-    const cameraPrice = 300;
-    const safariPrice = 1000;
+    useEffect(() => {
+        // Fetch Ticket Prices
+        api.get('/public/pricing/tickets', { params: { slotId: slot?.id } })
+            .then(res => setPrices(res.data))
+            .catch(err => console.error('Error fetching ticket prices:', err));
+
+        // Fetch Add-on Prices
+        api.get('/public/pricing/addons')
+            .then(res => {
+                const map = {};
+                res.data.forEach(a => map[a.name] = a.price);
+                setAddonPrices(map);
+            })
+            .catch(err => console.error('Error fetching add-on prices:', err));
+    }, []);
+
+    const adultPrice = prices.ADULT || 800;
+    const childPrice = prices.CHILD || 500;
+    const cameraPrice = addonPrices.Camera || 300;
+    const safariPrice = addonPrices.Safari || 1000;
 
     const totalPersons = adults + children;
     const subtotal = (adults * adultPrice) + (children * childPrice);
@@ -32,7 +51,16 @@ const TicketSelectionPage = () => {
 
     const handleContinue = () => {
         navigate('/book/details', {
-            state: { date, slot, adults, children, addons, total }
+            state: { 
+                date, 
+                slot, 
+                adults, 
+                children, 
+                addons, 
+                total,
+                adultPrice: prices.ADULT,
+                childPrice: prices.CHILD
+            }
         });
     };
 

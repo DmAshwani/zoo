@@ -28,7 +28,12 @@ const SlotManagement = () => {
             // Use the available slots endpoint for now, or the admin all slots endpoint
             const res = await api.get('/slots/');
             const allSlots = res.data;
-            const dateFiltered = allSlots.filter(s => s.slotDate === selectedDate);
+            const dateFiltered = allSlots.filter(s => {
+                const sDate = typeof s.slotDate === 'string' ? s.slotDate : 
+                             Array.isArray(s.slotDate) ? `${s.slotDate[0]}-${String(s.slotDate[1]).padStart(2,'0')}-${String(s.slotDate[2]).padStart(2,'0')}` : 
+                             '';
+                return sDate === selectedDate;
+            });
             setSlots(dateFiltered);
         } catch (err) {
             console.error("Error fetching slots:", err);
@@ -147,17 +152,21 @@ const SlotManagement = () => {
                                     </p>
                                 </div>
 
-                                <div className="flex gap-3 opacity-100 md:opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                                    <button className="flex-1 bg-surface-container-high hover:bg-primary hover:text-on-primary py-3 rounded-xl text-xs font-black uppercase tracking-widest text-on-surface transition-all">
-                                        Edit
-                                    </button>
-                                    <button 
-                                        onClick={() => toggleSlotStatus(slot.id, slot.isActive)}
-                                        className={`flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${slot.isActive ? 'bg-error-container/20 text-error hover:bg-error hover:text-white' : 'bg-secondary-container/20 text-secondary hover:bg-secondary hover:text-on-secondary'}`}
-                                    >
-                                        {slot.isActive ? 'Disable' : 'Enable'}
-                                    </button>
-                                </div>
+<div className="flex gap-3 mt-4">
+    <button className="flex-1 bg-surface-container-high hover:bg-primary hover:text-on-primary py-3 rounded-xl text-xs font-black uppercase tracking-widest text-on-surface transition-all">
+        Edit
+    </button>
+    <button 
+        onClick={() => toggleSlotStatus(slot.id, slot.isActive)}
+        className={`flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+            slot.isActive 
+                ? 'bg-error-container/20 text-error hover:bg-error hover:text-white' 
+                : 'bg-secondary-container/20 text-secondary hover:bg-secondary hover:text-on-secondary'
+        }`}
+    >
+        {slot.isActive ? 'Disable' : 'Enable'}
+    </button>
+</div>
                             </div>
                         );
                     }) : (

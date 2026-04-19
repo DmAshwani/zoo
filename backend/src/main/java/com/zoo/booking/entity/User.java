@@ -25,5 +25,7 @@ public class User {
     @JsonIgnore
     private java.time.LocalDateTime resetTokenExpiry;
 
+    private Boolean isActive = true;
+
     private Set<Role> roles = new HashSet<>();
 }

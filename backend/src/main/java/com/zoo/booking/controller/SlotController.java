@@ -40,7 +40,7 @@ public class SlotController {
 
     // Admin endpoint to create new slots for the day
     @PostMapping("/")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SLOTS')")
     @SecurityRequirement(name = "Bearer")
     @Operation(summary = "Create New Slot", description = "Create a new booking slot (Admin only)")
     @ApiResponses(value = {
@@ -55,7 +55,7 @@ public class SlotController {
 
     // Admin endpoint to deactivate a slot
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SLOTS')")
     @SecurityRequirement(name = "Bearer")
     @Operation(summary = "Update Slot", description = "Update a slot's capacity or status (Admin only)")
     @ApiResponses(value = {
@@ -73,7 +73,7 @@ public class SlotController {
 
     // Admin endpoint to get all slots
     @GetMapping("/")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SLOTS')")
     @SecurityRequirement(name = "Bearer")
     @Operation(summary = "Get All Slots", description = "Retrieve all slots (Admin only)")
     @ApiResponses(value = {
