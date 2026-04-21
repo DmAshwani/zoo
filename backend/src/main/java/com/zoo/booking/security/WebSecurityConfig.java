@@ -35,6 +35,9 @@ public class WebSecurityConfig {
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Value("#{'${app.cors.allowed-origins:http://localhost:3000}'.split(',')}")
     private List<String> corsAllowedOriginPatterns;
 
@@ -46,7 +49,7 @@ public class WebSecurityConfig {
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setPasswordEncoder(passwordEncoder);
 
         return authProvider;
     }
@@ -56,10 +59,6 @@ public class WebSecurityConfig {
         return authConfig.getAuthenticationManager();
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -74,8 +73,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/api/slots/available").permitAll()
                         .requestMatchers("/api/bookings/initiate").permitAll()
-                        .requestMatchers("/api/bookings/confirm/**").permitAll()
-                        .requestMatchers("/api/bookings/ticket/**").permitAll()
+                        .requestMatchers("/api/payments/webhook/**").permitAll() // Webhooks are public but verified internally
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**", "/api-docs/**").permitAll()
                         .anyRequest().authenticated()

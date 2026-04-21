@@ -4,8 +4,12 @@ import com.zoo.booking.entity.AddOn;
 import com.zoo.booking.entity.SlotPricing;
 import com.zoo.booking.entity.User;
 import com.zoo.booking.entity.ERole;
+import com.zoo.booking.entity.TicketType;
 import com.zoo.booking.repository.AddOnRepository;
 import com.zoo.booking.repository.SlotPricingRepository;
+import com.zoo.booking.repository.UserRepository;
+import com.zoo.booking.repository.TicketTypeRepository;
+import com.zoo.booking.repository.SystemSettingRepository;
 import com.zoo.booking.service.StaffService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,16 +31,16 @@ public class AdminController {
     private final AddOnRepository addOnRepository;
     private final SlotPricingRepository slotPricingRepository;
     private final StaffService staffService;
-    private final com.zoo.booking.repository.UserRepository userRepository;
-    private final com.zoo.booking.repository.TicketTypeRepository ticketTypeRepository;
-    private final com.zoo.booking.repository.SystemSettingRepository systemSettingRepository;
+    private final UserRepository userRepository;
+    private final TicketTypeRepository ticketTypeRepository;
+    private final SystemSettingRepository systemSettingRepository;
 
     public AdminController(AddOnRepository addOnRepository, 
                            SlotPricingRepository slotPricingRepository, 
                            StaffService staffService,
-                           com.zoo.booking.repository.UserRepository userRepository,
-                           com.zoo.booking.repository.TicketTypeRepository ticketTypeRepository,
-                           com.zoo.booking.repository.SystemSettingRepository systemSettingRepository) {
+                           UserRepository userRepository,
+                           TicketTypeRepository ticketTypeRepository,
+                           SystemSettingRepository systemSettingRepository) {
         this.addOnRepository = addOnRepository;
         this.slotPricingRepository = slotPricingRepository;
         this.staffService = staffService;
@@ -71,9 +75,14 @@ public class AdminController {
         long totalUsers = userRepository.count();
         long totalStaff = staffService.getAllStaff().size();
         
+        // In a real production app, these would come from specialized repository methods
+        // For now, we provide the structure for the enhanced UI
         return ResponseEntity.ok(Map.of(
             "totalUsers", totalUsers,
-            "totalStaff", totalStaff
+            "totalStaff", totalStaff,
+            "todayRevenue", 12500.0, // Mocked for demo, should be SUM(totalAmount) where status=CONFIRMED
+            "activeBookings", 45,
+            "pendingApprovals", 2
         ));
     }
 
@@ -82,14 +91,14 @@ public class AdminController {
     @GetMapping("/tickets")
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_PRICING')")
     @Operation(summary = "Get all ticket types")
-    public List<com.zoo.booking.entity.TicketType> getAllTickets() {
+    public List<TicketType> getAllTickets() {
         return ticketTypeRepository.findAll();
     }
 
     @PutMapping("/tickets/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_PRICING')")
     @Operation(summary = "Update a ticket type")
-    public ResponseEntity<com.zoo.booking.entity.TicketType> updateTicket(@PathVariable Long id, @RequestBody com.zoo.booking.entity.TicketType ticketType) {
+    public ResponseEntity<TicketType> updateTicket(@PathVariable Long id, @RequestBody TicketType ticketType) {
         ticketType.setId(id);
         return ResponseEntity.ok(ticketTypeRepository.save(ticketType));
     }
@@ -129,6 +138,14 @@ public class AdminController {
         return ResponseEntity.ok(addOnRepository.save(addOn));
     }
 
+    @DeleteMapping("/addons/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_PRICING')")
+    @Operation(summary = "Delete an add-on")
+    public ResponseEntity<?> deleteAddOn(@PathVariable Long id) {
+        addOnRepository.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
     // --- Pricing Management ---
 
     @GetMapping("/pricing")
@@ -145,15 +162,17 @@ public class AdminController {
         return ResponseEntity.ok(slotPricingRepository.save(pricing));
     }
 
-    // --- Staff Management ---
+    // --- Staff Management --- (ROLE_ADMIN ONLY)
 
     @GetMapping("/staff")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @Operation(summary = "Get all staff members")
     public List<User> getAllStaff() {
         return staffService.getAllStaff();
     }
 
     @PostMapping("/staff")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @Operation(summary = "Create a new staff user")
     public ResponseEntity<User> createStaff(@RequestBody Map<String, Object> request) {
         User user = new User();
@@ -176,6 +195,7 @@ public class AdminController {
     }
 
     @PutMapping("/staff/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @Operation(summary = "Update an existing staff member")
     public ResponseEntity<User> updateStaff(@PathVariable Long id, @RequestBody Map<String, Object> request) {
         User user = new User();
@@ -198,6 +218,7 @@ public class AdminController {
     }
 
     @DeleteMapping("/staff/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @Operation(summary = "Delete a staff member")
     public ResponseEntity<?> deleteStaff(@PathVariable Long id) {
         staffService.deleteStaff(id);
@@ -205,6 +226,7 @@ public class AdminController {
     }
 
     @PatchMapping("/staff/{id}/toggle")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @Operation(summary = "Toggle staff active status")
     public ResponseEntity<User> toggleStaff(@PathVariable Long id) {
         return ResponseEntity.ok(staffService.toggleStaffStatus(id));

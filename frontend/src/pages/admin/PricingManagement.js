@@ -56,27 +56,36 @@ const PricingManagement = () => {
         setTickets(tickets.map(t => t.id === id ? { ...t, [field]: value } : t));
     };
 
-    const handleAddonChange = (id, field, value) => {
-        setAddons(addons.map(a => a.id === id ? { ...a, [field]: value } : a));
+    const handleAddonChange = (idOrIndex, field, value) => {
+        setAddons(addons.map((a, idx) => (a.id === idOrIndex || `new-${idx}` === idOrIndex) ? { ...a, [field]: value } : a));
     };
 
     const handlePricingChange = (id, field, value) => {
         setSlotPricing(slotPricing.map(p => p.id === id ? { ...p, [field]: value } : p));
     };
 
+    const addNewAddon = () => {
+        setAddons([...addons, { name: 'New Service', type: 'ADDON', price: 0, isActive: true, isNew: true }]);
+    };
+
     const handleSave = async () => {
         setSaving(true);
         try {
+            // Separate new addons from existing ones
+            const newAddons = addons.filter(a => a.isNew);
+            const existingAddons = addons.filter(a => !a.isNew);
+
             // Save settings, tickets, addons, and slot overrides
             await Promise.all([
                 ...tickets.map(t => api.put(`/admin/tickets/${t.id}`, t)),
-                ...addons.map(a => api.put(`/admin/addons/${a.id}`, a)),
-                ...slotPricing.map(p => api.put('/admin/pricing', p)),
+                ...existingAddons.map(a => api.put(`/admin/addons/${a.id}`, a)),
+                ...newAddons.map(a => api.post('/admin/addons', { name: a.name, type: a.type, price: a.price, description: a.description, imageUrl: a.imageUrl, isActive: a.isActive })),
                 api.put('/admin/settings', { settingKey: 'dynamic_pricing_enabled', settingValue: String(dynamicPricing) }),
                 api.put('/admin/settings', { settingKey: 'manual_overrides_enabled', settingValue: String(manualPricing) }),
                 api.put('/admin/settings', { settingKey: 'surge_threshold_percent', settingValue: String(threshold) })
             ]);
             alert('Pricing, Add-Ons, and Dynamic Rules saved successfully!');
+            fetchData(); // Refresh to get real IDs for new addons
         } catch (error) {
             console.error('Error saving pricing:', error);
             alert('Failed to save changes. Some updates might have failed.');
@@ -112,11 +121,10 @@ const PricingManagement = () => {
             </div>
 
             <div className="grid grid-cols-12 gap-8">
-                {/* Base Ticket Prices & Slot-Specific */}
-                <div className="col-span-12 lg:col-span-8 space-y-8">
-                    {/* Base Ticket Prices */}
+                {/* Base Ticket Prices Section */}
+                <div className="col-span-12 lg:col-span-12">
                     <div className="bg-surface-container-lowest rounded-xl border border-outline-variant/10 shadow-sm overflow-hidden">
-                        <div className="p-6 border-b border-surface-container bg-surface-container-low/50">
+                        <div className="p-6 border-b border-surface-container bg-surface-container-low/50 flex justify-between items-center">
                             <h3 className="text-lg font-bold text-on-surface tracking-tight">Base Ticket Prices</h3>
                         </div>
                         <div className="p-6">
@@ -153,117 +161,110 @@ const PricingManagement = () => {
                             </table>
                         </div>
                     </div>
-
-                    {/* Slot-Specific Pricing */}
-                    <div className="bg-surface-container-lowest rounded-xl border border-outline-variant/10 shadow-sm overflow-hidden">
-                        <div className="p-6 border-b border-surface-container bg-surface-container-low/50">
-                            <h3 className="text-lg font-bold text-on-surface tracking-tight">Slot-Specific Pricing Surge</h3>
-                        </div>
-                        <div className="p-6">
-                            <table className="w-full text-left">
-                                <thead>
-                                    <tr className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest border-b border-surface-container">
-                                        <th className="pb-4">Slot Time</th>
-                                        <th className="pb-4">Ticket Type</th>
-                                        <th className="pb-4">Override (₹)</th>
-                                        <th className="pb-4 text-right">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {slotPricing.length > 0 ? slotPricing.map((s) => (
-                                        <tr key={s.id} className="border-b border-surface-container/50 last:border-0">
-                                            <td className="py-4 text-sm font-bold text-on-surface">Slot #{s.slotId}</td>
-                                            <td className="py-4 text-xs font-black uppercase tracking-widest text-on-surface-variant">{s.ticketType}</td>
-                                            <td className="py-4">
-                                                <input 
-                                                    className="w-24 bg-surface-container-low border-none rounded-lg py-2 px-3 font-bold text-primary focus:ring-2 focus:ring-primary" 
-                                                    type="number" 
-                                                    value={s.price} 
-                                                    onChange={e => handlePricingChange(s.id, 'price', parseFloat(e.target.value))}
-                                                />
-                                            </td>
-                                            <td className="py-4 text-right">
-                                                <button className="p-2 hover:bg-surface-container text-on-surface-variant rounded-lg transition-colors">
-                                                    <FiEdit2 size={16} />
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    )) : (
-                                        <tr>
-                                            <td colSpan={4} className="py-8 text-center text-on-surface-variant italic">No slot-specific pricing defined.</td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
                 </div>
 
-                {/* Automation & Add-ons Sidebar */}
-                <div className="col-span-12 lg:col-span-4 space-y-8">
-                    {/* Smart Pricing Controls */}
-                    <div className="bg-primary-container p-6 rounded-xl text-black shadow-xl shadow-primary/20">
-                        <div className="flex justify-between items-start mb-6">
+                {/* Add-On Master Section */}
+                <div className="col-span-12 space-y-8">
+                    <div>
+                        <div className="flex justify-between items-center mb-6">
                             <div>
-                                <h3 className="text-xl font-bold tracking-tight mb-1">Pricing Controls</h3>
-                                <p className="text-xs font-bold uppercase tracking-widest text-black/80">Global Rule Sets</p>
+                                <h3 className="text-2xl font-black text-on-surface tracking-tighter">Add-On Services Master</h3>
+                                <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Define extra services like Safari, Camera, or Meals</p>
                             </div>
-                        </div>
-
-                        {/* Toggle 1: Manual Overrides */}
-                        <div className="flex items-center justify-between mb-4 p-3 bg-white/10 rounded-lg backdrop-blur-sm">
-                            <span className="text-[10px] font-black uppercase tracking-widest">Manual Slot Overrides</span>
-                            <label className="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" className="sr-only peer" checked={manualPricing} onChange={e => setManualPricing(e.target.checked)} />
-                                <div className="w-11 h-6 bg-white/30 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                            </label>
-                        </div>
-
-                        {/* Toggle 2: Automatic Surge */}
-                        <div className="flex items-center justify-between mb-6 p-3 bg-white/10 rounded-lg backdrop-blur-sm">
-                            <span className="text-[10px] font-black uppercase tracking-widest">Automatic Surge</span>
-                            <label className="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" className="sr-only peer" checked={dynamicPricing} onChange={e => setDynamicPricing(e.target.checked)} />
-                                <div className="w-11 h-6 bg-white/30 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                            </label>
+                            <button 
+                                className="bg-secondary text-on-secondary px-4 py-2 rounded-lg font-bold text-sm hover:secondary-dim transition-all shadow-md active:scale-95 flex items-center gap-2" 
+                                onClick={addNewAddon}>
+                                <span className="material-symbols-outlined text-sm">add_circle</span>
+                                Add New Service
+                            </button>
                         </div>
                         
-                        {dynamicPricing && (
-                            <div className="mt-6 pt-6 border-t border-white/20">
-                                <div className="flex justify-between mb-2">
-                                    <span className="text-xs font-bold uppercase tracking-widest">Occupancy Threshold</span>
-                                    <span className="text-sm font-black">{threshold}%</span>
-                                </div>
-                                <input 
-                                    type="range" min="50" max="100" value={threshold} onChange={e => setThreshold(e.target.value)}
-                                    className="w-full h-2 bg-white/30 rounded-lg appearance-none cursor-pointer mb-4" 
-                                />
-                                <p className="text-xs font-medium leading-relaxed bg-white/10 p-3 rounded-lg backdrop-blur-sm">
-                                    When slot reaches <strong className="font-black text-white">{threshold}% occupancy</strong>, the system triggers a <strong className="font-black text-white">+50% price surge</strong> automatically.
-                                </p>
-                            </div>
-                        )}
-                    </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                            {addons.map((addon, index) => (
+                                <div key={addon.id || `new-${index}`} className="group bg-surface-container-lowest p-0 rounded-2xl border border-outline-variant/10 shadow-sm hover:shadow-xl hover:border-primary/20 transition-all overflow-hidden flex flex-col">
+                                    {/* Image Section */}
+                                    <div className="h-40 bg-surface-container relative">
+                                        {addon.imageUrl ? (
+                                            <img src={addon.imageUrl} alt={addon.name} className="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-500" />
+                                        ) : (
+                                            <div className="w-full h-full flex flex-col items-center justify-center text-on-surface-variant opacity-30">
+                                                <span className="material-symbols-outlined text-4xl mb-2">image_not_supported</span>
+                                                <span className="text-[10px] font-bold uppercase tracking-widest">No Image Provided</span>
+                                            </div>
+                                        )}
+                                        <div className="absolute top-4 right-4 flex gap-2">
+                                            <button 
+                                                onClick={async () => {
+                                                    if (window.confirm(`Delete add-on "${addon.name}"?`)) {
+                                                        try {
+                                                            if (addon.id) {
+                                                                await api.delete(`/admin/addons/${addon.id}`);
+                                                            }
+                                                            setAddons(addons.filter((a, idx) => a.id ? a.id !== addon.id : idx !== index));
+                                                        } catch (error) {
+                                                            alert('Failed to delete add-on');
+                                                        }
+                                                    }
+                                                }}
+                                                className="w-8 h-8 bg-error/90 text-white rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-error shadow-lg"
+                                            >
+                                                <span className="material-symbols-outlined text-sm">delete</span>
+                                            </button>
+                                        </div>
+                                        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
+                                            <input 
+                                                className="bg-white/10 hover:bg-white/20 text-white text-[10px] px-3 py-1 rounded-full backdrop-blur-md border border-white/20 w-full focus:ring-1 focus:ring-white outline-none placeholder:text-white/50"
+                                                value={addon.imageUrl || ''}
+                                                onChange={e => handleAddonChange(addon.id || `new-${index}`, 'imageUrl', e.target.value)}
+                                                placeholder="Image URL (direct link)"
+                                            />
+                                        </div>
+                                    </div>
 
-                    {/* Add-On Services */}
-                    <div>
-                        <h3 className="text-lg font-bold text-on-surface tracking-tight mb-4">Add-On Services</h3>
-                        <div className="space-y-4">
-                            {addons.map((addon) => (
-                                <div key={addon.id} className="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant/10 flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-primary">
-                                        <span className="material-symbols-outlined">{addon.name.toLowerCase().includes('camera') ? 'photo_camera' : addon.name.toLowerCase().includes('safari') ? 'explore' : 'restaurant'}</span>
+                                    <div className="p-5 flex-1 flex flex-col gap-4">
+                                        <div className="flex justify-between items-start gap-4">
+                                            <div className="flex-1">
+                                                <input 
+                                                    className="font-bold text-lg text-on-surface bg-transparent border-none p-0 focus:ring-0 w-full placeholder:text-on-surface-variant/30"
+                                                    value={addon.name}
+                                                    onChange={e => handleAddonChange(addon.id || `new-${index}`, 'name', e.target.value)}
+                                                    placeholder="Service Name"
+                                                />
+                                                <select 
+                                                    className="text-[10px] uppercase tracking-widest font-black text-primary bg-transparent border-none p-0 focus:ring-0 cursor-pointer"
+                                                    value={addon.type}
+                                                    onChange={e => handleAddonChange(addon.id || `new-${index}`, 'type', e.target.value)}
+                                                >
+                                                    <option value="PER_BOOKING">Per Booking</option>
+                                                    <option value="PER_PERSON">Per Person</option>
+                                                </select>
+                                            </div>
+                                            <div className="relative">
+                                                <span className="absolute left-3 top-2 text-primary font-bold text-sm">₹</span>
+                                                <input 
+                                                    className="w-24 bg-primary/5 border-none rounded-xl py-2 pl-7 pr-3 font-black text-primary focus:ring-2 focus:ring-primary text-right" 
+                                                    type="number" 
+                                                    value={addon.price} 
+                                                    onChange={e => handleAddonChange(addon.id || `new-${index}`, 'price', parseFloat(e.target.value) || 0)}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <textarea 
+                                            className="text-xs text-on-surface-variant bg-surface-container-low/30 border border-outline-variant/10 rounded-xl p-3 focus:ring-1 focus:ring-primary outline-none min-h-[80px] resize-none leading-relaxed"
+                                            value={addon.description || ''}
+                                            onChange={e => handleAddonChange(addon.id || `new-${index}`, 'description', e.target.value)}
+                                            placeholder="Detailed description of the service..."
+                                        />
+                                        
+                                        <div className="pt-2 flex items-center gap-2">
+                                            <label className="relative inline-flex items-center cursor-pointer scale-75 origin-left">
+                                                <input type="checkbox" className="sr-only peer" checked={addon.isActive} onChange={e => handleAddonChange(addon.id || `new-${index}`, 'isActive', e.target.checked)} />
+                                                <div className="w-11 h-6 bg-surface-container-high peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-success"></div>
+                                            </label>
+                                            <span className="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">Available for Booking</span>
+                                        </div>
                                     </div>
-                                    <div className="flex-1">
-                                        <h4 className="font-bold text-sm text-on-surface">{addon.name}</h4>
-                                        <p className="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant mb-2">{addon.type}</p>
-                                    </div>
-                                    <input 
-                                        className="w-20 bg-surface-container-low border-none rounded-lg py-2 px-3 font-bold text-primary focus:ring-2 focus:ring-primary text-right" 
-                                        type="number" 
-                                        value={addon.price} 
-                                        onChange={e => handleAddonChange(addon.id, 'price', parseFloat(e.target.value))}
-                                    />
                                 </div>
                             ))}
                         </div>

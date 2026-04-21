@@ -52,28 +52,6 @@ public class PricingService {
             }
         }
 
-        // 2. Apply Automatic Surge (Occupancy Based) if enabled
-        boolean automaticEnabled = systemSettingRepository.getBooleanValue("dynamic_pricing_enabled", true);
-        if (automaticEnabled && slotId != null) {
-            Optional<Slot> slotOpt = slotRepository.findById(slotId);
-            if (slotOpt.isPresent()) {
-                Slot slot = slotOpt.get();
-                int threshold = systemSettingRepository.getIntValue("surge_threshold_percent", 90);
-                double multiplier = systemSettingRepository.getDoubleValue("surge_multiplier", 1.5);
-                
-                int total = slot.getTotalCapacity();
-                int available = slot.getAvailableCapacity();
-                int booked = total - available;
-                
-                if (total > 0 && ((double) booked / total) * 100 >= threshold) {
-                    // Apply surge multiplier to current values (which might already be overridden)
-                    for (String type : finalPrices.keySet()) {
-                        finalPrices.put(type, finalPrices.get(type) * multiplier);
-                    }
-                }
-            }
-        }
-
         return finalPrices;
     }
 

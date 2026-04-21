@@ -10,9 +10,9 @@ const TicketSelectionPage = () => {
 
     const [adults, setAdults] = useState(2);
     const [children, setChildren] = useState(1);
-    const [addons, setAddons] = useState({ camera: false, safari: false });
+    const [availableAddons, setAvailableAddons] = useState([]);
+    const [selectedAddons, setSelectedAddons] = useState({}); // { id: boolean }
     const [prices, setPrices] = useState({ ADULT: 800, CHILD: 500 });
-    const [addonPrices, setAddonPrices] = useState({ Camera: 300, Safari: 1000 });
 
     useEffect(() => {
         // Fetch Ticket Prices
@@ -20,25 +20,37 @@ const TicketSelectionPage = () => {
             .then(res => setPrices(res.data))
             .catch(err => console.error('Error fetching ticket prices:', err));
 
-        // Fetch Add-on Prices
+        // Fetch Add-on Prices and Details
         api.get('/public/pricing/addons')
             .then(res => {
-                const map = {};
-                res.data.forEach(a => map[a.name] = a.price);
-                setAddonPrices(map);
+                setAvailableAddons(res.data);
+                // Initialize selected addons map
+                const initial = {};
+                res.data.forEach(a => initial[a.id] = false);
+                setSelectedAddons(initial);
             })
-            .catch(err => console.error('Error fetching add-on prices:', err));
+            .catch(err => console.error('Error fetching add-ons:', err));
     }, []);
 
     const adultPrice = prices.ADULT || 800;
     const childPrice = prices.CHILD || 500;
-    const cameraPrice = addonPrices.Camera || 300;
-    const safariPrice = addonPrices.Safari || 1000;
 
     const totalPersons = adults + children;
     const subtotal = (adults * adultPrice) + (children * childPrice);
-    const addonTotal = (addons.camera ? cameraPrice : 0) + (addons.safari ? safariPrice * totalPersons : 0);
+    
+    // Calculate addon total dynamically
+    const addonTotal = availableAddons.reduce((sum, addon) => {
+        if (selectedAddons[addon.id]) {
+            return sum + (addon.type === 'PER_PERSON' ? addon.price * totalPersons : addon.price);
+        }
+        return sum;
+    }, 0);
+
     const total = subtotal + addonTotal;
+
+    const toggleAddon = (id) => {
+        setSelectedAddons(prev => ({ ...prev, [id]: !prev[id] }));
+    };
 
     const formatAmPm = (timeStr) => {
         if (!timeStr) return '';
@@ -56,7 +68,8 @@ const TicketSelectionPage = () => {
                 slot, 
                 adults, 
                 children, 
-                addons, 
+                selectedAddons, // Map of ID -> boolean
+                availableAddons, // Full list for details
                 total,
                 adultPrice: prices.ADULT,
                 childPrice: prices.CHILD
@@ -154,51 +167,47 @@ const TicketSelectionPage = () => {
                         <section className="space-y-6">
                             <h2 className="text-2xl font-bold tracking-tight text-on-surface">Enhance Your Visit</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {/* Safari Access Card */}
-                                <div className="bg-surface-container-lowest overflow-hidden group rounded-xl shadow-sm border border-outline-variant/20 hover:border-primary transition-all cursor-pointer" onClick={() => setAddons({ ...addons, safari: !addons.safari })}>
-                                    <div className="h-48 w-full relative overflow-hidden">
-                                        <img alt="Safari Jeep" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjomdQcQyjIBVoi9JW3oQEBmukgQWoMOMt_sKMPAYs8Td-qyhtNBtYb0J1pxTl9BIuIbyN33cHTHLIJ4a4yW1LoW5S7YOJFVrrKpxC8kxqLkbZ5uIlUb7rCBj9DmrE6HrUirBso8pxEaXUXsiXcJ3kAp1IgdgduhOUZBx06Yt5Vzr7QfGEuqZIm3T1TO6QHSCfiwDYoXZ6rH3M5G2q6NZKVttqqnjfH3IbjU7aMqucLXVm9NQBDiVMMJ4z9cwzP1bCghABiMYyb3A" />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                                        <div className="absolute bottom-4 left-4 text-white font-bold text-lg">Safari Access</div>
-                                    </div>
-                                    <div className="p-6 space-y-4">
-                                        <p className="text-sm text-on-surface-variant">Premium guided truck tour through the open habitat zones. 90 minutes.</p>
-                                        <div className="flex justify-between items-center">
-                                            <span className="font-bold text-tertiary">+₹{safariPrice}.00 / person</span>
-                                            {addons.safari ? (
-                                                <button className="px-4 py-2 bg-primary text-on-primary text-xs font-bold uppercase tracking-widest rounded-lg flex items-center gap-2">
-                                                    <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>check</span>
-                                                    Added
-                                                </button>
+                                {availableAddons.map(addon => (
+                                    <div 
+                                        key={addon.id} 
+                                        className={`bg-surface-container-lowest overflow-hidden group rounded-2xl shadow-sm border transition-all cursor-pointer ${selectedAddons[addon.id] ? 'border-primary ring-2 ring-primary/20' : 'border-outline-variant/20 hover:border-primary/50'}`}
+                                        onClick={() => toggleAddon(addon.id)}
+                                    >
+                                        <div className="h-48 w-full relative overflow-hidden">
+                                            {addon.imageUrl ? (
+                                                <img alt={addon.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={addon.imageUrl} />
                                             ) : (
-                                                <button className="px-4 py-2 bg-tertiary-container text-on-tertiary-container text-xs font-bold uppercase tracking-widest rounded-lg hover:bg-tertiary hover:text-on-tertiary transition-colors">Add</button>
+                                                <div className="w-full h-full bg-surface-container-high flex items-center justify-center text-on-surface-variant/30">
+                                                    <span className="material-symbols-outlined text-4xl">image</span>
+                                                </div>
                                             )}
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                                            <div className="absolute bottom-4 left-4 text-white">
+                                                <div className="font-bold text-lg leading-tight">{addon.name}</div>
+                                                <div className="text-[10px] uppercase tracking-widest font-black opacity-80">{addon.type === 'PER_PERSON' ? 'Per Person' : 'Per Booking'}</div>
+                                            </div>
+                                        </div>
+                                        <div className="p-6 space-y-4">
+                                            <p className="text-sm text-on-surface-variant line-clamp-2 min-h-[40px]">{addon.description || 'Additional service to enhance your experience.'}</p>
+                                            <div className="flex justify-between items-center">
+                                                <span className="font-bold text-primary">₹{addon.price}.00</span>
+                                                {selectedAddons[addon.id] ? (
+                                                    <button className="px-5 py-2 bg-primary text-on-primary text-xs font-bold uppercase tracking-widest rounded-full flex items-center gap-2 shadow-lg shadow-primary/20">
+                                                        <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>check</span>
+                                                        Selected
+                                                    </button>
+                                                ) : (
+                                                    <button className="px-5 py-2 bg-primary-container text-on-primary-container text-xs font-bold uppercase tracking-widest rounded-full hover:bg-primary hover:text-on-primary transition-all">Add</button>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-
-                                {/* Camera Permit Card */}
-                                <div className="bg-surface-container-lowest overflow-hidden group rounded-xl shadow-sm border border-outline-variant/20 hover:border-primary transition-all cursor-pointer" onClick={() => setAddons({ ...addons, camera: !addons.camera })}>
-                                    <div className="h-48 w-full relative overflow-hidden">
-                                        <img alt="Camera Kit" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCf6sn6eW31lg44EBe8fpMVDtk9xiwSVZ-uYxxHmC-YhwS892BPSe7xwnw8ShiLiBqxLGxqg94knR7nOqZiv0mzMPZFFbnEmtZh2CR6P_tHXHv1XmHqHuwgwYXn2EgPh-TIKeTAWHw9iN6Lo3b1pdpI635_mEYCwCFAKP4E9aSWAn2BGQ20DLjE5NmEwSxThJEpMK_AdkazJkNrhxTyTwtopEgmPT1U7WGvZ8oaP21yDkj5j8G25gmwbFGGo-j6mXsD7v6oKEQXT3c" />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                                        <div className="absolute bottom-4 left-4 text-white font-bold text-lg">Camera Permit</div>
+                                ))}
+                                {availableAddons.length === 0 && (
+                                    <div className="col-span-2 py-12 text-center text-on-surface-variant italic border-2 border-dashed border-outline-variant/20 rounded-2xl">
+                                        No enhancement services currently available.
                                     </div>
-                                    <div className="p-6 space-y-4">
-                                        <p className="text-sm text-on-surface-variant">Professional gear access for photography enthusiasts. Includes tripod clearance.</p>
-                                        <div className="flex justify-between items-center">
-                                            <span className="font-bold text-tertiary">+₹{cameraPrice}.00 / group</span>
-                                            {addons.camera ? (
-                                                <button className="px-4 py-2 bg-primary text-on-primary text-xs font-bold uppercase tracking-widest rounded-lg flex items-center gap-2">
-                                                    <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>check</span>
-                                                    Added
-                                                </button>
-                                            ) : (
-                                                <button className="px-4 py-2 bg-tertiary-container text-on-tertiary-container text-xs font-bold uppercase tracking-widest rounded-lg hover:bg-tertiary hover:text-on-tertiary transition-colors">Add</button>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
+                                )}
                             </div>
                         </section>
                     </div>
@@ -230,18 +239,12 @@ const TicketSelectionPage = () => {
                                                 <span className="font-medium text-on-surface">₹{children * childPrice}.00</span>
                                             </div>
                                         )}
-                                        {addons.safari && (
-                                            <div className="flex justify-between text-sm">
-                                                <span className="text-on-surface-variant">Safari Access (x{totalPersons})</span>
-                                                <span className="font-medium text-on-surface">₹{safariPrice * totalPersons}.00</span>
+                                        {availableAddons.map(addon => selectedAddons[addon.id] && (
+                                            <div key={addon.id} className="flex justify-between text-sm">
+                                                <span className="text-on-surface-variant">{addon.name} {addon.type === 'PER_PERSON' ? `(x${totalPersons})` : ''}</span>
+                                                <span className="font-medium text-on-surface">₹{addon.type === 'PER_PERSON' ? addon.price * totalPersons : addon.price}.00</span>
                                             </div>
-                                        )}
-                                        {addons.camera && (
-                                            <div className="flex justify-between text-sm">
-                                                <span className="text-on-surface-variant">Camera Permit</span>
-                                                <span className="font-medium text-on-surface">₹{cameraPrice}.00</span>
-                                            </div>
-                                        )}
+                                        ))}
                                     </div>
 
                                     <div className="pt-6 border-t border-surface-container-high space-y-4">

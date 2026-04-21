@@ -65,10 +65,10 @@ const AdminDashboard = () => {
                 const occupancy = totalCap > 0 ? Math.round((usedCap / totalCap) * 100) : 0;
 
                 setStats({
-                    todayBookings: todayBookingsArr.length,
-                    totalRevenue: totalRev,
-                    occupancyRate: occupancy,
-                    activeSlots: activeCount,
+                    todayBookings: summaryData.todayBookings || todayBookingsArr.length,
+                    todayRevenue: summaryData.todayRevenue || totalRev,
+                    occupancyRate: summaryData.occupancyRate || occupancy,
+                    activeSlots: summaryData.activeSlots || activeCount,
                     totalUsers: summaryData.totalUsers,
                     totalStaff: summaryData.totalStaff
                 });

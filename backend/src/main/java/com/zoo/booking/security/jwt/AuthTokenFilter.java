@@ -30,35 +30,19 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         try {
-            // Skip JWT processing for public endpoints that don't require authentication
-            if (isPublicEndpoint(request.getRequestURI())) {
-                logger.debug("🔓 Public endpoint accessed: {}", request.getRequestURI());
-                filterChain.doFilter(request, response);
-                return;
-            }
-
             String jwt = parseJwt(request);
+            if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
+                String username = jwtUtils.getUserNameFromJwtToken(jwt);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-            if (jwt != null) {
-                if (jwtUtils.validateJwtToken(jwt)) {
-                    String username = jwtUtils.getUserNameFromJwtToken(jwt);
-                    logger.debug("✅ JWT Token validated for user: {}", username);
-
-                    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                            userDetails, null, userDetails.getAuthorities());
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                    logger.debug("🔐 User authenticated: {} with roles: {}", username, userDetails.getAuthorities());
-                } else {
-                    logger.warn("⚠️ Invalid JWT Token provided: {}", jwt.substring(0, Math.min(20, jwt.length())) + "...");
-                }
-            } else {
-                logger.debug("⚠️ No JWT token found in Authorization header for path: {}", request.getRequestURI());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
-            logger.error("❌ Cannot set user authentication: {}", e.getMessage(), e);
+            System.err.println("❌ AuthTokenFilter error: " + e.getMessage());
+            e.printStackTrace();
         }
 
         filterChain.doFilter(request, response);

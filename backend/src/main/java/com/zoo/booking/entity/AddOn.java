@@ -19,6 +19,8 @@ public class AddOn {
 
     private Integer bookedCapacity = 0; // Currently booked
 
+    private String description;
+    private String imageUrl;
     private Boolean isActive = true;
 }
 

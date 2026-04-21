@@ -63,23 +63,6 @@ public class BookingController {
         }
     }
 
-    @PostMapping("/confirm/{id}")
-    @SecurityRequirement(name = "Bearer")
-    @Operation(summary = "Confirm Booking", description = "Confirm a booking after successful payment")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Booking confirmed successfully"),
-        @ApiResponse(responseCode = "404", description = "Booking not found"),
-        @ApiResponse(responseCode = "500", description = "Error generating ticket")
-    })
-    public ResponseEntity<?> confirmBooking(@PathVariable Long id, @RequestParam String paymentId) {
-        try {
-            Booking booking = bookingService.confirmBooking(id, paymentId);
-            return ResponseEntity.ok(booking);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
-
     @GetMapping("/my-bookings")
     @SecurityRequirement(name = "Bearer")
     @Operation(summary = "Get User's Bookings", description = "Retrieve all bookings for the authenticated user")
