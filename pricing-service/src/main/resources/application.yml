@@ -1,0 +1,28 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: pricing-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/zoo_pricing_db
+    username: zoo_admin
+    password: ${DB_PASSWORD:zoo_password}
+    driver-class-name: org.postgresql.Driver
+  
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:ZooIdentitySecretKey2026!@#DynamicRBAC_Security}
+  services:
+    inventory:
+      name: inventory-service
+
+logging:
+  level:
+    com.zoo.pricing: DEBUG
+    org.springframework.jdbc.core.NamedParameterJdbcTemplate: DEBUG

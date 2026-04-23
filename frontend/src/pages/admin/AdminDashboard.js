@@ -66,11 +66,11 @@ const AdminDashboard = () => {
 
                 setStats({
                     todayBookings: summaryData.todayBookings || todayBookingsArr.length,
-                    todayRevenue: summaryData.todayRevenue || totalRev,
+                    totalRevenue: summaryData.todayRevenue || totalRev,
                     occupancyRate: summaryData.occupancyRate || occupancy,
                     activeSlots: summaryData.activeSlots || activeCount,
-                    totalUsers: summaryData.totalUsers,
-                    totalStaff: summaryData.totalStaff
+                    totalUsers: summaryData.totalUsers || 0,
+                    totalStaff: summaryData.totalStaff || 0
                 });
 
                 const sortedBookings = [...allBookings].sort((a,b) => b.id - a.id).slice(0, 5);
@@ -92,7 +92,7 @@ const AdminDashboard = () => {
         { day: 'Mon', revenue: 18500 }, { day: 'Tue', revenue: 22300 },
         { day: 'Wed', revenue: 19800 }, { day: 'Thu', revenue: 28400 },
         { day: 'Fri', revenue: 35200 }, { day: 'Sat', revenue: 42100 },
-        { day: 'Sun', revenue: stats.totalRevenue > 200000 ? 55000 : stats.totalRevenue / 7 },
+        { day: 'Sun', revenue: (stats.totalRevenue || 0) > 200000 ? 55000 : (stats.totalRevenue || 0) / 7 },
     ];
 
     if (loading) {
@@ -127,22 +127,22 @@ const AdminDashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-10">
                 <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm transition-transform hover:scale-[1.02]">
                     <p className="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest mb-1">Total Visitors</p>
-                    <h3 className="text-2xl font-black text-on-surface">{stats.totalUsers}</h3>
+                    <h3 className="text-2xl font-black text-on-surface">{stats.totalUsers || 0}</h3>
                 </div>
 
                 <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm transition-transform hover:scale-[1.02]">
                     <p className="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest mb-1">Total Staff</p>
-                    <h3 className="text-2xl font-black text-on-surface">{stats.totalStaff}</h3>
+                    <h3 className="text-2xl font-black text-on-surface">{stats.totalStaff || 0}</h3>
                 </div>
 
                 <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm transition-transform hover:scale-[1.02]">
                     <p className="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest mb-1">Today's Bookings</p>
-                    <h3 className="text-2xl font-black text-on-surface">{stats.todayBookings}</h3>
+                    <h3 className="text-2xl font-black text-on-surface">{stats.todayBookings || 0}</h3>
                 </div>
 
                 <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm transition-transform hover:scale-[1.02]">
                     <p className="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest mb-1">Total Revenue</p>
-                    <h3 className="text-2xl font-black text-on-surface">₹{stats.totalRevenue.toLocaleString()}</h3>
+                    <h3 className="text-2xl font-black text-on-surface">₹{(stats.totalRevenue || 0).toLocaleString()}</h3>
                 </div>
 
                 <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm transition-transform hover:scale-[1.02]">

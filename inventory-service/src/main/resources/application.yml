@@ -1,0 +1,29 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: inventory-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/zoo_inventory_db
+    username: zoo_admin
+    password: ${DB_PASSWORD:zoo_password}
+    driver-class-name: org.postgresql.Driver
+  
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:ZooIdentitySecretKey2026!@#DynamicRBAC_Security}
+
+logging:
+  level:
+    com.zoo.inventory: DEBUG
+    org.springframework.jdbc.core.NamedParameterJdbcTemplate: DEBUG
