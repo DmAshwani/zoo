@@ -11,7 +11,7 @@ const menuItems = [
   { path: '/admin/users', icon: 'group', label: 'Users', roles: ['ROLE_ADMIN'] },
 ];
 
-const AdminSidebar = () => {
+const AdminSidebar = ({ isOpen, setIsOpen }) => {
     const { logout, hasRole } = useAuth();
     const navigate = useNavigate();
 
@@ -26,79 +26,89 @@ const AdminSidebar = () => {
         return false;
     });
 
-    // Special case for Gatekeeper portal link
-    if (hasRole('ROLE_GATEKEEPER')) {
-        // If they are ONLY a gatekeeper, we might want to redirect them or just show the link
-    }
-
     return (
-        <aside className="h-screen w-64 fixed left-0 top-0 border-r-0 bg-[#FAFAF5] dark:bg-stone-950 flex flex-col py-8 z-50">
-            {/* Brand Header */}
-            <div className="px-8 mb-12 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center text-on-primary">
-                    <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>park</span>
-                </div>
-                <div>
-                    <h1 className="text-xl font-bold text-primary dark:text-[#B9F395] tracking-tighter">Botanical Archive</h1>
-                    <p className="text-[10px] font-semibold text-on-surface-variant uppercase tracking-widest">Zoo Administration</p>
-                </div>
-            </div>
+        <>
+            {/* Mobile Overlay */}
+            {isOpen && (
+                <div 
+                    className="fixed inset-0 bg-black/50 z-40 md:hidden" 
+                    onClick={() => setIsOpen(false)}
+                />
+            )}
 
-            {/* Navigation Links */}
-            <nav className="flex-1 space-y-1">
-                {filteredMenu.map((item) => (
-                    <NavLink
-                        key={item.path}
-                        to={item.path}
-                        end={item.exact}
-                        className={({ isActive }) =>
-                            isActive
-                                ? "flex items-center text-primary font-bold bg-surface-container-high dark:bg-stone-800 rounded-r-full px-6 py-3 transition-colors duration-200"
-                                : "flex items-center text-on-surface-variant dark:text-stone-400 font-medium px-6 py-3 hover:bg-surface-container-high dark:hover:bg-stone-800 transition-colors duration-200 rounded-r-full"
-                        }
-                    >
-                        <span className="material-symbols-outlined mr-4">{item.icon}</span>
-                        <span className="font-public-sans text-sm tracking-tight">{item.label}</span>
-                    </NavLink>
-                ))}
-                
-                {/* Gatekeeper Portal Link for Staff/Admins */}
-                {(hasRole('ROLE_GATEKEEPER') || hasRole('ROLE_ADMIN')) && (
-                    <NavLink
-                        to="/staff/gatekeeper"
-                        className={({ isActive }) =>
-                            isActive
-                                ? "flex items-center text-emerald-600 font-bold bg-emerald-50 rounded-r-full px-6 py-3 transition-colors duration-200"
-                                : "flex items-center text-stone-500 font-medium px-6 py-3 hover:bg-stone-100 transition-colors duration-200 rounded-r-full"
-                        }
-                    >
-                        <span className="material-symbols-outlined mr-4">door_open</span>
-                        <span className="font-public-sans text-sm tracking-tight text-emerald-700">Gatekeeper Portal</span>
-                    </NavLink>
-                )}
-            </nav>
+            <aside className={`h-screen w-64 fixed left-0 top-0 border-r-0 bg-[#FAFAF5] dark:bg-stone-950 flex flex-col py-8 z-50 transition-transform duration-300 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
+                {/* Brand Header */}
+                <div className="px-8 mb-12 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center text-on-primary">
+                        <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>park</span>
+                    </div>
+                    <div>
+                        <h1 className="text-xl font-bold text-primary dark:text-[#B9F395] tracking-tighter">Botanical Archive</h1>
+                        <p className="text-[10px] font-semibold text-on-surface-variant uppercase tracking-widest">Zoo Administration</p>
+                    </div>
+                </div>
 
-            {/* Footer Actions */}
-            <div className="mt-auto px-2 space-y-1">
-                <button
-                    onClick={() => navigate('/')}
-                    className="w-full flex items-center text-on-surface-variant dark:text-stone-400 font-medium px-6 py-3 hover:bg-surface-container-high dark:hover:bg-stone-800 rounded-r-full transition-colors duration-200"
-                >
-                    <span className="material-symbols-outlined mr-4">arrow_back</span>
-                    <span className="font-public-sans text-sm tracking-tight">Back to Site</span>
-                </button>
-                <button
-                    onClick={() => {
-                        logout();
-                        navigate('/');
-                    }}
-                    className="w-full flex items-center text-on-surface-variant dark:text-stone-400 font-medium px-6 py-3 hover:bg-surface-container-high dark:hover:bg-stone-800 rounded-r-full transition-colors duration-200"
-                >
-                    <span className="material-symbols-outlined mr-4">logout</span>
-                    <span className="font-public-sans text-sm tracking-tight">Logout</span>
-                </button>
-            </div>
-        </aside>
+                {/* Navigation Links */}
+                <nav className="flex-1 space-y-1">
+                    {filteredMenu.map((item) => (
+                        <NavLink
+                            key={item.path}
+                            to={item.path}
+                            end={item.exact}
+                            onClick={() => setIsOpen(false)}
+                            className={({ isActive }) =>
+                                isActive
+                                    ? "flex items-center text-primary font-bold bg-surface-container-high dark:bg-stone-800 rounded-r-full px-6 py-3 transition-colors duration-200"
+                                    : "flex items-center text-on-surface-variant dark:text-stone-400 font-medium px-6 py-3 hover:bg-surface-container-high dark:hover:bg-stone-800 transition-colors duration-200 rounded-r-full"
+                            }
+                        >
+                            <span className="material-symbols-outlined mr-4">{item.icon}</span>
+                            <span className="font-public-sans text-sm tracking-tight">{item.label}</span>
+                        </NavLink>
+                    ))}
+                    
+                    {/* Gatekeeper Portal Link for Staff/Admins */}
+                    {(hasRole('ROLE_GATEKEEPER') || hasRole('ROLE_ADMIN')) && (
+                        <NavLink
+                            to="/staff/gatekeeper"
+                            onClick={() => setIsOpen(false)}
+                            className={({ isActive }) =>
+                                isActive
+                                    ? "flex items-center text-emerald-600 font-bold bg-emerald-50 rounded-r-full px-6 py-3 transition-colors duration-200"
+                                    : "flex items-center text-stone-500 font-medium px-6 py-3 hover:bg-stone-100 transition-colors duration-200 rounded-r-full"
+                            }
+                        >
+                            <span className="material-symbols-outlined mr-4">door_open</span>
+                            <span className="font-public-sans text-sm tracking-tight text-emerald-700">Gatekeeper Portal</span>
+                        </NavLink>
+                    )}
+                </nav>
+
+                {/* Footer Actions */}
+                <div className="mt-auto px-2 space-y-1">
+                    <button
+                        onClick={() => {
+                            setIsOpen(false);
+                            navigate('/');
+                        }}
+                        className="w-full flex items-center text-on-surface-variant dark:text-stone-400 font-medium px-6 py-3 hover:bg-surface-container-high dark:hover:bg-stone-800 rounded-r-full transition-colors duration-200"
+                    >
+                        <span className="material-symbols-outlined mr-4">arrow_back</span>
+                        <span className="font-public-sans text-sm tracking-tight">Back to Site</span>
+                    </button>
+                    <button
+                        onClick={() => {
+                            logout();
+                            navigate('/');
+                        }}
+                        className="w-full flex items-center text-on-surface-variant dark:text-stone-400 font-medium px-6 py-3 hover:bg-surface-container-high dark:hover:bg-stone-800 rounded-r-full transition-colors duration-200"
+                    >
+                        <span className="material-symbols-outlined mr-4">logout</span>
+                        <span className="font-public-sans text-sm tracking-tight">Logout</span>
+                    </button>
+                </div>
+            </aside>
+        </>
     );
 };
 

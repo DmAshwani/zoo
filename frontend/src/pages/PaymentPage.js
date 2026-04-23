@@ -90,17 +90,17 @@ const PaymentPage = () => {
         try {
             // 1. Initiate Booking
             const addOns = [];
-            if (bookingState.addons?.camera && addonMap['Camera']) {
-                addOns.push({ addOnId: addonMap['Camera'], quantity: 1 });
-            }
-            if (bookingState.addons?.safari && addonMap['Safari']) {
-                addOns.push({ addOnId: addonMap['Safari'], quantity: bookingState.adults + bookingState.children });
-            }
-            // Fallback for hardcoded IDs if map is empty (development safety)
-            if (addOns.length === 0 && Object.keys(addonMap).length === 0) {
-                if (bookingState.addons?.camera) addOns.push({ addOnId: 1, quantity: 1 });
-                if (bookingState.addons?.safari) addOns.push({ addOnId: 2, quantity: bookingState.adults + bookingState.children });
-            }
+            const selectedAddonIds = Object.keys(bookingState.selectedAddons || {}).filter(id => bookingState.selectedAddons[id]);
+            
+            selectedAddonIds.forEach(id => {
+                const addon = (bookingState.availableAddons || []).find(a => String(a.id) === String(id));
+                if (addon) {
+                    addOns.push({ 
+                        addOnId: parseInt(id), 
+                        quantity: addon.type === 'PER_PERSON' ? (bookingState.adults + bookingState.children) : 1 
+                    });
+                }
+            });
 
             const initiatePayload = {
                 slotId: bookingState.slot?.id,
@@ -293,18 +293,12 @@ const PaymentPage = () => {
                                     </div>
 
                                     {/* Additional Addons */}
-                                    {bookingState.addons?.safari && (
-                                        <div className="flex justify-between items-center text-sm">
-                                            <span className="text-on-surface-variant">Safari Access</span>
-                                            <span className="font-medium">₹{(bookingState.adults + bookingState.children) * 1000}.00</span>
+                                    {(bookingState.availableAddons || []).map(addon => bookingState.selectedAddons?.[addon.id] && (
+                                        <div key={addon.id} className="flex justify-between items-center text-sm">
+                                            <span className="text-on-surface-variant">{addon.name} {addon.type === 'PER_PERSON' ? `(x${bookingState.adults + bookingState.children})` : ''}</span>
+                                            <span className="font-medium">₹{addon.type === 'PER_PERSON' ? addon.price * (bookingState.adults + bookingState.children) : addon.price}.00</span>
                                         </div>
-                                    )}
-                                    {bookingState.addons?.camera && (
-                                        <div className="flex justify-between items-center text-sm">
-                                            <span className="text-on-surface-variant">Camera Permit</span>
-                                            <span className="font-medium">₹300.00</span>
-                                        </div>
-                                    )}
+                                    ))}
 
 
                                     <div className="flex justify-between items-center text-sm">

@@ -4,15 +4,20 @@ import com.zoo.booking.entity.Booking;
 import com.zoo.booking.payload.response.MessageResponse;
 import com.zoo.booking.service.BookingService;
 import com.zoo.booking.config.RazorpayService;
+import com.razorpay.Utils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import jakarta.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 @Slf4j
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -27,16 +32,19 @@ public class PaymentController {
     @Autowired
     private RazorpayService razorpayService;
 
+    @Value("${razorpay.webhook.secret:ZooWebhookSecret2026}")
+    private String webhookSecret;
+
     @PostMapping("/confirm/{bookingId}")
     public ResponseEntity<?> confirmBooking(
             @PathVariable Long bookingId,
-            @RequestBody java.util.Map<String, String> payload
+            @RequestBody Map<String, String> payload
     ) {
         String orderId = payload.get("razorpayOrderId");
         String paymentId = payload.get("razorpayPaymentId");
         String signature = payload.get("razorpaySignature");
 
-        java.util.Map<String, String> result = razorpayService.verifyPayment(orderId, paymentId, signature);
+        Map<String, String> result = razorpayService.verifyPayment(orderId, paymentId, signature);
 
         if (!"SUCCESS".equals(result.get("status"))) {
             return ResponseEntity.badRequest().body(result);
@@ -45,7 +53,7 @@ public class PaymentController {
         // ✅ Update booking status in DB
         bookingService.confirmBooking(bookingId, paymentId);
 
-        return ResponseEntity.ok(java.util.Map.of(
+        return ResponseEntity.ok(Map.of(
                 "bookingId", String.valueOf(bookingId),
                 "status", "CONFIRMED"
         ));
@@ -59,37 +67,38 @@ public class PaymentController {
     @Operation(summary = "Razorpay Payment Webhook", description = "Webhook endpoint for Razorpay payment callbacks")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Webhook processed successfully"),
-        @ApiResponse(responseCode = "400", description = "Invalid webhook payload"),
+        @ApiResponse(responseCode = "401", description = "Invalid webhook signature"),
         @ApiResponse(responseCode = "500", description = "Error processing webhook")
     })
-    public ResponseEntity<?> handleRazorpayWebhook(@RequestBody RazorpayWebhookPayload payload) {
-        log.info("Received Razorpay webhook: orderId={}, paymentId={}",
-                payload.getOrderId(), payload.getPaymentId());
+    public ResponseEntity<?> handleRazorpayWebhook(
+            @RequestBody String body,
+            @RequestHeader("X-Razorpay-Signature") String signature
+    ) {
+        log.info("Received Razorpay webhook signature review");
 
         try {
-            // Verify webhook signature (in production, verify with Razorpay public key)
-            if (!verifyWebhookSignature(payload)) {
-                log.warn("Webhook signature verification failed");
+            // Verify webhook signature
+            if (!verifyWebhookSignature(body, signature)) {
+                log.warn("Webhook signature verification failed!");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(new MessageResponse("Invalid webhook signature"));
             }
 
-            // Find booking by order ID
-            // Note: Using a custom query method that should be added to BookingRepository
-            // For now, we'll implement a basic version
-
-            if ("PAYMENT_SUCCESS".equals(payload.getStatus())) {
-                // Confirm booking
-                log.info("Processing payment success for order: {}", payload.getOrderId());
-                // This should extract booking ID from order ID format: order_{bookingId}_{timestamp}
-                Long bookingId = extractBookingIdFromOrderId(payload.getOrderId());
-                Booking booking = bookingService.confirmBooking(bookingId, payload.getPaymentId());
-                return ResponseEntity.ok(new MessageResponse("Booking confirmed successfully"));
-            } else if ("PAYMENT_FAILED".equals(payload.getStatus())) {
-                log.warn("Processing payment failure for order: {}", payload.getOrderId());
-                Long bookingId = extractBookingIdFromOrderId(payload.getOrderId());
-                bookingService.failBooking(bookingId, "PAYMENT_FAILED_" + payload.getFailureReason());
-                return ResponseEntity.ok(new MessageResponse("Booking marked as failed"));
+            // Parse body
+            if (body.contains("payment.captured")) {
+                 String orderId = extractField(body, "order_id");
+                 String paymentId = extractField(body, "payment_id");
+                 
+                 log.info("Processing payment success for order: {}", orderId);
+                 Long bookingId = extractBookingIdFromOrderId(orderId);
+                 bookingService.confirmBooking(bookingId, paymentId);
+                 return ResponseEntity.ok(new MessageResponse("Booking confirmed via webhook"));
+            } else if (body.contains("payment.failed")) {
+                 String orderId = extractField(body, "order_id");
+                 log.warn("Processing payment failure for order: {}", orderId);
+                 Long bookingId = extractBookingIdFromOrderId(orderId);
+                 bookingService.failBooking(bookingId, "PAYMENT_FAILED_VIA_WEBHOOK");
+                 return ResponseEntity.ok(new MessageResponse("Booking failed via webhook"));
             }
 
             return ResponseEntity.ok(new MessageResponse("Webhook processed"));
@@ -100,34 +109,43 @@ public class PaymentController {
         }
     }
 
-    /**
-     * Verify webhook signature with Razorpay.
-     * In production, this should verify using Razorpay's webhook secret.
-     */
-    private boolean verifyWebhookSignature(RazorpayWebhookPayload payload) {
-        // TODO: Implement proper signature verification
-        // For now, accept all valid payloads
-        return payload.getOrderId() != null && payload.getPaymentId() != null;
+    private boolean verifyWebhookSignature(String body, String signature) {
+        try {
+            return Utils.verifyWebhookSignature(body, signature, webhookSecret);
+        } catch (Exception e) {
+            log.error("Signature verification error", e);
+            return false;
+        }
     }
 
-    /**
-     * Extract booking ID from order ID.
-     * Order ID format: order_{bookingId}_{timestamp}
-     */
+    private String extractField(String json, String field) {
+        // Simple regex-based extraction
+        java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("\"" + field + "\"\\s*:\\s*\"([^\"]+)\"");
+        java.util.regex.Matcher matcher = pattern.matcher(json);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
+    }
+
     private Long extractBookingIdFromOrderId(String orderId) {
+        if (orderId == null) throw new RuntimeException("Order ID is null");
         try {
+            // Format: order_{bookingId}_{timestamp}
             String[] parts = orderId.split("_");
             if (parts.length >= 2) {
                 return Long.parseLong(parts[1]);
             }
+            // Fallback for simple numeric IDs
+            return Long.parseLong(orderId.replaceAll("[^0-9]", ""));
         } catch (Exception e) {
             log.error("Error extracting booking ID from order: {}", orderId, e);
+            throw new RuntimeException("Invalid order ID format");
         }
-        throw new RuntimeException("Invalid order ID format");
     }
 
     /**
-     * Webhook payload from Razorpay.
+     * Legacy payload class - kept for backward compatibility if needed
      */
     @lombok.Data
     public static class RazorpayWebhookPayload {
@@ -137,4 +155,3 @@ public class PaymentController {
         private String failureReason;
     }
 }
-

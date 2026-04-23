@@ -200,10 +200,82 @@
   border-color: var(--primary-container);
 }
 
+/* Status Badges Refined */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid transparent;
+}
+
+.status-badge--active {
+  background: #ecfdf5;
+  color: #059669;
+  border-color: #10b98120;
+}
+
+.status-badge--inactive {
+  background: #fdf2f2;
+  color: #dc2626;
+  border-color: #ef444420;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.status-indicator--active { background: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15); }
+.status-indicator--inactive { background: #ef4444; }
+
+/* Avatar Status Ring */
+.avatar-container {
+  position: relative;
+  display: inline-block;
+}
+
+.avatar-status {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--surface-container-lowest);
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
 /* ─── Responsive ─── */
 @media (max-width: 768px) {
   .admin-grid-2 { grid-template-columns: 1fr; }
   .admin-grid-3 { grid-template-columns: 1fr; }
   .slot-grid { grid-template-columns: 1fr; }
   .pricing-card { flex-direction: column; text-align: center; }
+  
+  /* Table Stack for Mobile */
+  .responsive-table tr {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    border-bottom: 1px solid var(--outline-variant);
+  }
+  
+  .responsive-table td {
+    padding: 0.5rem 0;
+    border: none;
+  }
 }

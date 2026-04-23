@@ -21,6 +21,8 @@ public class AddOnRepository {
                 addOn.setMaxLimitPerBooking((Integer) rs.getObject("max_limit_per_booking"));
                 addOn.setAvailableCapacity((Integer) rs.getObject("available_capacity"));
                 addOn.setBookedCapacity((Integer) rs.getObject("booked_capacity"));
+                addOn.setDescription(rs.getString("description"));
+                addOn.setImageUrl(rs.getString("image_url"));
                 addOn.setIsActive((Boolean) rs.getObject("is_active"));
                 return addOn;
             };
@@ -33,7 +35,7 @@ public class AddOnRepository {
 
     public Optional<AddOn> findById(Long id) {
         List<AddOn> addOns = jdbcTemplate.query(
-                "SELECT id, name, type, price, max_limit_per_booking, available_capacity, booked_capacity, is_active " +
+                "SELECT id, name, type, price, max_limit_per_booking, available_capacity, booked_capacity, description, image_url, is_active " +
                         "FROM add_on_master WHERE id = ?",
                 ADD_ON_ROW_MAPPER,
                 id
@@ -43,7 +45,7 @@ public class AddOnRepository {
 
     public Optional<AddOn> findByIdForUpdate(Long id) {
         List<AddOn> addOns = jdbcTemplate.query(
-                "SELECT id, name, type, price, max_limit_per_booking, available_capacity, booked_capacity, is_active " +
+                "SELECT id, name, type, price, max_limit_per_booking, available_capacity, booked_capacity, description, image_url, is_active " +
                         "FROM add_on_master WHERE id = ? FOR UPDATE",
                 ADD_ON_ROW_MAPPER,
                 id
@@ -53,7 +55,7 @@ public class AddOnRepository {
 
     public Optional<AddOn> findByName(String name) {
         List<AddOn> addOns = jdbcTemplate.query(
-                "SELECT id, name, type, price, max_limit_per_booking, available_capacity, booked_capacity, is_active " +
+                "SELECT id, name, type, price, max_limit_per_booking, available_capacity, booked_capacity, description, image_url, is_active " +
                         "FROM add_on_master WHERE name = ?",
                 ADD_ON_ROW_MAPPER,
                 name
@@ -64,8 +66,8 @@ public class AddOnRepository {
     public AddOn save(AddOn addOn) {
         if (addOn.getId() == null) {
             Long id = jdbcTemplate.queryForObject(
-                    "INSERT INTO add_on_master (name, type, price, max_limit_per_booking, available_capacity, booked_capacity, is_active) " +
-                            "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id",
+                    "INSERT INTO add_on_master (name, type, price, max_limit_per_booking, available_capacity, booked_capacity, description, image_url, is_active) " +
+                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id",
                     Long.class,
                     addOn.getName(),
                     addOn.getType(),
@@ -73,6 +75,8 @@ public class AddOnRepository {
                     addOn.getMaxLimitPerBooking(),
                     addOn.getAvailableCapacity(),
                     addOn.getBookedCapacity(),
+                    addOn.getDescription(),
+                    addOn.getImageUrl(),
                     Boolean.TRUE.equals(addOn.getIsActive())
             );
             addOn.setId(id);
@@ -80,7 +84,7 @@ public class AddOnRepository {
         }
 
         jdbcTemplate.update(
-                "UPDATE add_on_master SET name = ?, type = ?, price = ?, max_limit_per_booking = ?, available_capacity = ?, booked_capacity = ?, is_active = ?, updated_at = now() " +
+                "UPDATE add_on_master SET name = ?, type = ?, price = ?, max_limit_per_booking = ?, available_capacity = ?, booked_capacity = ?, description = ?, image_url = ?, is_active = ?, updated_at = now() " +
                         "WHERE id = ?",
                 addOn.getName(),
                 addOn.getType(),
@@ -88,6 +92,8 @@ public class AddOnRepository {
                 addOn.getMaxLimitPerBooking(),
                 addOn.getAvailableCapacity(),
                 addOn.getBookedCapacity(),
+                addOn.getDescription(),
+                addOn.getImageUrl(),
                 Boolean.TRUE.equals(addOn.getIsActive()),
                 addOn.getId()
         );
@@ -96,16 +102,20 @@ public class AddOnRepository {
 
     public List<AddOn> findAll() {
         return jdbcTemplate.query(
-                "SELECT id, name, type, price, max_limit_per_booking, available_capacity, booked_capacity, is_active FROM add_on_master ORDER BY id",
+                "SELECT id, name, type, price, max_limit_per_booking, available_capacity, booked_capacity, description, image_url, is_active FROM add_on_master ORDER BY id",
                 ADD_ON_ROW_MAPPER
         );
     }
 
     public List<AddOn> findByIsActiveTrue() {
         return jdbcTemplate.query(
-                "SELECT id, name, type, price, max_limit_per_booking, available_capacity, booked_capacity, is_active FROM add_on_master WHERE is_active = TRUE ORDER BY id",
+                "SELECT id, name, type, price, max_limit_per_booking, available_capacity, booked_capacity, description, image_url, is_active " +
+                        "FROM add_on_master WHERE is_active = true ORDER BY name",
                 ADD_ON_ROW_MAPPER
         );
     }
-}
 
+    public void deleteById(Long id) {
+        jdbcTemplate.update("DELETE FROM add_on_master WHERE id = ?", id);
+    }
+}
