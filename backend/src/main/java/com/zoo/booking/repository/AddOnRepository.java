@@ -100,5 +100,12 @@ public class AddOnRepository {
                 ADD_ON_ROW_MAPPER
         );
     }
+
+    public List<AddOn> findByIsActiveTrue() {
+        return jdbcTemplate.query(
+                "SELECT id, name, type, price, max_limit_per_booking, available_capacity, booked_capacity, is_active FROM add_on_master WHERE is_active = TRUE ORDER BY id",
+                ADD_ON_ROW_MAPPER
+        );
+    }
 }
 

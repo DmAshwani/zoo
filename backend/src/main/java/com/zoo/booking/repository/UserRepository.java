@@ -59,6 +59,8 @@ public class UserRepository {
     }
 
     public void deleteById(Long id) {
+        // Delete bookings first
+        jdbcTemplate.update("DELETE FROM bookings WHERE user_id = ?", id);
         // Delete roles first
         jdbcTemplate.update("DELETE FROM user_roles WHERE user_id = ?", id);
         // Delete user
